@@ -1,0 +1,85 @@
+# ----------------------------
+# General
+# ----------------------------
+# OS-specific junk
+.DS_Store
+Thumbs.db
+
+# Logs and temp files
+*.log
+*.pot
+*.pyc
+__pycache__/
+*.swp
+*.swo
+
+# Virtual environments (Python)
+venv/
+env/
+.virtualenv/
+
+# Local environment / secrets
+.env
+.env.*
+
+# ----------------------------
+# Django / Python
+# ----------------------------
+# Migrations (often auto-generated)
+**/migrations/**/__pycache__/
+**/migrations/*.pyc
+# Uncomment if you want to ignore all migration files (optional):
+# **/migrations/*.py
+
+# Python egg and build files
+*.egg
+*.egg-info/
+dist/
+build/
+
+# SQLite database (if using local dev DB)
+*.sqlite3
+
+# Coverage reports
+htmlcov/
+.coverage
+.coverage.*
+
+# ----------------------------
+# React / Node
+# ----------------------------
+# Node modules folder
+frontend/node_modules/
+# Production build (if you don’t want to commit the build output)
+frontend/build/
+
+# Lock files (if you prefer not to commit lock files—though generally recommended to commit)
+# yarn.lock
+# package-lock.json
+
+# npm debug log
+npm-debug.log
+yarn-error.log
+
+# ----------------------------
+# Docker
+# ----------------------------
+# Ignore container logs
+*.pid
+*.seed
+*.pid.lock
+
+# Typically you *don't* ignore the Dockerfiles or docker-compose.yml themselves,
+# but if you have additional Docker resources or environment overrides, list them here.
+
+# ----------------------------
+# IDE / Editor Config
+# ----------------------------
+# VSCode
+.vscode/
+# JetBrains
+.idea/
+*.iml
+# Sublime
+*.sublime-workspace
+*.sublime-project
