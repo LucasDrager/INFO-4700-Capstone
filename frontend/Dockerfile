@@ -1,17 +1,20 @@
+# Use a Node.js image
 FROM node:18-alpine
 
-# Set our working directory
+# Set the working directory inside the container
 WORKDIR /app
 
+# Copy only package.json and package-lock.json first
+COPY package.json package-lock.json ./
+
 # Install dependencies
-COPY package*.json ./
 RUN npm install
 
-# Copy the rest of our code
+# Copy the rest of the application files
 COPY . .
 
-# Expose port 3000 for the React dev server
+# Expose the port React runs on
 EXPOSE 3000
 
-# Default command is "npm start", which runs the dev server
+# Start the React application
 CMD ["npm", "start"]

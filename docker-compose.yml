@@ -42,13 +42,16 @@ services:
   frontend:
     build: ./frontend
     container_name: react_app
-    # Bind mount our frontend code so changes are reflected
     volumes:
       - ./frontend:/app
+      - /app/node_modules  # Avoid conflicts with host node_modules
     ports:
       - "3000:3000"
     networks:
       - frontend_net
+    command: npm start  # Explicitly set the start command
+    stdin_open: true  # Keep container open for interactive mode
+    tty: true
 
 networks:
   backend_net:
