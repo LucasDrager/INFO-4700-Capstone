@@ -77,18 +77,17 @@ With these installed locally, you can run React’s dev server or Django command
 ---
 
 ## 3. Directory Structure
-INFO-4700-Capstone/ 
-├─ docker-compose.yml # Defines Docker services (backend, db, frontend) 
-├─ backend/ 
-│ ├─ Dockerfile # Builds the Django container 
-│ ├─ requirements.txt # Python dependencies 
-│ ├─ manage.py # Django's main management script 
-│ └─ myproject/ # Django code (settings, urls, etc.) 
-└─ frontend/ 
-├─ Dockerfile # Builds the React container 
-├─ package.json # React project dependencies 
-├─ public/ # Static/public files 
-└─ src/ # React components & logic
+INFO-4700-Capstone/\
+├─ docker-compose.yml # Defines Docker services (backend, db, frontend) \
+├─ backend/ \
+│ ├─ Dockerfile # Builds the Django container \
+│ ├─ requirements.txt # Python dependencies \
+│ ├─ manage.py # Django's main management script \
+│ └─ Application/ # Django code (settings, urls, etc.) \
+├─ Dockerfile # Builds the React container \
+├─ package.json # React project dependencies \
+├─ public/ # Static/public files \
+└─ src/ # React components & logic \
 
 **Key Points**:
 - **backend/**: Contains our Django project and a `Dockerfile` that installs Python dependencies.  
@@ -188,4 +187,3 @@ That’s it! You now have a local instance running via Docker.
 - **Node.js**: [https://nodejs.org/en/docs/](https://nodejs.org/en/docs/)
 
 ---
-```
