@@ -16,7 +16,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.urls import path
+from .views import welcome_message, about_message, contact_message
 
 urlpatterns = [
+    path('api/welcome/', welcome_message),
+    path('api/about/', about_message),
+    path('api/contact/', contact_message),
     path('admin/', admin.site.urls),
 ]
