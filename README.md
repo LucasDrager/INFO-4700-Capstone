@@ -1,4 +1,5 @@
-# INFOCapstone
+# Lectern
+## Information Science Capstone
 
 A combined **Django (Python)** back end and **React** front end, orchestrated via **Docker**.
 
