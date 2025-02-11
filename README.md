@@ -188,5 +188,4 @@ That’s it! You now have a local instance running via Docker.
 - **Node.js**: [https://nodejs.org/en/docs/](https://nodejs.org/en/docs/)
 
 ---
-
 Hello!
