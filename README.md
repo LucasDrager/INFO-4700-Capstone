@@ -1,4 +1,5 @@
-# INFOCapstone
+# Lectern
+## Information Science Capstone
 
 A combined **Django (Python)** back end and **React** front end, orchestrated via **Docker**.
 
@@ -187,3 +188,5 @@ That’s it! You now have a local instance running via Docker.
 - **Node.js**: [https://nodejs.org/en/docs/](https://nodejs.org/en/docs/)
 
 ---
+
+Hello!
