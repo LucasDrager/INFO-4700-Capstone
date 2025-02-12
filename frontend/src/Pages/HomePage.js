@@ -1,25 +1,79 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React from "react";
+import { motion } from "framer-motion";
+import "bootstrap/dist/css/bootstrap.min.css";
 
-const HomePage = () => {
-  const [message, setMessage] = useState("");
-
-  useEffect(() => {
-    axios.get("http://127.0.0.1:8000/api/welcome/")
-      .then(response => {
-        setMessage(response.data.message);
-      })
-      .catch(error => {
-        console.error("Error fetching welcome message:", error);
-      });
-  }, []);
-
+const LandingPage = () => {
   return (
-    <div style={{ textAlign: "center", marginTop: "50px" }}>
-      <h1>{message || "Loading..."}</h1>
-      <p>This is the home page.</p>
+    <div className="landing-container">
+      {/* Hero Section */}
+      <motion.div
+        className="hero-section text-center text-white"
+        initial={{ opacity: 0, y: -50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1 }}
+      >
+        <h1 className="display-3">Welcome to Our Website</h1>
+        <p className="lead">Experience innovation with a modern, sleek design.</p>
+        <motion.a
+          href="about"
+          className="btn btn-primary btn-lg"
+          whileHover={{ scale: 1.1 }}
+        >
+          Learn More
+        </motion.a>
+      </motion.div>
+
+      {/* Features Section */}
+      <div id="about" className="container text-center mt-5">
+        <motion.h2
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          transition={{ duration: 1 }}
+        >
+          Why Choose Us?
+        </motion.h2>
+        <div className="row mt-4">
+          <motion.div
+            className="col-md-4"
+            whileHover={{ scale: 1.05 }}
+            transition={{ duration: 0.3 }}
+          >
+            <i className="bi bi-lightning-fill feature-icon"></i>
+            <h4>Fast Performance</h4>
+            <p>Optimized for speed and efficiency.</p>
+          </motion.div>
+          <motion.div
+            className="col-md-4"
+            whileHover={{ scale: 1.05 }}
+            transition={{ duration: 0.3 }}
+          >
+            <i className="bi bi-lock-fill feature-icon"></i>
+            <h4>Secure</h4>
+            <p>Industry-leading security standards.</p>
+          </motion.div>
+          <motion.div
+            className="col-md-4"
+            whileHover={{ scale: 1.05 }}
+            transition={{ duration: 0.3 }}
+          >
+            <i className="bi bi-code-slash feature-icon"></i>
+            <h4>Developer Friendly</h4>
+            <p>Built with modern technologies.</p>
+          </motion.div>
+        </div>
+      </div>
+
+      {/* Footer */}
+      <motion.footer
+        className="footer mt-5 text-white text-center"
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        transition={{ duration: 1 }}
+      >
+        <p>© 2025 My Website. All rights reserved.</p>
+      </motion.footer>
     </div>
   );
 };
 
-export default HomePage;
+export default LandingPage;
