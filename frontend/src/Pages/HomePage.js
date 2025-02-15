@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import "bootstrap/dist/css/bootstrap.min.css";
 
@@ -6,6 +6,36 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import Header from "../components/Header";
 //HTML
 const LandingPage = () => {
+  const [pdfText, setPdfText] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleFileUpload = async (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append('pdf_file', file);
+
+    setIsLoading(true);
+    try {
+      const response = await fetch('http://localhost:8000/api/parse-pdf/', {
+        method: 'POST',
+        body: formData,
+      });
+      const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data.message || 'Error processing PDF file');
+      }
+      
+      setPdfText(data.message);
+    } catch (error) {
+      console.error('Error uploading PDF:', error);
+      setPdfText(error.message || 'Error processing PDF file');
+    }
+    setIsLoading(false);
+  };
+
   return (
     <div className="landing-container"> {/*parent container*/}
       <div>
@@ -31,6 +61,42 @@ const LandingPage = () => {
           Learn More
         </motion.a>
       </motion.div>
+
+      {/* PDF Upload Section */}
+      <div className="container text-center mt-5">
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          transition={{ duration: 1 }}
+          className="pdf-upload-section"
+        >
+          <h2>Upload and Parse PDF</h2>
+          <div className="mt-4">
+            <input
+              type="file"
+              accept=".pdf"
+              onChange={handleFileUpload}
+              className="form-control"
+              style={{ maxWidth: '300px', margin: '0 auto' }}
+            />
+          </div>
+          {isLoading && (
+            <div className="mt-3">
+              <div className="spinner-border text-primary" role="status">
+                <span className="visually-hidden">Loading...</span>
+              </div>
+            </div>
+          )}
+          {pdfText && (
+            <div className="mt-4">
+              <h3>Extracted Text:</h3>
+              <div className="text-start bg-light p-3 rounded" style={{ maxHeight: '300px', overflowY: 'auto' }}>
+                <pre style={{ whiteSpace: 'pre-wrap' }}>{pdfText}</pre>
+              </div>
+            </div>
+          )}
+        </motion.div>
+      </div>
 
       {/* Features Section */}
       <div id="about" className="container text-center mt-5">
