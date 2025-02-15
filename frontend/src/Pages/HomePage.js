@@ -2,8 +2,6 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-//Partials
-import Header from "../components/Header";
 //HTML
 const LandingPage = () => {
   const [pdfText, setPdfText] = useState("");
