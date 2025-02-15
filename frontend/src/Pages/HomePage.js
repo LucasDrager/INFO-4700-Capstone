@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import "bootstrap/dist/css/bootstrap.min.css";
 
+//Partials
+import Header from "../components/Header";
+//HTML
 const LandingPage = () => {
   const [pdfText, setPdfText] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -34,7 +37,13 @@ const LandingPage = () => {
   };
 
   return (
-    <div className="landing-container">
+    <div className="landing-container"> {/*parent container*/}
+      <div>
+      <main className="container mt-4">
+        <h2>Welcome to Our Home Page</h2>
+        <p>Explore our features and offerings.</p>
+      </main>
+    </div>
       {/* Hero Section */}
       <motion.div
         className="hero-section text-center text-white"
