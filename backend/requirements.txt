@@ -3,3 +3,7 @@ psycopg2-binary
 djangorestframework
 PyPDF2
 django-cors-headers
+gradio
+ollama
+httpx
+django-cors-headers

@@ -53,9 +53,30 @@ services:
     stdin_open: true  # Keep container open for interactive mode
     tty: true
 
+  #####################
+  # Ollama AI Model   #
+  #####################
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama
+    restart: unless-stopped
+    volumes:
+      - ollama_data:/root/.ollama
+    ports:
+      - "11434:11434"
+    networks:
+      - backend_net
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        ollama pull deepseek-r1:14b
+        ollama serve
+
+
 networks:
   backend_net:
   frontend_net:
 
 volumes:
   db_data:
+  ollama_data:
