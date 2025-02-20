@@ -66,6 +66,7 @@ services:
       - "11434:11434"
     networks:
       - backend_net
+    runtime: nvidia
     entrypoint: ["/bin/sh", "-c"]
     command:
       - |

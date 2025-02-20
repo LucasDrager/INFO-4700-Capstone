@@ -5,9 +5,7 @@ function App() {
     const [response, setResponse] = useState("");
     const [useWebSearch, setUseWebSearch] = useState(true);
 
-    const API_URL = process.env.NODE_ENV === "development"
-    ? "http://localhost:8000/api/chat/"
-    : "http://backend:8000/api/chat/";
+    const API_URL = 'http://localhost:8000/api/chat/'
 
     const sendMessage = async () => {
         try {

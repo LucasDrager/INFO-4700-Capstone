@@ -51,51 +51,41 @@ def chat_with_ollama(request):
         return JsonResponse({"error": "Invalid request method"}, status=400)
 
     try:
-        #  Print incoming request data
-        print("Incoming request:", request.body)
-
         data = json.loads(request.body)
         query = data.get("query", "")
-        use_web_search = data.get("use_web_search", False)
 
         if not query:
             return JsonResponse({"error": "Missing query parameter"}, status=400)
 
-        #  Perform optional web search
-        context = "No additional context provided."
-        if use_web_search:
-            try:
-                search_results = search_web(query)
-                context = format_search_results(search_results, max_results=5)
-            except Exception as e:
-                print("Web search error:", e)
-                traceback.print_exc()
+        payload = {"model": "deepseek-r1:14b", "prompt": query, "stream": True}
+        print(f"Sending request to Ollama at {OLLAMA_API_URL}/api/generate")
+        print(f"Payload: {json.dumps(payload, indent=2)}")
 
-        #  Contact Ollama
-        try:
-            response = httpx.post(
-                f"{OLLAMA_API_URL}/api/chat",  # Corrected endpoint
-                json={
-                    "model": "deepseek-r1:14b",
-                    "messages": [{"role": "user", "content": f"{context}\n{query}\nAnswer:"}]
-                },
-                timeout=30
-            )
-            response.raise_for_status()  # Raise error for failed requests
-            print("Ollama response:", response.json())  # Debugging
-            ai_response = response.json().get("message", {}).get("content", "No response received")
-        except Exception as e:
-            print("Ollama API error:", e)
-            return JsonResponse({"error": "Failed to contact Ollama"}, status=500)
+        with httpx.stream("POST", f"{OLLAMA_API_URL}/api/generate", json=payload, timeout=30) as response:
+            response.raise_for_status()
+            full_response = ""
 
-        return JsonResponse({"response": ai_response})
+            # ✅ Read response line by line (handling streaming JSON)
+            for line in response.iter_lines():
+                if line:
+                    try:
+                        data = json.loads(line)
+                        full_response += data.get("response", "")
+                    except json.JSONDecodeError:
+                        print("Warning: Skipping malformed JSON chunk:", line)
+
+        return JsonResponse({"response": full_response})
+
+    except httpx.HTTPStatusError as http_err:
+        print("Ollama HTTP error:", http_err.response.text)
+        return JsonResponse({"error": f"Ollama HTTP error: {http_err.response.text}"}, status=http_err.response.status_code)
 
     except Exception as e:
-        print("Unexpected error:", e)
-        traceback.print_exc()  #  Print full error
-        return JsonResponse({"error": "Internal server error"}, status=500)
+        print("Unexpected Ollama API error:", e)
+        traceback.print_exc()
+        return JsonResponse({"error": "Failed to contact Ollama"}, status=500)
 
-# @csrf_exempt  # Allows API calls from React without CSRF issues
+# @csrf_exempt
 # def chat_with_ollama(request):
 #     if request.method != "POST":
 #         return JsonResponse({"error": "Invalid request method"}, status=400)
@@ -133,6 +123,35 @@ def chat_with_ollama(request):
 #     except Exception as e:
 #         print("Unexpected error:", e)
 #         return JsonResponse({"error": "Internal server error"}, status=500)
+# @csrf_exempt
+# def chat_with_ollama(request):
+#     if request.method != "POST":
+#         return JsonResponse({"error": "Invalid request method"}, status=400)
+
+#     try:
+#         data = json.loads(request.body)
+#         query = data.get("query", "")
+
+#         if not query:
+#             return JsonResponse({"error": "Missing query parameter"}, status=400)
+
+#         response = httpx.post(
+#             f"{OLLAMA_API_URL}/api/generate",
+#             json={"model": "deepseek-r1:14b", "prompt": query},
+#             timeout=300
+#         )
+
+#         response.raise_for_status()
+#         response_json = response.json()
+
+#         # ✅ Collect full response text
+#         full_response = "".join([msg["response"] for msg in response_json if "response" in msg])
+
+#         return JsonResponse({"response": full_response})
+
+#     except Exception as e:
+#         print("Ollama API error:", e)
+#         return JsonResponse({"error": "Failed to contact Ollama"}, status=500)
 
 def search_web(query: str):
     """
