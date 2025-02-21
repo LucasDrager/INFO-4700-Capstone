@@ -11,8 +11,14 @@ services:
       - POSTGRES_PASSWORD=mysecretpassword
     volumes:
       - db_data:/var/lib/postgresql/data
+      - ./backend/init.sql:/docker-entrypoint-initdb.d/init.sql #Establish Tables from DB init
     networks:
       - backend_net
+    healthcheck:  # Ensures DB is ready before Django starts
+      test: ["CMD-SHELL", "pg_isready -U myuser -d mydb"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
 
   #####################
   # Django Backend    #
@@ -20,8 +26,11 @@ services:
   backend:
     build: ./backend
     container_name: django_app
+    # Assure that DB Table connections are established and
     # Run the Django dev server on port 8000
-    command: python manage.py runserver 0.0.0.0:8000
+    command: >
+      sh -c "python manage.py migrate &&
+             python manage.py runserver 0.0.0.0:8000"
     volumes:
       - ./backend:/app  # Bind mount our backend code
     ports:
@@ -32,7 +41,8 @@ services:
       - POSTGRES_PASSWORD=mysecretpassword
       - POSTGRES_HOST=db
     depends_on:
-      - db
+      db:
+        condition: service_healthy  # Wait for PostgreSQL to be ready
     networks:
       - backend_net
 
@@ -57,7 +67,7 @@ services:
   # Ollama AI Model   #
   #####################
   ollama:
-    image: ollama/ollama:latest
+    build: ./LLM
     container_name: ollama
     restart: unless-stopped
     volumes:
@@ -66,13 +76,7 @@ services:
       - "11434:11434"
     networks:
       - backend_net
-    runtime: nvidia
-    entrypoint: ["/bin/sh", "-c"]
-    command:
-      - |
-        ollama pull deepseek-r1:14b
-        ollama serve
-
+    runtime: nvidia #Allows the servace to take advantage of GPU resorces
 
 networks:
   backend_net:

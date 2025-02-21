@@ -1,10 +1,12 @@
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from .models import ChatMessage
 from PyPDF2 import PdfReader
 import httpx
 import ollama
 import json
 import traceback
+import re
 
 def welcome_message(request):
     return JsonResponse({"message": "Welcome to My Website!"})
@@ -41,38 +43,58 @@ def parse_pdf(request):
             return JsonResponse({"message": f"Error processing PDF: {str(e)}"}, status=500)
 
     return JsonResponse({"message": "Please upload a PDF file"})
-
-# AI API CALLS
-OLLAMA_API_URL = "http://ollama:11434"
+#################################
+#     LLM API INFORMATION
+#################################
+OLLAMA_API_URL = "http://ollama:11434" #USE TO DO INTER-CONTAINER API CALLS
 
 @csrf_exempt
-def chat_with_ollama(request):
+def chat_with_ollama(request): # Makes a call to the LLM
     if request.method != "POST":
         return JsonResponse({"error": "Invalid request method"}, status=400)
 
     try:
         data = json.loads(request.body)
-        query = data.get("query", "")
+        query = data.get("query", "").strip()
 
         if not query:
             return JsonResponse({"error": "Missing query parameter"}, status=400)
+
+        # Save user message to DB
+        ChatMessage.objects.create(sender="user", text=query)
 
         payload = {"model": "deepseek-r1:14b", "prompt": query, "stream": True}
         print(f"Sending request to Ollama at {OLLAMA_API_URL}/api/generate")
         print(f"Payload: {json.dumps(payload, indent=2)}")
 
+        full_response = ""
+        previous_chunk_ends_with_space = True  # Helps ensure proper spacing
+
         with httpx.stream("POST", f"{OLLAMA_API_URL}/api/generate", json=payload, timeout=30) as response:
             response.raise_for_status()
-            full_response = ""
 
-            # ✅ Read response line by line (handling streaming JSON)
-            for line in response.iter_lines():
+            for line in response.iter_lines(): # Deep Seek returns infromation in many different "returns" so this handles that.
                 if line:
                     try:
                         data = json.loads(line)
-                        full_response += data.get("response", "")
+                        bot_text = data.get("response", "").strip()
+
+                        # Ensure spacing between streamed responses
+                        if not previous_chunk_ends_with_space and not bot_text.startswith(" "):
+                            bot_text = " " + bot_text
+
+                        previous_chunk_ends_with_space = bot_text.endswith(" ")
+
+                        full_response += bot_text
                     except json.JSONDecodeError:
                         print("Warning: Skipping malformed JSON chunk:", line)
+
+        # Remove entire "<think>...</think>" sections from the full response
+        # Deep seek thinks a lot
+        full_response = re.sub(r"<think>.*?</think>", "", full_response, flags=re.DOTALL).strip()
+
+        # Save bot response to DB
+        ChatMessage.objects.create(sender="bot", text=full_response)
 
         return JsonResponse({"response": full_response})
 
@@ -80,103 +102,9 @@ def chat_with_ollama(request):
         print("Ollama HTTP error:", http_err.response.text)
         return JsonResponse({"error": f"Ollama HTTP error: {http_err.response.text}"}, status=http_err.response.status_code)
 
-    except Exception as e:
-        print("Unexpected Ollama API error:", e)
-        traceback.print_exc()
-        return JsonResponse({"error": "Failed to contact Ollama"}, status=500)
-
-# @csrf_exempt
-# def chat_with_ollama(request):
-#     if request.method != "POST":
-#         return JsonResponse({"error": "Invalid request method"}, status=400)
-
-#     try:
-#         # Parse JSON request body
-#         data = json.loads(request.body)
-#         query = data.get("query", "")
-#         use_web_search = data.get("use_web_search", False)
-
-#         if not query:
-#             return JsonResponse({"error": "Missing query parameter"}, status=400)
-
-#         # Optional: Perform a web search and add context
-#         context = "No additional context provided."
-#         if use_web_search:
-#             search_results = search_web(query)
-#             context = format_search_results(search_results, max_results=5)
-
-#         # Generate a response from Ollama
-#         try:
-#             response = ollama.chat(
-#                 model="deepseek-r1:14b",
-#                 messages=[{"role": "user", "content": f"{context}\n{query}\nAnswer:"}]
-#             )
-#             ai_response = response.get("message", {}).get("content", "No response received")
-#         except Exception as e:
-#             print("Ollama API error:", e)
-#             return JsonResponse({"error": "Failed to contact Ollama"}, status=500)
-
-#         return JsonResponse({"response": ai_response})
-
-#     except json.JSONDecodeError:
-#         return JsonResponse({"error": "Invalid JSON received"}, status=400)
-#     except Exception as e:
-#         print("Unexpected error:", e)
-#         return JsonResponse({"error": "Internal server error"}, status=500)
-# @csrf_exempt
-# def chat_with_ollama(request):
-#     if request.method != "POST":
-#         return JsonResponse({"error": "Invalid request method"}, status=400)
-
-#     try:
-#         data = json.loads(request.body)
-#         query = data.get("query", "")
-
-#         if not query:
-#             return JsonResponse({"error": "Missing query parameter"}, status=400)
-
-#         response = httpx.post(
-#             f"{OLLAMA_API_URL}/api/generate",
-#             json={"model": "deepseek-r1:14b", "prompt": query},
-#             timeout=300
-#         )
-
-#         response.raise_for_status()
-#         response_json = response.json()
-
-#         # ✅ Collect full response text
-#         full_response = "".join([msg["response"] for msg in response_json if "response" in msg])
-
-#         return JsonResponse({"response": full_response})
-
-#     except Exception as e:
-#         print("Ollama API error:", e)
-#         return JsonResponse({"error": "Failed to contact Ollama"}, status=500)
-
-def search_web(query: str):
-    """
-    Perform a web search using SearXNG and return top search results.
-    """
-    SEARXNG_URL = "http://localhost:4000/search"
-    params = {"q": query, "format": "json"}
-    headers = {"User-Agent": "Mozilla/5.0"}
-
-    try:
-        response = httpx.get(SEARXNG_URL, params=params, headers=headers, timeout=10)
-
-        if response.status_code == 200:
-            return response.json().get("results", [])
-        else:
-            print(f"Search failed: {response.status_code}")
-            return []
-    except Exception as e:
-        print("Web search error:", e)
-        return []
-
-def format_search_results(results, max_results=5):
-    """
-    Format the top search results into a context string.
-    """
-    return "\n\n".join(
-        [f"Title: {r.get('title', 'No title')}\nURL: {r.get('url', 'No URL')}\nSnippet: {r.get('content', 'No snippet')}" for r in results[:max_results]]
-    )
+#Gets chat history with the bot
+def get_chat_history(request):
+    messages = ChatMessage.objects.all().order_by("timestamp")
+    return JsonResponse({
+        "messages": [{"sender": m.sender, "text": m.text} for m in messages]
+    })
