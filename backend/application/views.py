@@ -79,7 +79,7 @@ def chat_with_ollama(request): # Makes a call to the LLM
         full_response = ""
         previous_chunk_ends_with_space = True  # Helps ensure proper spacing
 
-        with httpx.stream("POST", f"{OLLAMA_API_URL}/api/generate", json=payload, timeout=30) as response:
+        with httpx.stream("POST", f"{OLLAMA_API_URL}/api/generate", json=payload, timeout=120) as response:
             response.raise_for_status()
 
             for line in response.iter_lines(): # Deep Seek returns infromation in many different "returns" so this handles that.
