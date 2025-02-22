@@ -11,8 +11,14 @@ services:
       - POSTGRES_PASSWORD=mysecretpassword
     volumes:
       - db_data:/var/lib/postgresql/data
+      - ./backend/init.sql:/docker-entrypoint-initdb.d/init.sql #Establish Tables from DB init
     networks:
       - backend_net
+    healthcheck:  # Ensures DB is ready before Django starts
+      test: ["CMD-SHELL", "pg_isready -U myuser -d mydb"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
 
   #####################
   # Django Backend    #
@@ -20,8 +26,11 @@ services:
   backend:
     build: ./backend
     container_name: django_app
+    # Assure that DB Table connections are established and
     # Run the Django dev server on port 8000
-    command: python manage.py runserver 0.0.0.0:8000
+    command: >
+      sh -c "python manage.py migrate &&
+             python manage.py runserver 0.0.0.0:8000"
     volumes:
       - ./backend:/app  # Bind mount our backend code
     ports:
@@ -32,7 +41,8 @@ services:
       - POSTGRES_PASSWORD=mysecretpassword
       - POSTGRES_HOST=db
     depends_on:
-      - db
+      db:
+        condition: service_healthy  # Wait for PostgreSQL to be ready
     networks:
       - backend_net
 
@@ -53,9 +63,31 @@ services:
     stdin_open: true  # Keep container open for interactive mode
     tty: true
 
+  #####################
+  # Ollama AI Model   #
+  #####################
+  ollama:
+    build: ./LLM
+    container_name: ollama
+    restart: unless-stopped
+    volumes:
+      - ollama_data:/root/.ollama
+    ports:
+      - "11434:11434"
+    networks:
+      - backend_net
+    devices:
+    - /dev/dri # Required for Intel & AMD GPUs
+    environment: #Allows the service to take advantage of GPU resorces
+    - NVIDIA_VISIBLE_DEVICES=all # Enables Nvidia GPUs
+    - NVIDIA_DRIVER_CAPABILITIES=compute,utility
+    - ROC_ENABLE_PRE_VEGA=1 # Enables AMD ROCm support (for older AMD GPUs)
+    - OLLAMA_USE_METAL=1 # Enables Apple Metal GPU support
+
 networks:
   backend_net:
   frontend_net:
 
 volumes:
   db_data:
+  ollama_data:

@@ -33,7 +33,7 @@ CORS_ALLOW_CREDENTIALS = True
 
 
 # Application definition
-
+# added "application" folder to allow us to make our own Django functions
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'corsheaders',
+    'application'
 ]
 
 MIDDLEWARE = [
