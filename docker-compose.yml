@@ -76,7 +76,13 @@ services:
       - "11434:11434"
     networks:
       - backend_net
-    runtime: nvidia #Allows the servace to take advantage of GPU resorces
+    devices:
+    - /dev/dri # Required for Intel & AMD GPUs
+    environment: #Allows the service to take advantage of GPU resorces
+    - NVIDIA_VISIBLE_DEVICES=all # Enables Nvidia GPUs
+    - NVIDIA_DRIVER_CAPABILITIES=compute,utility
+    - ROC_ENABLE_PRE_VEGA=1 # Enables AMD ROCm support (for older AMD GPUs)
+    - OLLAMA_USE_METAL=1 # Enables Apple Metal GPU support
 
 networks:
   backend_net:
