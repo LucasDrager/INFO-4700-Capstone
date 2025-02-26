@@ -47,14 +47,14 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(to right, #007bff, #6610f2);
+  background: linear-gradient(to right, #4ba881, #6610f2);
   color: white;
   padding: 50px;
 }
 
 .feature-icon {
   font-size: 3rem;
-  color: #007bff;
+  color: #4ba881;
 }
 
 .footer {
