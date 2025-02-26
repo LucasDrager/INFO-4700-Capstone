@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import "bootstrap/dist/css/bootstrap.min.css";
+import ExtractedTextAnnotator from "../components/ExtractedTextAnnotator"; // Added the component here
 
 //HTML
 const LandingPage = () => {
@@ -54,12 +55,11 @@ const LandingPage = () => {
         throw new Error(data.message || 'Error processing PDF file');
       }
       
-      setPdfText(data.message);
+
       setPdfText(Array.isArray(data.texts) ? data.texts : []); // pdfText is an array
 
     } catch (error) {
       console.error('Error uploading PDF:', error);
-      setPdfText(error.message || 'Error processing PDF file');
     }
     setIsLoading(false);
   };
@@ -111,23 +111,19 @@ const LandingPage = () => {
               style={{ maxWidth: '300px', margin: '0 auto' }}
             />
           </div>
-          {isLoading && (
+          {!isLoading ? null : (
             <div className="mt-3">
               <div className="spinner-border text-primary" role="status">
                 <span className="visually-hidden">Loading...</span>
               </div>
             </div>
           )}
-          {pdfText.length > 0 && (
-          <div className="mt-4">
-            <h3>Extracted Text:</h3>
-            <div className="text-start bg-light p-3 rounded" style={{ maxHeight: '300px', overflowY: 'auto' }}>
-              {pdfText.map((text, index) => (
-                <pre key={index} style={{ whiteSpace: 'pre-wrap' }}>{text}</pre>
-              ))}
+
+          {pdfText.length === 0 ? null : (
+            <div className="mt-4">
+              <ExtractedTextAnnotator pdfText={pdfText} />
             </div>
-          </div>
-        )}
+          )}
         </motion.div>
       </div>
       <div>

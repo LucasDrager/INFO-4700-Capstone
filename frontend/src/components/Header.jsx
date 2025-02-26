@@ -1,9 +1,10 @@
 import React from "react";
+import "../index.css"; // Import the CSS file for styling
 
 const Header = () => {
   return (
-    <header className="bg-primary text-white text-center py-3">
-      <h1>My Awesome Website</h1>
+    <header className="header">
+      <h1>Lectern</h1>
       <p>Bringing innovation to your doorstep</p>
     </header>
   );
