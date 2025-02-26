@@ -7,6 +7,7 @@ import ollama
 import json
 import traceback
 import re
+import os
 
 def welcome_message(request):
     return JsonResponse({"message": "Welcome to My Website!"})
@@ -52,10 +53,11 @@ def parse_pdf(request):
             return JsonResponse({"message": f"Error processing PDF: {str(e)}"}, status=500)
 
     return JsonResponse({"message": "Please upload a PDF file"})
+
 #################################
 #     LLM API INFORMATION
 #################################
-OLLAMA_API_URL = "http://ollama:11434" #USE TO DO INTER-CONTAINER API CALLS
+OLLAMA_API_URL = os.environ.get('OLLAMA_APP_API_URL') #USE TO DO INTER-CONTAINER API CALLS
 
 @csrf_exempt
 def chat_with_ollama(request): # Makes a call to the LLM
