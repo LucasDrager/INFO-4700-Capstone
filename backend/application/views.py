@@ -119,3 +119,17 @@ def get_chat_history(request):
     return JsonResponse({
         "messages": [{"sender": m.sender, "text": m.text} for m in messages]
     })
+
+#################################
+#   SECURITY API INFORMATION
+#################################
+from rest_framework.generics import CreateAPIView
+from rest_framework.permissions import AllowAny
+from django.contrib.auth import get_user_model
+from .serializers import UserRegistrationSerializer
+
+User = get_user_model()
+class RegisterUserView(CreateAPIView):
+    queryset = User.objects.all()
+    permission_classes = [AllowAny]
+    serializer_class = UserRegistrationSerializer

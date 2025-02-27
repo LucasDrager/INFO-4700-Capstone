@@ -6,4 +6,4 @@ django-cors-headers
 gradio
 ollama
 httpx
-django-cors-headers
+djangorestframework-simplejwt
