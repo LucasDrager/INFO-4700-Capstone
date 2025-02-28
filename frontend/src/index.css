@@ -18,3 +18,121 @@ code {
   padding: 1rem;
   text-align: center;
 }
+
+/* DASHBOARD */ 
+.dashboard-container {
+  display: flex;
+}
+
+
+/* SideBarDashboard.jsx */
+
+/* sidebar itself */
+.sidebar-dashboard {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 25vw; /*collapsed width*/
+  height: 100vh;
+  padding: 25px; 
+  background-color: #747272;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  justify-content: space-between;
+}
+
+.sidebar-tab {
+  cursor: pointer;
+  background-color:#f8f8f8;; /* just needs to be same as sidebar-dashboard */
+  padding: 10px;
+  text-align: center;
+  border-radius: 4px;
+}
+
+/* all widgets inside sidebar */
+.sidebar-top,
+.sidebar-upload,
+.sidebar-tab,
+.sidebar-plant{
+  margin-bottom: 20px;
+}
+
+.sidebar-tab { 
+  left: 100%; 
+  position: absolute;
+  top: 45%;
+  transform: translateX(-50%);
+  cursor: pointer;
+  background-color: #747272;;
+  padding: 20px;
+  height: 50px;
+  text-align: center;
+  border-radius: 4px;
+}
+
+.sidebar-tab a { 
+  color: white;
+  text-decoration: none;
+}
+
+.sidebar-plant{ /* this will eventually need to dissapear when vh gets too small for min img size! */
+  height: 40vh; 
+  width: 80%;
+  margin: auto; /*center content*/
+  background-color: lightblue;
+  position: absolute;
+  bottom: 3vh; 
+}
+
+
+/*SETTINGS */
+
+
+/* SETTINGS */ 
+.settings-container {
+  display: flex;
+}
+
+.settings-mainContentArea {
+  width: 75vw;
+  padding: 25px;
+}
+
+
+/* SETTINGS version of sidebar */ 
+
+.sidebar-settings {
+  position: fixed;             
+  top: 0;
+  width: 25vw;    
+  height: 100vh;
+  padding: 25px;
+  background-color: #747272;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+} 
+
+.sidebar-settingsTop,
+.sidebar-settingsUpload,
+.sidebar-settingsPlant {
+  margin-bottom: 20px;
+}
+
+.sidebar-settingsTab {
+  position: absolute;
+  left: 80%;               
+  top: 45%;
+  transform: translateX(50%); /* shift right by half its own width to center it on the edge */
+  cursor: pointer;
+  background-color:red;
+  padding: 10px;
+  text-align: center;
+  border-radius: 4px;
+}
+
+.sidebar-settingsTab a {
+  color: white;
+  text-decoration: none;
+}
