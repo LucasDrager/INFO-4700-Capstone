@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import "bootstrap/dist/css/bootstrap.min.css";
-import ExtractedTextAnnotator from "../components/ExtractedTextAnnotator"; // Added the component here
+import ExtractedTextAnnotator from "../components/extracted-text-components/ExtractedTextAnnotator"; // Added the component here
 
 //HTML
 const LandingPage = () => {
@@ -68,8 +68,8 @@ const LandingPage = () => {
     <div className="landing-container"> {/*parent container*/}
       <div>
       <main className="container mt-4">
-        <h2>Welcome to Our Home Page</h2>
-        <p>Explore our features and offerings.</p>
+        <h2>Welcome to Lectern</h2>
+        <p></p>
       </main>
     </div>
       {/* Hero Section */}
@@ -77,19 +77,14 @@ const LandingPage = () => {
         className="hero-section text-center "
         initial={{ opacity: 0, y: -50 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1 }}
-      >
-        <h1 className="">Welcome to Lectern</h1>
-        <p className="lead">An application desinged to improve your reading abilities.</p>
-        
-
+        transition={{ duration: 1 }}>
 
         <motion.a
           href="about"
           className="btn btn-primary btn-lg"
-          whileHover={{ scale: 1.1 }}
-        >
-          Learn More
+          whileHover={{ scale: 1.1 }}>
+          Learn More About Lectern
+
         </motion.a>
       </motion.div>
 
@@ -204,7 +199,7 @@ const LandingPage = () => {
         whileInView={{ opacity: 1 }}
         transition={{ duration: 1 }}
       >
-        <p>© 2025 My Website. All rights reserved.</p>
+        <p>© 2025 Lectern. All rights reserved.</p>
       </motion.footer>
     </div>
   );
