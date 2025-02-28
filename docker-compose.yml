@@ -65,7 +65,7 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - API_BASE=${API_BASE}
+      - REACT_APP_API_BASE=${REACT_APP_API_BASE}
     networks:
       - frontend_net
     command: npm start  # Explicitly set the start command

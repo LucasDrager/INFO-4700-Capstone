@@ -7,8 +7,8 @@ import React, { useState, useEffect, createContext, useContext } from "react";
 import { BrowserRouter as Router, Routes, Route, Link, useNavigate, Navigate, useLocation } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-import { useAuth } from '../AuthContext';
-
+import { useAuth, AuthProvider } from '../AuthContext';
+const API_BASE = process.env.REACT_APP_API_BASE;
 // ============================
 // Protected Route component
 // ============================
@@ -26,11 +26,11 @@ import { useAuth } from '../AuthContext';
 // ============================
 
 function LoginPage() {
+  const { loginUser, authTokens, setAuthTokens, currentUser, setCurrentUser } = useAuth();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
   const navigate = useNavigate();
-  const { loginUser } = useAuth();
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -88,40 +88,4 @@ function LoginPage() {
   );
 }
 
-// ============================
-// Main App
-// ============================
-
-function App() {
-  return (
-    <Router>
-      <AuthProvider>
-        <nav className="navbar navbar-expand-lg navbar-light bg-light">
-          <div className="container">
-            <Link className="navbar-brand" to="/">MyApp</Link>
-            <div>
-              <ul className="navbar-nav">
-                <li className="nav-item"><Link className="nav-link" to="/login">Login</Link></li>
-                <li className="nav-item"><Link className="nav-link" to="/register">Register</Link></li>
-              </ul>
-            </div>
-          </div>
-        </nav>
-        <Routes>
-          <Route path="/" element={<Navigate to="/dashboard" />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-          <Route path="/reset-password" element={<ResetPasswordPage />} />
-          <Route path="/dashboard" element={
-            <PrivateRoute>
-              {/* <DashboardPage /> */}
-            </PrivateRoute>
-          }/>
-        </Routes>
-      </AuthProvider>
-    </Router>
-  );
-}
-
-export default App;
+export default LoginPage;

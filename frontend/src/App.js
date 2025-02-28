@@ -1,7 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route, Link, Navigate, Outlet } from "react-router-dom";
 import { useAuth, AuthProvider } from './AuthContext.js';
-
+import jwtDecode from 'jwt-decode';
 
 import Header from "./components/Header"; 
 import HomePage from "./Pages/HomePage";
@@ -10,7 +10,7 @@ import ContactPage from "./Pages/ContactPage";
 import ChatPage from "./Pages/ChatPage.js";
 
 // Import your auth-related components
-import LoginPage from "./Auth/LoginPage";
+import LoginPage from "./Auth/LoginPage.js";
 import RegisterPage from "./Auth/RegisterPage.js";
 import ForgotPasswordPage from "./Auth/ForgotPasswordPage.js";
 import ResetPasswordPage from "./Auth/ResetPasswordPage";
@@ -21,6 +21,8 @@ function PrivateOutlet() {
   const { currentUser } = useAuth();
   return currentUser ? <Outlet /> : <Navigate to="/login" replace />;
 }
+
+const API_BASE = process.env.REACT_APP_API_BASE;
 
 function App() {
   return (
