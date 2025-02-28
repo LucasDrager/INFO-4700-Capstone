@@ -1,6 +1,9 @@
 // ============================
 // Forgot Password (Request)
 // ============================
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { useAuth } from '../AuthContext';
 
 function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
@@ -28,6 +31,7 @@ function ForgotPasswordPage() {
         setError(JSON.stringify(data));
       }
     } catch (err) {
+      
       console.error(err);
       setError("Network error, please try again.");
     }
@@ -54,3 +58,5 @@ function ForgotPasswordPage() {
     </div>
   );
 }
+
+export default ForgotPasswordPage;

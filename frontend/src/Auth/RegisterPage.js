@@ -1,6 +1,9 @@
 // ============================
 // Registration Page
 // ============================
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { useAuth } from '../AuthContext';
 
 function RegisterPage() {
   const [username, setUsername] = useState("");
@@ -78,3 +81,4 @@ function RegisterPage() {
     </div>
   );
 }
+export default RegisterPage;

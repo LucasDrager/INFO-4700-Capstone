@@ -7,88 +7,19 @@ import React, { useState, useEffect, createContext, useContext } from "react";
 import { BrowserRouter as Router, Routes, Route, Link, useNavigate, Navigate, useLocation } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-// We'll mock these endpoints with some placeholders for demonstration.
-// In a real project, set baseURL and endpoints to your actual Django server.
-// For example: const API_BASE = 'http://localhost:8000/api/';
-const API_BASE = 'http://localhost:8000/api/';
-
-// ============================
-// Auth Context and Provider
-// ============================
-
-const AuthContext = createContext(null);
-
-function AuthProvider({ children }) {
-  const [authTokens, setAuthTokens] = useState(null);
-  const [currentUser, setCurrentUser] = useState(null);
-
-  const loginUser = async (username, password) => {
-    try {
-      const res = await fetch(`${API_BASE}token/`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ username, password })
-      });
-      if (res.ok) {
-        const data = await res.json();
-        setAuthTokens(data);
-        // Typically you'd decode the JWT to get user info; let's store just the username here.
-        // In real usage, we'd decode 'data.access' with something like jwt-decode.
-        setCurrentUser(username);
-        localStorage.setItem('authTokens', JSON.stringify(data));
-        return { success: true };
-      } else {
-        return { success: false, message: "Invalid credentials." };
-      }
-    } catch (error) {
-      console.error("Login error:", error);
-      return { success: false, message: "Network error." };
-    }
-  };
-
-  const logoutUser = () => {
-    setAuthTokens(null);
-    setCurrentUser(null);
-    localStorage.removeItem('authTokens');
-  };
-
-  useEffect(() => {
-    // On mount, try to restore tokens from localStorage
-    const storedTokens = localStorage.getItem('authTokens');
-    if (storedTokens) {
-      const parsed = JSON.parse(storedTokens);
-      setAuthTokens(parsed);
-      // For simplicity, let's assume we also stored the username in localStorage.
-      // Real usage: parse the token.
-      // setCurrentUser(jwtDecode(parsed.access).username) or similar
-      setCurrentUser("restored-user"); // placeholder
-    }
-  }, []);
-
-  return (
-    <AuthContext.Provider value={{ currentUser, authTokens, loginUser, logoutUser }}>
-      {children}
-    </AuthContext.Provider>
-  );
-}
-
-function useAuth() {
-  return useContext(AuthContext);
-}
+import { useAuth } from '../AuthContext';
 
 // ============================
 // Protected Route component
 // ============================
 
-function PrivateRoute({ children }) {
-  const { currentUser } = useAuth();
-  if (!currentUser) {
-    return <Navigate to="/login" replace />;
-  }
-  return children;
-}
+// function PrivateRoute({ children }) {
+//   const { currentUser } = useAuth();
+//   if (!currentUser) {
+//     return <Navigate to="/login" replace />;
+//   }
+//   return children;
+// }
 
 // ============================
 // Login Page
@@ -184,7 +115,7 @@ function App() {
           <Route path="/reset-password" element={<ResetPasswordPage />} />
           <Route path="/dashboard" element={
             <PrivateRoute>
-              <DashboardPage />
+              {/* <DashboardPage /> */}
             </PrivateRoute>
           }/>
         </Routes>

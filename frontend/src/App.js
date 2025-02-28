@@ -1,18 +1,20 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route, Link, Navigate, Outlet } from "react-router-dom";
+import { useAuth, AuthProvider } from './AuthContext.js';
+
 
 import Header from "./components/Header"; 
 import HomePage from "./Pages/HomePage";
 import AboutPage from "./Pages/AboutPage";
 import ContactPage from "./Pages/ContactPage";
-import ChatPage from "./Pages/ChatPage";
+import ChatPage from "./Pages/ChatPage.js";
 
 // Import your auth-related components
-import { AuthProvider, useAuth } from "./auth/AuthContext"; 
-import LoginPage from "./auth/LoginPage";
+import LoginPage from "./Auth/LoginPage";
 import RegisterPage from "./Auth/RegisterPage.js";
-import ForgotPasswordPage from "./Auth/ForgotPasswordPage.js/index.js";
-import ResetPasswordPage from "./auth/ResetPasswordPage";
+import ForgotPasswordPage from "./Auth/ForgotPasswordPage.js";
+import ResetPasswordPage from "./Auth/ResetPasswordPage";
+import DashboardPage from './Auth/Dashboard.js';
 
 // 1) PrivateOutlet checks if user is logged in before rendering child routes
 function PrivateOutlet() {

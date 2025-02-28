@@ -17,7 +17,7 @@ services:
     networks:
       - backend_net
     healthcheck:  # Ensures DB is ready before Django starts
-      test: ["CMD-SHELL", "pg_isready -U myuser -d mydb"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
       interval: 5s
       timeout: 3s
       retries: 5
@@ -61,11 +61,11 @@ services:
       - .env
     volumes:
       - ./frontend:/app
-      - /app/node_modules  # Avoid conflicts with host node_modules
+      - react_node_modules:/app/node_modules # Avoid conflicts with host node_modules
     ports:
       - "3000:3000"
     environment:
-      - OLLAMA_APP_API_URL=${OLLAMA_APP_API_URL}
+      - API_BASE=${API_BASE}
     networks:
       - frontend_net
     command: npm start  # Explicitly set the start command
@@ -102,3 +102,4 @@ networks:
 volumes:
   db_data:
   ollama_data:
+  react_node_modules:

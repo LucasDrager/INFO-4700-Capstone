@@ -1,6 +1,9 @@
 // ============================
 // Dashboard (Protected)
 // ============================
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { useAuth } from '../AuthContext';
 
 function DashboardPage() {
   const { currentUser, logoutUser } = useAuth();

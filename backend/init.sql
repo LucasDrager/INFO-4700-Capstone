@@ -52,7 +52,7 @@ CREATE TABLE IF NOT EXISTS chats (
 CREATE TABLE IF NOT EXISTS messages (
     message_id SERIAL PRIMARY KEY,
     chat_id INT NOT NULL,
-    sender ENUM('user', 'AI') NOT NULL,
+    sender VARCHAR(50) NOT NULL,
     content TEXT NOT NULL,
     sent_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (chat_id) REFERENCES chats(chat_id) ON DELETE CASCADE

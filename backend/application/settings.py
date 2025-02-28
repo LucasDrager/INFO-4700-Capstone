@@ -29,8 +29,16 @@ DEBUG = os.environ.get('DEBUG')
 ALLOWED_HOSTS = []
 
 # CORS settings
-CORS_ALLOW_ALL_ORIGINS = os.environ.get('CORS_ORIGINS')  # Controls which domains the middleware can access
+CORS_ALLOW_ALL_ORIGINS = False  # Controls which domains the middleware can access
 CORS_ALLOW_CREDENTIALS = True
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+    "http://localhost:8000",
+    "http://ollama:11434",
+    "http://localhost:11434",
+]
+
 
 
 # Application definition

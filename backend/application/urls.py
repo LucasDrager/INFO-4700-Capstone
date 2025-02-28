@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import path
 from django.contrib.auth import views as auth_views
 from .views import welcome_message, about_message, contact_message, parse_pdf, chat_with_ollama, get_chat_history, RegisterUserView
-from .rest_framework_simplejwt import TokenObtainPairView, TokenRefreshView
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 
 urlpatterns = [

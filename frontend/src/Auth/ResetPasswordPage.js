@@ -3,6 +3,9 @@
 // ============================
 // In reality, you'd parse uid/token from the URL.
 // For demonstration, we'll do it with query params.
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { useAuth } from '../AuthContext';
 
 function ResetPasswordPage() {
     const searchParams = new URLSearchParams(useLocation().search);
@@ -76,3 +79,4 @@ function ResetPasswordPage() {
       </div>
     );
   }
+  export default ResetPasswordPage;
