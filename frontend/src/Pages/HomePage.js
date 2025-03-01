@@ -1,29 +1,26 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import "bootstrap/dist/css/bootstrap.min.css";
-import ExtractedTextAnnotator from "../components/extracted-text-components/ExtractedTextAnnotator"; // Added the component here
+import ExtractedTextAnnotator from "../components/extracted-text-components/ExtractedTextAnnotator";
 
-//HTML
 const LandingPage = () => {
   const [pdfText, setPdfText] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [fileName, setFileName] = useState('');
-  const [files, setFiles] = useState([]); // We might have to connect to database to store the files later...
+  const [files, setFiles] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
 
-// This is a function to test the connection to the API
-  const testApiConnection = async () => {
-    try {
-      const response = await fetch('http://localhost:8000/api/parse-pdf/');
-      if (!response.ok) {
-        throw new Error('API is not reachable');
+  useEffect(() => {
+    const testApiConnection = async () => {
+      try {
+        const response = await fetch('http://localhost:8000/api/parse-pdf/');
+        if (!response.ok) throw new Error('API is not reachable');
+        console.log('API is reachable');
+      } catch (error) {
+        console.error('API connection test failed:', error);
       }
-      console.log('API is reachable');
-    } catch (error) {
-      console.error('API connection test failed:', error);
-    }
-  };
-  // Call this function when the component mounts or when needed
-  testApiConnection();
+    };
+    testApiConnection();
+  }, []);
 
   const handleFileUpload = async (event) => {
     const selectedFiles = Array.from(event.target.files);
@@ -35,12 +32,9 @@ const LandingPage = () => {
     }));
 
     setFiles(prevFiles => [...prevFiles, ...newFiles]);
-    setFileName(selectedFiles[0].name);
 
     const formData = new FormData();
     selectedFiles.forEach(file => formData.append('pdf_files', file));
-
-   // formData.append('pdf_file', selectedFiles);
 
     setIsLoading(true);
     try {
@@ -49,64 +43,57 @@ const LandingPage = () => {
         body: formData,
       });
       const data = await response.json();
-      console.log('API Response:', data);
       
       if (!response.ok) {
         throw new Error(data.message || 'Error processing PDF file');
       }
       
-
-      setPdfText(Array.isArray(data.texts) ? data.texts : []); // pdfText is an array
-
+      setPdfText(Array.isArray(data.texts) ? data.texts : []);
     } catch (error) {
       console.error('Error uploading PDF:', error);
+    } finally {
+      setIsLoading(false);
     }
-    setIsLoading(false);
   };
 
   return (
-    <div className="landing-container"> {/*parent container*/}
-      <div>
+    <div className="landing-container">
       <main className="container mt-4">
         <h2>Welcome to Lectern</h2>
-        <p></p>
       </main>
-    </div>
-      {/* Hero Section */}
+
       <motion.div
-        className="hero-section text-center "
+        className="hero-section text-center"
         initial={{ opacity: 0, y: -50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1 }}>
-
         <motion.a
           href="about"
           className="btn btn-primary btn-lg"
           whileHover={{ scale: 1.1 }}>
           Learn More About Lectern
-
         </motion.a>
       </motion.div>
 
-      
       <div className="container text-center mt-5">
         <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           transition={{ duration: 1 }}
-          className="pdf-upload-section"
-        >
+          className="pdf-upload-section">
           <h2>Upload and Parse PDF</h2>
           <div className="mt-4">
             <input
               type="file"
               accept=".pdf"
-              multiple onChange={handleFileUpload}
+              multiple
+              onChange={handleFileUpload}
               className="form-control"
               style={{ maxWidth: '300px', margin: '0 auto' }}
             />
           </div>
-          {!isLoading ? null : (
+
+          {isLoading && (
             <div className="mt-3">
               <div className="spinner-border text-primary" role="status">
                 <span className="visually-hidden">Loading...</span>
@@ -114,93 +101,62 @@ const LandingPage = () => {
             </div>
           )}
 
-          {pdfText.length === 0 ? null : (
+          {pdfText.length > 0 && (
             <div className="mt-4">
-              <ExtractedTextAnnotator pdfText={pdfText} />
+              <ExtractedTextAnnotator 
+                pdfText={pdfText} 
+                currentPage={currentPage}
+                onPageClick={(page) => {
+                  setCurrentPage(page);
+                  // Find the PDF viewer iframe and navigate to the page
+                  const pdfViewer = document.querySelector('iframe');
+                  if (pdfViewer?.contentWindow) {
+                    pdfViewer.contentWindow.postMessage({
+                      type: 'jumpToPage',
+                      page: page
+                    }, '*');
+                  }
+                }}
+              />
             </div>
           )}
         </motion.div>
       </div>
-      <div>
-      {/* <input type="file" multiple onChange={handleFileUpload} /> */}
-      {files.map((file, index) => (
-        <div key={index}>
-          <p>Selected file: {file.name}</p>
-          <iframe
-            src={file.url}
-            title={`PDF Viewer ${index}`}
-            width="50%"
-            height="600px"
-            style={{ border: 'none' }}
-          ></iframe>
-        </div>
-      ))}
-      {/*Show the PDF in a pdf reader as well!*/}
-    {/* //  This is not working as intended so far so I will have to change this later...
-   <div>
-      <input type="file" onChange={handleFileUpload} />
-      {fileName && <p>Selected file: {fileName}</p>}
-      {fileUrl && (
-        <iframe
-          src={fileUrl}
-          title="PDF Viewer"
-          width="100%"
-          height="600px"
-          style={{ border: 'none' }}
-        ></iframe>
-      )}
-    </div>  */}
 
- {/* Features Section */}
-      <div id="about" className="container text-center mt-5">
-        <motion.h2
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          transition={{ duration: 1 }}
-        >
-          Why Choose Us?
-        </motion.h2>
-        <div className="row mt-4">
-          <motion.div
-            className="col-md-4"
-            whileHover={{ scale: 1.05 }}
-            transition={{ duration: 0.3 }}
-          >
-            <i className="bi bi-lightning-fill feature-icon"></i>
-            <h4>Fast Performance</h4>
-            <p>Optimized for speed and efficiency.</p>
-          </motion.div>
-          <motion.div
-            className="col-md-4"
-            whileHover={{ scale: 1.05 }}
-            transition={{ duration: 0.3 }}
-          >
-            <i className="bi bi-lock-fill feature-icon"></i>
-            <h4>Secure</h4>
-            <p>Industry-leading security standards.</p>
-          </motion.div>
-          <motion.div
-            className="col-md-4"
-            whileHover={{ scale: 1.05 }}
-            transition={{ duration: 0.3 }}
-          >
-            <i className="bi bi-code-slash feature-icon"></i>
-            <h4>Developer Friendly</h4>
-            <p>Built with modern technologies.</p>
-          </motion.div>
-        </div>
-      </div>
-      </div>
+      <div className="pdf-viewer-container">
+        {files.map((file, index) => (
+          <div key={index} className="pdf-viewer-item">
+            <iframe
+              src={file.url}
+              title={`PDF Viewer ${index}`}
+              width="50%"
+              height="600px"
+              style={{ border: 'none' }}
+              onLoad={(e) => {
+                // Add message listener for PDF.js events
+                window.addEventListener('message', (event) => {
+                  if (event.data?.type === 'pageChanged') {
+                    setCurrentPage(event.data.page);
+                  }
+                });
 
-      {/* Footer */}
-      <motion.footer
-        className="footer mt-5 text-white text-center"
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        transition={{ duration: 1 }}
-      >
-        <p>© 2025 Lectern. All rights reserved.</p>
-      </motion.footer>
+                // Inject page change listener into PDF viewer
+                const script = `
+                  if (window.PDFViewerApplication) {
+                    window.PDFViewerApplication.eventBus.on('pagechanging', function(evt) {
+                      window.parent.postMessage({
+                        type: 'pageChanged',
+                        page: evt.pageNumber
+                      }, '*');
+                    });
+                  }
+                `;
+                e.target.contentWindow.eval(script);
+              }}
+            />
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

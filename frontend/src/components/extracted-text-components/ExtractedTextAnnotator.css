@@ -7,7 +7,7 @@
 }
 
 .text-panel {
-  flex: 1;
+  flex: 1fr;
   padding: 20px;
   background-color: #f8f9fa;
   border-radius: 8px;
@@ -24,16 +24,43 @@
 }
 
 .annotation-panel {
-  flex: 1;
-  padding: 20px;
+  flex: 0 0 350px;
+  padding: 25px;
   background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  margin-left: 30px;
+  height: fit-content;
+  position: sticky;
+  top: 20px;
 }
 
 .page-text {
-  margin-bottom: 20px;
+  margin-bottom: 40px;
   cursor: pointer;
+  padding: 20px;
+  border-radius: 8px;
+  transition: background-color 0.2s ease;
+}
+
+.page-text:hover {
+  background-color: rgba(0, 0, 0, 0.02);
+}
+
+.page-text.current-page {
+  background-color: rgba(40, 167, 69, 0.05);
+  border-left: 4px solid #28a745;
+}
+
+.page-text h3 {
+  font-family: 'Helvetica Neue', sans-serif;
+  color: #666;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 20px;
+  border-bottom: none;
+  padding-left: 30px;
 }
 
 .selectable-text {
@@ -41,12 +68,15 @@
   line-height: 1.8;
   cursor: text;
   user-select: text;
-  font-size: 16px;
+  font-size: 18px;
   color: #2c3e50;
-  padding: 15px;
+  padding: 20px 30px;
   background-color: #fff;
   border-radius: 6px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  font-family: 'Georgia', serif;
+  letter-spacing: 0.3px;
+  max-width: 70ch;
+  margin: 0 auto;
 }
 
 .selectable-text p {
@@ -89,14 +119,80 @@
   font-style: italic;
 }
 
-.add-annotation-btn {
+.text-panel-header {
+  position: sticky;
+  top: 0;
+  background-color: #fff;
+  padding: 20px 30px;
+  border-bottom: 1px solid #e9ecef;
+  margin: -40px -40px 30px -40px;
+  backdrop-filter: blur(8px);
+  background-color: rgba(255, 255, 255, 0.95);
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.reading-timer {
+  background-color: #28a745;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-weight: 500;
+  font-size: 14px;
+  letter-spacing: 0.5px;
+  font-family: 'SF Mono', 'Menlo', monospace;
+}
+
+.button-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.primary-button-group {
+  display: flex;
+  gap: 10px;
+}
+
+.add-annotation-btn,
+.highlight-btn,
+.search-google-btn {
   background-color: #007bff;
   color: white;
   border: none;
   padding: 8px 16px;
   border-radius: 4px;
   cursor: pointer;
+  flex: 1;
+}
+
+.highlight-btn {
+  background-color: #ffc107;
+  color: #000;
+}
+
+.search-google-btn {
+  background-color: #4285f4;
+  color: white;
   width: 100%;
+}
+
+.add-annotation-btn:disabled,
+.highlight-btn:disabled,
+.search-google-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.highlighted-text {
+  background-color: #fff3cd;
+  padding: 2px 0;
 }
 
 .add-annotation-btn:disabled {

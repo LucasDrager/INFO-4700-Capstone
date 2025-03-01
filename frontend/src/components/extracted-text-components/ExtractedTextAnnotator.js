@@ -1,11 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import './ExtractedTextAnnotator.css';
 
-const ExtractedTextAnnotator = ({ pdfText }) => {
+// Function to format time in MM:SS
+const formatTime = (seconds) => {
+  const mins = Math.floor(seconds / 60);
+  const secs = seconds % 60;
+  return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+};
+
+const ExtractedTextAnnotator = ({ pdfText, currentPage, onPageClick }) => {
   const [extractedText, setExtractedText] = useState([]);
   const [annotations, setAnnotations] = useState([]);
   const [selectedText, setSelectedText] = useState('');
   const [currentComment, setCurrentComment] = useState('');
+  const [highlights, setHighlights] = useState([]);
+  const [readingTime, setReadingTime] = useState(0);
+  const [isReading, setIsReading] = useState(false);
 
   // Formatting Text!!
   // Format the extracted text for better readability
@@ -56,12 +66,51 @@ const ExtractedTextAnnotator = ({ pdfText }) => {
     setExtractedText(formattedText);
   }, [pdfText]);
 
+  // Reading timer effect
+  useEffect(() => {
+    let interval;
+    if (isReading) {
+      interval = setInterval(() => {
+        setReadingTime(prev => prev + 1);
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [isReading]);
+
+  // Start timer when component mounts
+  useEffect(() => {
+    setIsReading(true);
+    return () => setIsReading(false);
+  }, []);
+
   // Handle text selection
   const handleTextSelection = () => {
     const selection = window.getSelection();
     const selectedText = selection.toString().trim();
     if (selectedText) {
       setSelectedText(selectedText);
+    }
+  };
+
+  // Add highlight
+  const addHighlight = () => {
+    if (selectedText) {
+      const selection = window.getSelection();
+      const range = selection.getRangeAt(0);
+      const span = document.createElement('span');
+      span.className = 'highlighted-text';
+      range.surroundContents(span);
+      setHighlights([...highlights, selectedText]);
+      setSelectedText('');
+      selection.removeAllRanges();
+    }
+  };
+
+  // Search on Google
+  const searchOnGoogle = () => {
+    if (selectedText) {
+      const searchQuery = encodeURIComponent(selectedText); // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/encodeURIComponent
+      window.open(`https://www.google.com/search?q=${searchQuery}`, '_blank');
     }
   };
 
@@ -91,9 +140,17 @@ const ExtractedTextAnnotator = ({ pdfText }) => {
   return (
     <div className="container">
       <div className="text-panel">
-        <h2>Extracted Text</h2>
+        <div className="text-panel-header">
+          <div className="reading-timer">
+            Reading Time: {formatTime(readingTime)}
+          </div>
+        </div>
         {extractedText.map((pageData, index) => (
-          <div key={index} className="page-text">
+          <div 
+            key={index} 
+            className={`page-text ${currentPage === index + 1 ? 'current-page' : ''}`}
+            onClick={() => onPageClick(index + 1)}
+          >
             <h3>Page {pageData.page}</h3>
             <p onMouseUp={handleTextSelection} className="selectable-text">
               {pageData.text}
@@ -116,13 +173,31 @@ const ExtractedTextAnnotator = ({ pdfText }) => {
             placeholder="Add your comment here..."
             className="annotation-textarea comment-textarea"
           />
-          <button 
-            onClick={addAnnotation} 
-            className="add-annotation-btn"
-            disabled={!selectedText.trim()}
-          >
-            Add Annotation
-          </button>
+          <div className="button-container">
+            <div className="primary-button-group">
+              <button 
+                onClick={addHighlight} 
+                className="highlight-btn"
+                disabled={!selectedText.trim()}
+              >
+                Highlight Text
+              </button>
+              <button 
+                onClick={addAnnotation} 
+                className="add-annotation-btn"
+                disabled={!selectedText.trim()}
+              >
+                Add Annotation
+              </button>
+            </div>
+            <button
+              onClick={searchOnGoogle}
+              className="search-google-btn"
+              disabled={!selectedText.trim()}
+            >
+              Search on Google
+            </button>
+          </div>
         </div>
         <div className="annotation-list">
           {annotations.map((ann, i) => (
