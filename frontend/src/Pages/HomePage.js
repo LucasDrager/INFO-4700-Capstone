@@ -17,7 +17,11 @@ const LandingPage = () => {
   useEffect(() => {
     const testApiConnection = async () => {
       try {
-        const response = await fetch(`${API_BASE_URL}/api/parse-pdf/`);
+        const response = await fetch(`${API_BASE_URL}/api/parse-pdf/`, {
+          headers: {
+            'Accept': 'application/json',
+          },
+        });
         if (!response.ok) {
           const errorData = await response.json();
           throw new Error(errorData.message || 'API is not reachable');
@@ -48,6 +52,9 @@ const LandingPage = () => {
     try {
       const response = await fetch(`${API_BASE_URL}/api/parse-pdf/`, {
         method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+        },
         body: formData,
       });
       const data = await response.json();

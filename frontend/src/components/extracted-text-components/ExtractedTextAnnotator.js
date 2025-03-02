@@ -159,7 +159,9 @@ const ExtractedTextAnnotator = ({ pdfText, currentPage, onPageClick }) => {
   const handleSummarize = async () => {
     if (selectedText) {
       try {
-        const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000';
+        const API_BASE_URL = window.location.hostname === 'localhost' 
+          ? 'http://localhost:8000'  // Local development
+          : 'http://backend:8000';    // Docker environment
         const response = await fetch(`${API_BASE_URL}/api/summarize/`, {
           method: 'POST',
           headers: {

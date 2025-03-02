@@ -9,8 +9,9 @@ import json
 import traceback
 import re
 
-# Initialize the summarization pipeline
+# Initialize the summarization pipeline with a specific model
 summarizer = pipeline("summarization")
+
 
 def welcome_message(request):
     return JsonResponse({"message": "Welcome to My Website!"})
@@ -125,18 +126,23 @@ def get_chat_history(request):
 # Text summarization endpoint
 @csrf_exempt
 def summarize_text(request):
+    if request.method != "POST":
+        return JsonResponse({"error": "Invalid request method"}, status=400)
+
     try:
         data = json.loads(request.body)
         text = data.get('text', '')
         
         if not text:
             return JsonResponse({'error': 'No text provided'}, status=400)
-            
-        # Generate summary
+
+        # Use BART model for summarization
         summary = summarizer(text, max_length=130, min_length=30, do_sample=False)
         
         return JsonResponse({
             'summary': summary[0]['summary_text']
         })
     except Exception as e:
+        print(f"Error in summarize_text: {str(e)}")
+        traceback.print_exc()
         return JsonResponse({'error': str(e)}, status=500)
