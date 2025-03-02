@@ -2,11 +2,15 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from .models import ChatMessage
 from PyPDF2 import PdfReader
+from transformers import pipeline
 import httpx
 import ollama
 import json
 import traceback
 import re
+
+# Initialize the summarization pipeline
+summarizer = pipeline("summarization")
 
 def welcome_message(request):
     return JsonResponse({"message": "Welcome to My Website!"})
@@ -117,3 +121,22 @@ def get_chat_history(request):
     return JsonResponse({
         "messages": [{"sender": m.sender, "text": m.text} for m in messages]
     })
+
+# Text summarization endpoint
+@csrf_exempt
+def summarize_text(request):
+    try:
+        data = json.loads(request.body)
+        text = data.get('text', '')
+        
+        if not text:
+            return JsonResponse({'error': 'No text provided'}, status=400)
+            
+        # Generate summary
+        summary = summarizer(text, max_length=130, min_length=30, do_sample=False)
+        
+        return JsonResponse({
+            'summary': summary[0]['summary_text']
+        })
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)

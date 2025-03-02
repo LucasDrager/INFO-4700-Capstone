@@ -58,11 +58,52 @@ const ExtractedTextAnnotator = ({ pdfText, currentPage, onPageClick }) => {
   };
 
   useEffect(() => {
-    // Transform and format the pdfText array
-    const formattedText = pdfText.map((text, index) => ({
-      page: index + 1,
-      text: formatText(text)
-    }));
+    // Split text into pages based on common page indicators
+    const detectAndSplitPages = (text) => {
+      // Common page break patterns
+      const pageBreakPatterns = [
+        /Page\s+\d+\s+of\s+\d+/i,  // "Page X of Y"
+        /^Page\s+\d+$/im,           // "Page X" at start of line
+        /\n\s*\d+\s*\n/,           // Standalone page numbers
+        /\[Page\s*\d+\]/i,         // [Page X]
+      ];
+
+      // Split text into initial chunks by double newlines
+      let chunks = text.split(/\n\s*\n/);
+      let pages = [];
+      let currentPage = [];
+      let pageNumber = 1;
+
+      chunks.forEach((chunk) => {
+        // Check if chunk contains a page break indicator
+        const isPageBreak = pageBreakPatterns.some(pattern => pattern.test(chunk));
+
+        if (isPageBreak) {
+          // If we have content in currentPage, save it as a page
+          if (currentPage.length > 0) {
+            pages.push({
+              page: pageNumber++,
+              text: formatText(currentPage.join('\n\n'))
+            });
+            currentPage = [];
+          }
+        }
+        currentPage.push(chunk);
+      });
+
+      // Add the last page
+      if (currentPage.length > 0) {
+        pages.push({
+          page: pageNumber,
+          text: formatText(currentPage.join('\n\n'))
+        });
+      }
+
+      return pages;
+    };
+
+    // Process each text chunk from pdfText
+    const formattedText = pdfText.flatMap(text => detectAndSplitPages(text));
     setExtractedText(formattedText);
   }, [pdfText]);
 
@@ -109,8 +150,34 @@ const ExtractedTextAnnotator = ({ pdfText, currentPage, onPageClick }) => {
   // Search on Google
   const searchOnGoogle = () => {
     if (selectedText) {
-      const searchQuery = encodeURIComponent(selectedText); // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/encodeURIComponent
+      const searchQuery = encodeURIComponent(selectedText);
       window.open(`https://www.google.com/search?q=${searchQuery}`, '_blank');
+    }
+  };
+
+  // Summarize text
+  const handleSummarize = async () => {
+    if (selectedText) {
+      try {
+        const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000';
+        const response = await fetch(`${API_BASE_URL}/api/summarize/`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ text: selectedText })
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        setCurrentComment(data.summary);
+      } catch (error) {
+        console.error('Error:', error);
+        alert('Failed to get summary: ' + error.message);
+      }
     }
   };
 
@@ -190,13 +257,22 @@ const ExtractedTextAnnotator = ({ pdfText, currentPage, onPageClick }) => {
                 Add Annotation
               </button>
             </div>
-            <button
-              onClick={searchOnGoogle}
-              className="search-google-btn"
-              disabled={!selectedText.trim()}
-            >
-              Search on Google
-            </button>
+            <div className="secondary-button-group">
+              <button
+                onClick={searchOnGoogle}
+                className="search-google-btn"
+                disabled={!selectedText.trim()}
+              >
+                Search on Google
+              </button>
+              <button
+                onClick={handleSummarize}
+                className="summarize-btn"
+                disabled={!selectedText.trim()}
+              >
+                Summarize Text
+              </button>
+            </div>
           </div>
         </div>
         <div className="annotation-list">

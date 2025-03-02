@@ -57,8 +57,11 @@ services:
       - /app/node_modules  # Avoid conflicts with host node_modules
     ports:
       - "3000:3000"
+    environment:
+      - REACT_APP_API_URL=http://backend:8000
     networks:
       - frontend_net
+      - backend_net
     command: npm start  # Explicitly set the start command
     stdin_open: true  # Keep container open for interactive mode
     tty: true

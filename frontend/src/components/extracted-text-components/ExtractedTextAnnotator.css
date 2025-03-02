@@ -232,3 +232,73 @@
 .annotation-item p {
   margin: 5px 0;
 }
+
+.button-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.primary-button-group,
+.secondary-button-group {
+  display: flex;
+  gap: 10px;
+}
+
+.primary-button-group button,
+.secondary-button-group button {
+  flex: 1;
+}
+
+.search-google-btn {
+  background-color: #4285f4;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.summarize-btn {
+  background-color: #34a853;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.search-google-btn:hover {
+  background-color: #357abd;
+}
+
+.summarize-btn:hover {
+  background-color: #2d8f47;
+}
+
+.search-google-btn:disabled,
+.summarize-btn:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.search-google-btn:hover {
+  background-color: #357abd;
+}
+
+.summarize-btn:hover {
+  background-color: #2d8f47;
+}
+
+.search-google-btn:disabled,
+.summarize-btn:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}

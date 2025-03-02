@@ -9,11 +9,19 @@ const LandingPage = () => {
   const [files, setFiles] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
 
+  // API base URL - determine based on hostname
+  const API_BASE_URL = window.location.hostname === 'localhost' 
+    ? 'http://localhost:8000'  // Local development
+    : 'http://backend:8000';    // Docker environment
+
   useEffect(() => {
     const testApiConnection = async () => {
       try {
-        const response = await fetch('http://localhost:8000/api/parse-pdf/');
-        if (!response.ok) throw new Error('API is not reachable');
+        const response = await fetch(`${API_BASE_URL}/api/parse-pdf/`);
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.message || 'API is not reachable');
+        }
         console.log('API is reachable');
       } catch (error) {
         console.error('API connection test failed:', error);
@@ -38,7 +46,7 @@ const LandingPage = () => {
 
     setIsLoading(true);
     try {
-      const response = await fetch('http://localhost:8000/api/parse-pdf/', {
+      const response = await fetch(`${API_BASE_URL}/api/parse-pdf/`, {
         method: 'POST',
         body: formData,
       });
@@ -108,13 +116,14 @@ const LandingPage = () => {
                 currentPage={currentPage}
                 onPageClick={(page) => {
                   setCurrentPage(page);
-                  // Find the PDF viewer iframe and navigate to the page
+                  // Find the PDF viewer iframe and navigate to the page || This doesnt work at all
                   const pdfViewer = document.querySelector('iframe');
-                  if (pdfViewer?.contentWindow) {
-                    pdfViewer.contentWindow.postMessage({
-                      type: 'jumpToPage',
-                      page: page
-                    }, '*');
+                  if (pdfViewer?.contentWindow?.PDFViewerApplication) {
+                    try {
+                      pdfViewer.contentWindow.PDFViewerApplication.page = page;
+                    } catch (error) {
+                      console.error('Failed to navigate PDF:', error);
+                    }
                   }
                 }}
               />
@@ -133,25 +142,38 @@ const LandingPage = () => {
               height="600px"
               style={{ border: 'none' }}
               onLoad={(e) => {
-                // Add message listener for PDF.js events
-                window.addEventListener('message', (event) => {
-                  if (event.data?.type === 'pageChanged') {
-                    setCurrentPage(event.data.page);
-                  }
-                });
+                const iframe = e.target;
+                const checkPDFViewer = setInterval(() => {
+                  try {
+                    if (iframe.contentWindow.PDFViewerApplication) {
+                      clearInterval(checkPDFViewer);
+                      
+                      // Add message listener for PDF.js events
+                      const messageHandler = (event) => {
+                        if (event.data?.type === 'pageChanged') {
+                          setCurrentPage(event.data.page);
+                        }
+                      };
+                      window.addEventListener('message', messageHandler);
 
-                // Inject page change listener into PDF viewer
-                const script = `
-                  if (window.PDFViewerApplication) {
-                    window.PDFViewerApplication.eventBus.on('pagechanging', function(evt) {
-                      window.parent.postMessage({
-                        type: 'pageChanged',
-                        page: evt.pageNumber
-                      }, '*');
-                    });
+                      // Cleanup listener when component unmounts
+                      return () => window.removeEventListener('message', messageHandler);
+
+                      // Setup PDF viewer event listeners
+                      iframe.contentWindow.PDFViewerApplication.eventBus.on('pagechanging', (evt) => {
+                        window.parent.postMessage({
+                          type: 'pageChanged',
+                          page: evt.pageNumber
+                        }, '*');
+                      });
+                    }
+                  } catch (error) {
+                    console.log('PDF viewer not ready yet...');
                   }
-                `;
-                e.target.contentWindow.eval(script);
+                }, 100);
+
+                // Clear interval after 10 seconds to prevent infinite checking
+                setTimeout(() => clearInterval(checkPDFViewer), 10000);
               }}
             />
           </div>
