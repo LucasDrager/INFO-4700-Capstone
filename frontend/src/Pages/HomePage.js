@@ -10,9 +10,7 @@ const LandingPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
 
   // API base URL - determine based on hostname
-  const API_BASE_URL = window.location.hostname === 'localhost' 
-    ? 'http://localhost:8000'  // Local development
-    : 'http://backend:8000';    // Docker environment
+  const API_BASE_URL = 'http://localhost:8000';
 
   useEffect(() => {
     const testApiConnection = async () => {
