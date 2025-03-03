@@ -12,13 +12,15 @@ import Dashboard from "./Pages/Dashboard";
 //components 
 import Header from "./components/Header";  // Common header for all pages
 
+import './NavBar.css'; // some css for the navbar
+
 
 function App() { // This is what will render on every single page
   return (
     <Router>
       <Header /> {/* Global header */}
       <div style={{ textAlign: "center", marginTop: "20px" }}>
-        <nav>
+        <nav className="navbar">
           <Link to="/" style={{ margin: "10px" }}>Home</Link>
           <Link to="/about" style={{ margin: "10px" }}>About</Link>
           <Link to="/contact" style={{ margin: "10px" }}>Contact</Link>
