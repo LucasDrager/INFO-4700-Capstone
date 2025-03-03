@@ -3,7 +3,11 @@
 import React from "react";
 
 const UserProfileWidget = () => {
-  return <div>User Profile</div>;
+  return (
+    <div className="userProfileContainer">
+      <button className="ProfileBtn">PROFILE BUTTON</button>
+    </div>
+  )
 };
 
 export default UserProfileWidget;
