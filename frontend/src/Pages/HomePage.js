@@ -10,7 +10,7 @@ const LandingPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
 
   // API base URL - determine based on hostname
-  const API_BASE_URL = 'http://localhost:8000';
+  const API_BASE_URL = "http://localhost:8000";
 
   useEffect(() => {
     const testApiConnection = async () => {
