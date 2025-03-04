@@ -50,6 +50,11 @@ services:
         condition: service_healthy  # Wait for PostgreSQL to be ready
     networks:
       - backend_net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
 
   #####################
   # React Frontend    #
@@ -71,6 +76,9 @@ services:
     command: npm start  # Explicitly set the start command
     stdin_open: true  # Keep container open for interactive mode
     tty: true
+    depends_on:
+    backend:
+      condition: service_healthy  # Wait for Django backend to be ready
 
   #####################
   # Ollama AI Model   #
