@@ -94,6 +94,13 @@ services:
     - NVIDIA_DRIVER_CAPABILITIES=compute,utility
     - ROC_ENABLE_PRE_VEGA=1 # Enables AMD ROCm support (for older AMD GPUs)
     - OLLAMA_USE_METAL=1 # Enables Apple Metal GPU support
+    deploy:
+        resources:
+          reservations:
+            devices:
+              - driver: nvidia
+                count: all
+                capabilities: [compute, utility]
 
 networks:
   backend_net:
