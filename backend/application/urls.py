@@ -16,9 +16,15 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from .views import welcome_message, about_message, contact_message, parse_pdf, chat_with_ollama, get_chat_history
+from django.http import HttpResponse
+from .views import welcome_message, about_message, contact_message, parse_pdf, chat_with_ollama, get_chat_history, summarize_text
+
+def health_check(request):
+    return HttpResponse('Backend is running')
 
 urlpatterns = [
+    path('', health_check),  # Root URL pattern
+    path('api/summarize/', summarize_text),
     path('api/welcome/', welcome_message),
     path('api/about/', about_message),
     path('api/contact/', contact_message),
