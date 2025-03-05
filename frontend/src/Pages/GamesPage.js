@@ -1,6 +1,11 @@
 import React, { useState } from "react";
 import "../components/games-components/gamesstyle.css";
-
+const GamesPageToggleSidebar = () => {
+    const [isSidebarOpen, setSidebarOpen] = useState(false);
+    const toggleSidebar = () => {
+        setSidebarOpen(!isSidebarOpen);
+      };
+  };
 const GamesPage = () => {
     const [activeTab, setActiveTab] = useState('flashcards');
 

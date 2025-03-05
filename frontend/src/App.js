@@ -7,16 +7,14 @@ import AboutPage from "./Pages/AboutPage";
 import ContactPage from "./Pages/ContactPage";
 import ChatPage from "./Pages/chatPage";
 import GamesPage from "./Pages/GamesPage";
+import LoginPage from "./Pages/LoginPage";
 //figma design pages
 import Settings from "./Pages/Settings";
 import Dashboard from "./Pages/Dashboard";
 //components 
 import Header from "./components/Header";  // Common header for all pages
 
-  const toggleSidebar = () => {
-    setSidebarOpen(!isSidebarOpen);
-  };
-
+const App = () => {
   return (
     <Router>
       <Header /> {/* Global header */}
@@ -27,6 +25,7 @@ import Header from "./components/Header";  // Common header for all pages
           <Link to="/contact" style={{ margin: "10px" }}>Contact</Link>
           <Link to="/LLM" style={{ margin: "10px" }}>LLM</Link>
           <Link to="/Dashboard" style={{ margin: "10px" }}>Dashboard</Link>
+          <Link to="/login" style={{ margin: "10px" }}>Login</Link>
         </nav>
         <Routes>
           <Route path="/" element={<HomePage />} />
@@ -35,10 +34,11 @@ import Header from "./components/Header";  // Common header for all pages
           <Route path="/LLM" element={<ChatPage />} />
           <Route path="/Dashboard" element={<Dashboard />} />
           <Route path="/Settings" element={<Settings />} />
+          <Route path="/login" element={<LoginPage />} />
         </Routes>
       </div>
     </Router>
   );
-}
+};
 
 export default App;
