@@ -4,7 +4,13 @@
 import React from 'react';
 
 const UploadWidget = () => {
-  return <div>Upload Widget</div>;
+  return ( 
+  <div>
+      <button className="createFolderBTN">New File</button>
+      <button className="createFolderBTN">Create Folder</button>
+  </div>);
 };
 
 export default UploadWidget;
+
+

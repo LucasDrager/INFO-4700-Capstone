@@ -6,7 +6,10 @@
 //the sidebar will show a user profile button at the top, and then the main widget for uploading files or creating folders. then at the bottom the plant widget. 
 import React from 'react';
 import SidebarDashboard from '../components/dashboard-components/SidebarDashboard'; // Import the Sidebar component you created
-import '../index.css'
+
+import FileExplorerWidget from '../components/dashboard-components/FileExplorerWidget'; 
+import MyLibraryWidget from '../components/dashboard-components/MyLibraryWidget';
+import ButtonsDashboardWidget from '../components/dashboard-components/ButtonsDashboard';
 
 
 function DashboardPage() {
@@ -14,8 +17,10 @@ function DashboardPage() {
       <div className="dashboard-container">
         <SidebarDashboard />
         <div className="dashboard-mainContentArea">
-          <h1>Dashboard Content</h1>
-          {/* Add additional dashboard widgets here */}
+          <MyLibraryWidget />
+          <FileExplorerWidget />
+          {/*it would go right here and be called fileExplorerWidget*/}
+          <ButtonsDashboardWidget/>
         </div>
       </div>
     );

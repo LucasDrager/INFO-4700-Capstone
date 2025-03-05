@@ -1,3 +1,9 @@
+
+
+html {
+  font-size: 16px; /* DO NOT CHANGE!! we use root ems which needs this to stay at 16. */
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -19,117 +25,389 @@ code {
   text-align: center;
 }
 
-/* DASHBOARD */ 
+/* DASHBOARD */
+/* LARGER PAGE CONTAINER: hold elements side by side */
 .dashboard-container {
   display: flex;
+  flex-direction: row;
+}
+
+/* MAIN CONTENT OF DASHBOARD PAGE*/
+.dashboard-mainContentArea { 
+  flex: 1;
+  padding: 1rem;
+  flex-direction: column;
+  margin-left: 21.875rem; /* sidebar isnt a flex item, so we need to offset it's width so content doesnt fold under it*/
+}
+
+/* MY LIBRARY WIDGET */ 
+.myLib-DashboardWidget { 
+  height: 10rem;
+  width: 65rem; 
+  min-height: 150px;
+  background-color: white;
+  border: .5px solid #ccc;
+  border-radius: 8px;
+  box-sizing: border-box;
+  padding: 1rem;
+  display: flex;
+  margin-bottom: 1rem;
+  flex-direction: column;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.myLib-DashboardWidget.open {
+  height: 22rem;              
+}
+
+.myLib-Header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.myLib-Search { 
+  width: 30rem;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.myLib-Folders { 
+  display: flex;
+  gap: 1rem; /* spacing between folder buttons */
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.folder-button {
+  background-color: #ccc;
+  border: none;
+  border-radius: 4px;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.folder-button:hover {
+  background-color: #bbb;
+}
+
+.myLib-PDFSection {
+  display: flex;
+  gap: 1rem;
+  background-color: #e6ffe6; /* Light green background, */
+  border-radius: 4px;
+  margin-top: 1rem;
+}
+
+/* PDF ITEMS CSS */
+.pdf-item {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 80px; 
+  text-align: center;
+}
+
+/* Placeholder for an actual PDF icon */
+.pdf-icon {
+  width: 5rem;            /*  60px (3.75rem if 1rem = 16px) */
+  height: 7rem;              /*  80px */
+  background-color: #ccc;    /* Placeholder color */
+  border: 1px solid #999;
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
 }
 
 
-/* SideBarDashboard.jsx */
+/* FILE EXPLORER */ 
 
-/* sidebar itself */
+/* FILE EXPLORER MAIN CONTAINER */
+.FE-WidgetContainer {
+  height: 25rem; 
+  width: 65rem; /* Match MyLibraryWidget width */
+  min-height: 150px;
+  border: .5px solid #ccc;
+  border-radius: 8px;
+  background-color: white;
+  box-sizing: border-box;
+  padding: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* INNER CONTAINER WITH SHADOW EFFECT */
+.FE-InnerContainer {
+  width: 100%;
+  height: 100%;
+  background-color: #e0e0e0;
+  border-radius: 8px;
+  padding: 1rem; /* delete this and the docs will not be tightly packed*/
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  align-items: center;
+  box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* PDF ITEM CONTAINER */
+.FE-PdfItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 6rem; /* Adjusted for proportion */
+  margin: 0.5rem;
+  text-align: center;
+}
+
+/* PDF ICON STYLING */
+.FE-PdfIcon {
+  width: 5rem; /* Match MyLibraryWidget */
+  height: 7rem; /* Maintain document proportions */
+  background-color: white;
+  border: 1px solid #aaa;
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
+}
+
+/* PDF TITLE */
+.FE-PdfTitle {
+  font-size: 0.85rem;
+  color: black;
+}
+
+/*BUTTOSN*/
+
+.BDW-Container {
+  width: 65rem; /* Same as MyLibrary and FileExplorer */
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  position: relative; /* Ensures it gets covered when MyLibrary expands */
+  height: 12.5rem; /* 200px, as seen in the screenshot */
+  margin-top: 1rem;
+}
+
+/* BUTTON STYLING */
+.BDW-Button {
+  width: 10rem; /* Square shape */
+  height: 10rem;
+  border: none;
+  border-radius: 8px;
+  background-color: #f0f0f0; /* Light gray to match UI */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 3rem; /* Icon size */
+  cursor: pointer;
+  transition: background 0.2s ease-in-out;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.BDW-Button:hover {
+  background-color: #d9d9d9;
+}
+
+.BDW-Icon {
+  font-size: 4rem;
+}
+
+/* SidebarDashboard.jsx */
+/* Sidebar itself */
 .sidebar-dashboard {
   position: fixed;
   left: 0;
   top: 0;
-  width: 25vw; /*collapsed width*/
+  width: 21.875rem; /* 350px converted: 350/16 */
   height: 100vh;
-  padding: 25px; 
+  padding: 1.5625rem; /* 25px */
   background-color: #747272;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   justify-content: space-between;
 }
 
-.sidebar-tab {
-  cursor: pointer;
-  background-color:#f8f8f8;; /* just needs to be same as sidebar-dashboard */
-  padding: 10px;
-  text-align: center;
-  border-radius: 4px;
+/* Container for rightmost column of sidebar */
+.sidebar-dashboardContainer {
+  width: 18.75rem; /* 300px */
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background-color: #919191;
 }
 
-/* all widgets inside sidebar */
+/* All widgets inside sidebar */
 .sidebar-top,
-.sidebar-upload,
-.sidebar-tab,
-.sidebar-plant{
-  margin-bottom: 20px;
+.sidebar-upload {
+  margin-bottom: 1.25rem; /* 20px */
 }
 
-.sidebar-tab { 
-  left: 100%; 
+/* Sidebar upload widget */
+.sidebar-upload {
+  height: 4.6875rem; /* 75px */
+  width: 80%;
+  margin: 0 1.875rem; /* 30px */
+  background-color: gray;
+}
+
+/* Sidebar tab for settings */
+.sidebar-tab {
+  left: 100%;
   position: absolute;
   top: 45%;
   transform: translateX(-50%);
   cursor: pointer;
-  background-color: #747272;;
-  padding: 20px;
-  height: 50px;
-  text-align: center;
-  border-radius: 4px;
+  background-color: #747272;
+  height: 3.125rem; /* 50px */
+  width: 0.9375rem;  /* 15px */
+  border-radius: 0.25rem; /* 4px */
 }
 
-.sidebar-tab a { 
+/* Sidebar tab triangle icon */
+.triangle {
+  width: 0;
+  height: 0;
+  transform: translateY(65%);
+  border-top: 0.625rem solid transparent;   /* 10px */
+  border-bottom: 0.625rem solid transparent; /* 10px */
+  border-left: 0.625rem solid white;         /* 10px */
+}
+
+.rightTriangle {
+  width: 0;
+  height: 0;
+  transform: translateY(65%);
+  border-top: 0.625rem solid transparent;
+  border-bottom: 0.625rem solid transparent;
+  border-right: 0.625rem solid white; /* 10px */
+}
+
+.sidebar-tab a {
   color: white;
   text-decoration: none;
 }
 
-.sidebar-plant{ /* this will eventually need to dissapear when vh gets too small for min img size! */
-  height: 40vh; 
-  width: 80%;
-  margin: auto; /*center content*/
+/* Sidebar plant widget */
+.sidebar-plant {
+  height: 18.75rem; /* 300px */
+  width: 15.625rem; /* 250px */
+  margin: 0 1.5625rem; /* 25px */
   background-color: lightblue;
   position: absolute;
-  bottom: 3vh; 
+  bottom: 3vh; /* keep using vh if you want relative to viewport height */
 }
 
+/* SETTINGS */
 
-/*SETTINGS */
 
-
-/* SETTINGS */ 
-.settings-container {
+/* SETTINGS WIDGETS */ 
+/* SETTINGS WIDGETS CONTAINER */
+.SW-Container {
   display: flex;
+  width: 60rem; /* Matches sidebar-settingsMainContent */
+  height: 47.84rem; /* 765.5px converted to rem */
+  gap: 1.5625rem; /* 25px spacing */
+  padding: 1.25rem; /* 20px padding inside */
 }
 
-.settings-mainContentArea {
-  width: 75vw;
-  padding: 25px;
+
+/* SETTINGS WIDGETS CONTAINER */
+.SW-Container {
+  display: flex;
+  flex-direction: row;
+  width: 55rem; 
+  height: 47.8rem; 
+  gap: 1.5rem;
+  padding: 1.5rem; 
 }
 
-
-/* SETTINGS version of sidebar */ 
-
-.sidebar-settings {
-  position: fixed;             
-  top: 0;
-  width: 25vw;    
-  height: 100vh;
-  padding: 25px;
-  background-color: #747272;
+.SW-Left {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-} 
+  width: 50%; 
+  gap: 1.5rem;
+}
 
+.SW-TallWidget {
+  height: 25rem; 
+  background-color: #d9d9d9;
+  border-radius: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.5rem;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+}
+
+.SW-SquareWidget {
+  width: 100%; 
+  height: 18rem; 
+  background-color: #e6e6e6;
+  border-radius: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.5rem;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+}
+
+/* Settings version of the sidebar from dashboard */
+.sidebar-settings {
+  position: fixed;
+  top: 0;
+  width: 80rem; 
+  height: 100%;
+  padding: 1.5625rem; /* 25px */
+  background-color: #747272;
+  display: flex;
+  flex-direction: row;
+  gap: 1.5625rem; /* 25px */
+  justify-content: space-between;
+}
+
+.sidebar-settingsMainContent {
+  width: 60rem; 
+  height: 100%;
+}
+
+/* SETTINGS version of sidebar */
+.sidebar-settingsMimic {
+  width: 18.75rem; /* 300px */
+  height: 100%;
+  flex: 0 0 auto;
+  border-radius: .5rem;
+  display: flex;
+  flex-direction: column;
+  background-color: #919191;
+}
+
+/* Widgets inside settings sidebar */
 .sidebar-settingsTop,
-.sidebar-settingsUpload,
-.sidebar-settingsPlant {
-  margin-bottom: 20px;
+.sidebar-settingsUpload {
+  margin-bottom: 1.25rem; /* 20px */
+}
+
+.sidebar-Top {
+  height: 1.25rem; /* 20px */
+  margin: 1.25rem 0; /* 20px */
 }
 
 .sidebar-settingsTab {
+  left: 100%;
   position: absolute;
-  left: 80%;               
   top: 45%;
-  transform: translateX(50%); /* shift right by half its own width to center it on the edge */
+  transform: translateX(-50%);
   cursor: pointer;
-  background-color:red;
-  padding: 10px;
+  background-color: #747272;
+  height: 3.125rem; /* 50px */
+  width: 0.9375rem;  /* 15px */
   text-align: center;
-  border-radius: 4px;
+  border-radius: 0.25rem; /* 4px */
 }
 
 .sidebar-settingsTab a {
