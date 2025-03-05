@@ -90,6 +90,9 @@ WSGI_APPLICATION = 'application.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+AUTH_USER_MODEL = "application.ReaderDatabase"
+
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',

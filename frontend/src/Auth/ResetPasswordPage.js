@@ -7,6 +7,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../AuthContext';
 
+const API_BASE = process.env.REACT_APP_API_BASE;
+
 function ResetPasswordPage() {
     const searchParams = new URLSearchParams(useLocation().search);
     const uid = searchParams.get('uid');

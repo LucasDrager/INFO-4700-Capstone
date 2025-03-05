@@ -16,12 +16,16 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.http import HttpResponse,JsonResponse
 from django.contrib.auth import views as auth_views
-from .views import welcome_message, about_message, contact_message, parse_pdf, chat_with_ollama, get_chat_history, RegisterUserView
+from .views import welcome_message, about_message, contact_message, parse_pdf, chat_with_ollama, get_chat_history, register_user, RegisterUserView
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
+def health_check(request):
+    return JsonResponse({"status":"ok"}, status=200)
 
 urlpatterns = [
+    path('', health_check),  # Root URL pattern
     path('api/welcome/', welcome_message),
     path('api/about/', about_message),
     path('api/contact/', contact_message),
@@ -34,4 +38,5 @@ urlpatterns = [
     path('register/', RegisterUserView.as_view(), name='register'),
     path('password-reset/', auth_views.PasswordResetView.as_view(), name='password_reset'),
     path('password-reset-confirm/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
+    path('api/register/', register_user, name='register_user'),
 ]

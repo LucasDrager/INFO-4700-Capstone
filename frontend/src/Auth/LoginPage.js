@@ -34,22 +34,23 @@ function LoginPage() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    const res = await fetch('http://localhost:8000/api/token/', {
+    const res = await fetch(`${API_BASE}token/`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username, password })
+      body: JSON.stringify({ email: username, password })
     });
+    
     const data = await res.json();
+    
     if (res.ok) {
-      // Expect data = { access: '...', refresh: '...' }
-      localStorage.setItem('authTokens', JSON.stringify(data));  // store tokens
+      localStorage.setItem('authTokens', JSON.stringify(data));  
       setAuthTokens(data);
-      setCurrentUser(jwtDecode(data.access));  // decode token to get user info (optional)
-      // redirect to dashboard or home
+      setCurrentUser({ username: data.username, email: data.email });  // Use the returned user info
+      navigate("/dashboard");  
     } else {
       setError("Invalid username or password");
     }
-  };
+};
 
   return (
     <div className="container mt-5" style={{ maxWidth: '400px' }}>

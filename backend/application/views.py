@@ -123,13 +123,28 @@ def get_chat_history(request):
 #################################
 #   SECURITY API INFORMATION
 #################################
+from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.generics import CreateAPIView
 from rest_framework.permissions import AllowAny
 from django.contrib.auth import get_user_model
-from .serializers import UserRegistrationSerializer
+from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
+from .serializers import UserRegistrationSerializer, CustomTokenObtainPairSerializer
 
 User = get_user_model()
+
+class CustomTokenObtainPairView(TokenObtainPairView):
+    serializer_class = CustomTokenObtainPairSerializer
 class RegisterUserView(CreateAPIView):
     queryset = User.objects.all()
     permission_classes = [AllowAny]
     serializer_class = UserRegistrationSerializer
+    
+@api_view(['POST'])
+def register_user(request):
+    serializer = RegisterUserSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response({"message": "Registration successful!"}, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

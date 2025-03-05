@@ -5,6 +5,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../AuthContext';
 
+const API_BASE = process.env.REACT_APP_API_BASE;
+
 function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState(null);

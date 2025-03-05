@@ -22,8 +22,6 @@ function PrivateOutlet() {
   return currentUser ? <Outlet /> : <Navigate to="/login" replace />;
 }
 
-const API_BASE = process.env.REACT_APP_API_BASE;
-
 function App() {
   return (
     <Router>
