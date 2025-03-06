@@ -90,8 +90,7 @@ WSGI_APPLICATION = 'application.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-AUTH_USER_MODEL = "application.ReaderDatabase"
-
+AUTH_USER_MODEL = 'auth.User'  # Uses Django's built-in user model
 
 DATABASES = {
     'default': {

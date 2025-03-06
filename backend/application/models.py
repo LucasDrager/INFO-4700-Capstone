@@ -1,53 +1,35 @@
-# Database specific funtions
+from django.contrib.auth.models import User
 from django.db import models
-from django.contrib.auth.hashers import make_password
-from django.contrib.auth.models import AbstractUser, AbstractBaseUser, BaseUserManager, PermissionsMixin
-from django.conf import settings
-
 
 class ChatMessage(models.Model):
     sender = models.CharField(max_length=10)  # "user" or "bot"
     text = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
 
-# Custom user manager
-class ReaderDatabaseManager(BaseUserManager):
-    def create_user(self, username, email, password=None):
-        if not email:
-            raise ValueError("Users must have an email address")
-        user = self.model(username=username, email=email)
-        user.set_password(password)  # Ensures hashing
-        user.save(using=self._db)
-        return user
+class ReaderProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile")
+    full_name = models.CharField(max_length=255, blank=True)
+    bio = models.TextField(blank=True)
+    stats = models.JSONField(default=dict)
 
-    def create_superuser(self, username, email, password=None):
-        user = self.create_user(username, email, password)
-        user.is_superuser = True
-        user.is_staff = True
-        user.save(using=self._db)
-        return user
+class File(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="files")
+    file_name = models.CharField(max_length=255)
+    file_path = models.TextField()
+    uploaded_at = models.DateTimeField(auto_now_add=True)
 
-# Custom user model
-class ReaderDatabase(AbstractBaseUser, PermissionsMixin):
-    user_id = models.AutoField(primary_key=True)  # Map to your predefined `user_id`
-    username = models.CharField(max_length=50, unique=True)
-    email = models.EmailField(unique=True)
-    password_hash = models.CharField(max_length=255)  # Map to `password_hash` in DB
+class Annotation(models.Model):
+    file = models.ForeignKey(File, on_delete=models.CASCADE, related_name="annotations")
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="annotations")
+    content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
 
-    objects = ReaderDatabaseManager()
+class Chat(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="chats")
+    started_at = models.DateTimeField(auto_now_add=True)
 
-    USERNAME_FIELD = 'email'  # Login with email
-    REQUIRED_FIELDS = ['username']
-
-    class Meta:
-        db_table = 'ReaderDatabase '  # Map to your existing table
-        managed = False  # Django will NOT create or modify this table
-
-    def set_password(self, raw_password):
-        from django.contrib.auth.hashers import make_password
-        self.password_hash = make_password(raw_password)  # Hash passwords correctly
-
-    def check_password(self, raw_password):
-        from django.contrib.auth.hashers import check_password
-        return check_password(raw_password, self.password_hash)
+class Message(models.Model):
+    chat = models.ForeignKey(Chat, on_delete=models.CASCADE, related_name="messages")
+    sender = models.CharField(max_length=50)
+    content = models.TextField()
+    sent_at = models.DateTimeField(auto_now_add=True)
