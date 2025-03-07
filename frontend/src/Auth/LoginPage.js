@@ -1,29 +1,12 @@
-// react_auth_setup.jsx
-// Example React app with Bootstrap for user registration, login, password reset (forgot/reset), and protected route.
-// This sample uses the concepts from the guide.
-// In practice, you'll organize these components into separate files.
+// ============================
+// Login Page
+// ============================
 
 import React, { useState, useEffect, createContext, useContext } from "react";
 import { BrowserRouter as Router, Routes, Route, Link, useNavigate, Navigate, useLocation } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
-
 import { useAuth, AuthProvider } from '../AuthContext';
 const API_BASE = process.env.REACT_APP_API_BASE;
-// ============================
-// Protected Route component
-// ============================
-
-// function PrivateRoute({ children }) {
-//   const { currentUser } = useAuth();
-//   if (!currentUser) {
-//     return <Navigate to="/login" replace />;
-//   }
-//   return children;
-// }
-
-// ============================
-// Login Page
-// ============================
 
 function LoginPage() {
   const { loginUser, authTokens, setAuthTokens, currentUser, setCurrentUser } = useAuth();
@@ -34,23 +17,27 @@ function LoginPage() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    const res = await fetch(`${API_BASE}token/`, {
+    
+    // Debugging: Check if useAuth() is returning the correct values
+    console.log("useAuth values:", { loginUser, authTokens, setAuthTokens, currentUser, setCurrentUser });
+
+    const res = await fetch(`${process.env.REACT_APP_API_BASE}token/`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: username, password })
+      body: JSON.stringify({ username, password })  
     });
-    
+
     const data = await res.json();
-    
+
     if (res.ok) {
       localStorage.setItem('authTokens', JSON.stringify(data));  
       setAuthTokens(data);
-      setCurrentUser({ username: data.username, email: data.email });  // Use the returned user info
+      setCurrentUser({ username: data.username, email: data.email });
       navigate("/dashboard");  
     } else {
       setError("Invalid username or password");
     }
-};
+  };
 
   return (
     <div className="container mt-5" style={{ maxWidth: '400px' }}>

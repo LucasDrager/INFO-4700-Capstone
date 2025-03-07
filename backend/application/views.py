@@ -1,22 +1,35 @@
+###  HEADER IMPORTS  ###
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from .models import ChatMessage
-from PyPDF2 import PdfReader
+from django.utils import timezone
+
+###  SYSTEM IMPORTS  ###
 import httpx
 import ollama
 import json
 import traceback
 import re
 import os
-
-def welcome_message(request):
-    return JsonResponse({"message": "Welcome to My Website!"})
-
-def about_message(request):
-    return JsonResponse({"message": "This is the About Page!"})
-
-def contact_message(request):
-    return JsonResponse({"message": "Contact us at support@example.com"})
+###  SECURITY IMPORTS  ###
+#JWT
+from rest_framework_simplejwt.views import TokenObtainPairView
+from rest_framework.generics import CreateAPIView
+from rest_framework.permissions import AllowAny
+#REST
+from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework_simplejwt.tokens import RefreshToken
+#AUTH
+from django.contrib.auth import get_user_model, authenticate, login, logout
+from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
+#SERIAL
+from .serializers import UserRegistrationSerializer, CustomTokenObtainPairSerializer
+from application.serializers import UserRegistrationSerializer
+###  API IMPORTS ###
+from PyPDF2 import PdfReader
+from application.models import Chat, Message
 
 # Parse PDF
 # This works by getting a post request with a pdf file and returning the text extracted from the pdf file.
@@ -57,34 +70,45 @@ def parse_pdf(request):
 #################################
 #     LLM API INFORMATION
 #################################
-OLLAMA_API_URL = os.environ.get('OLLAMA_APP_API_URL') #USE TO DO INTER-CONTAINER API CALLS
+OLLAMA_API_URL = os.environ.get('OLLAMA_APP_API_URL')  # API URL for inter-container calls
 
 @csrf_exempt
-def chat_with_ollama(request): # Makes a call to the LLM
+@login_required  # Ensures user is logged in before sending messages
+def chat_with_ollama(request):  
     if request.method != "POST":
         return JsonResponse({"error": "Invalid request method"}, status=400)
 
     try:
+        user = request.user  # Get the logged-in user
         data = json.loads(request.body)
         query = data.get("query", "").strip()
 
         if not query:
             return JsonResponse({"error": "Missing query parameter"}, status=400)
 
-        # Save user message to DB
-        ChatMessage.objects.create(sender="user", text=query)
+        # **Step 1: Find or Create a Chat Session for the User**
+        chat, created = Chat.objects.get_or_create(user=user)  
 
+        # **Step 2: Save User's Message in `messages` table**
+        user_message = Message.objects.create(
+            chat=chat,  
+            sender=user.username,  # Use the username for sender field
+            content=query,  
+            sent_at=timezone.now()
+        )
+
+        # **Step 3: Call the Ollama API**
         payload = {"model": "deepseek-r1:14b", "prompt": query, "stream": True}
         print(f"Sending request to Ollama at {OLLAMA_API_URL}/api/generate")
         print(f"Payload: {json.dumps(payload, indent=2)}")
 
         full_response = ""
-        previous_chunk_ends_with_space = True  # Helps ensure proper spacing
+        previous_chunk_ends_with_space = True  # Ensures proper spacing
 
         with httpx.stream("POST", f"{OLLAMA_API_URL}/api/generate", json=payload, timeout=600) as response:
             response.raise_for_status()
 
-            for line in response.iter_lines(): # Deep Seek returns infromation in many different "returns" so this handles that.
+            for line in response.iter_lines():  
                 if line:
                     try:
                         data = json.loads(line)
@@ -100,12 +124,16 @@ def chat_with_ollama(request): # Makes a call to the LLM
                     except json.JSONDecodeError:
                         print("Warning: Skipping malformed JSON chunk:", line)
 
-        # Remove entire "<think>...</think>" sections from the full response
-        # Deep seek thinks a lot
+        # Remove AI "thinking" sections
         full_response = re.sub(r"<think>.*?</think>", "", full_response, flags=re.DOTALL).strip()
 
-        # Save bot response to DB
-        ChatMessage.objects.create(sender="bot", text=full_response)
+        # **Step 4: Save AI Response in `messages` table**
+        bot_message = Message.objects.create(
+            chat=chat,  
+            sender="bot",  
+            content=full_response,  
+            sent_at=timezone.now()
+        )
 
         return JsonResponse({"response": full_response})
 
@@ -113,48 +141,30 @@ def chat_with_ollama(request): # Makes a call to the LLM
         print("Ollama HTTP error:", http_err.response.text)
         return JsonResponse({"error": f"Ollama HTTP error: {http_err.response.text}"}, status=http_err.response.status_code)
 
-#Gets chat history with the bot
+
+# **Get chat history for the logged-in user**
+@login_required
 def get_chat_history(request):
-    messages = ChatMessage.objects.all().order_by("timestamp")
+    user = request.user  
+    chat = Chat.objects.filter(user=user).first()  # Get user's chat
+    if not chat:
+        return JsonResponse({"messages": []})  # No chat history
+
+    messages = Message.objects.filter(chat=chat).order_by("sent_at")  # Fetch messages
     return JsonResponse({
-        "messages": [{"sender": m.sender, "text": m.text} for m in messages]
+        "messages": [{"sender": m.sender, "text": m.content, "sent_at": m.sent_at} for m in messages]
     })
 
 #################################
 #   SECURITY API INFORMATION
 #################################
-from rest_framework_simplejwt.views import TokenObtainPairView
-from rest_framework.generics import CreateAPIView
-from rest_framework.permissions import AllowAny
-from django.contrib.auth import get_user_model
-from rest_framework import status
-from rest_framework.response import Response
-from rest_framework.decorators import api_view
-from .serializers import UserRegistrationSerializer, CustomTokenObtainPairSerializer
-
 User = get_user_model()
-
 class CustomTokenObtainPairView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer
 class RegisterUserView(CreateAPIView):
     queryset = User.objects.all()
     permission_classes = [AllowAny]
     serializer_class = UserRegistrationSerializer
-    
-@api_view(['POST'])
-def register_user(request):
-    serializer = RegisterUserSerializer(data=request.data)
-    if serializer.is_valid():
-        serializer.save()
-        return Response({"message": "Registration successful!"}, status=status.HTTP_201_CREATED)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-from django.contrib.auth import authenticate, login, logout
-from django.http import JsonResponse
-from rest_framework_simplejwt.tokens import RefreshToken
-from django.contrib.auth.models import User
-
 
 @api_view(["POST"])
 def login_user(request):
@@ -178,16 +188,11 @@ def logout_user(request):
     logout(request)
     return JsonResponse({"message": "Logged out successfully"}, status=200)
 
-@api_view(["POST"])
+@api_view(['POST'])
+@permission_classes([AllowAny])  # Allow anyone to register
 def register_user(request):
-    username = request.data.get("username")
-    email = request.data.get("email")
-    password = request.data.get("password")
-
-    if User.objects.filter(username=username).exists():
-        return JsonResponse({"error": "Username already exists"}, status=400)
-
-    user = User.objects.create_user(username=username, email=email, password=password)
-    user.save()
-
-    return JsonResponse({"message": "User created successfully"})
+    serializer = UserRegistrationSerializer(data=request.data)
+    if serializer.is_valid():
+        user = serializer.save()
+        return Response({"message": "User created successfully"}, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

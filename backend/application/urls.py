@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import path
 from django.http import HttpResponse,JsonResponse
 from django.contrib.auth import views as auth_views
-from .views import welcome_message, about_message, contact_message, parse_pdf, chat_with_ollama, get_chat_history, register_user, RegisterUserView
+from .views import parse_pdf, chat_with_ollama, get_chat_history, register_user, RegisterUserView, CustomTokenObtainPairView
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 def health_check(request):
@@ -26,14 +26,13 @@ def health_check(request):
 
 urlpatterns = [
     path('', health_check),  # Root URL pattern
-    path('api/welcome/', welcome_message),
-    path('api/about/', about_message),
-    path('api/contact/', contact_message),
     path('api/parse-pdf/', parse_pdf),
     path('admin/', admin.site.urls),
     path("api/chat/", chat_with_ollama),
     path('api/chat-history/', get_chat_history),
-    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    
+    ### SECURITY ###
+    path('api/token/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('register/', RegisterUserView.as_view(), name='register'),
     path('password-reset/', auth_views.PasswordResetView.as_view(), name='password_reset'),

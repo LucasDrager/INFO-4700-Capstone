@@ -16,7 +16,7 @@ export function AuthProvider({ children }) {
 
   const loginUser = async (username, password) => {
     try {
-      const res = await fetch(`${API_BASE}login/`, {
+      const res = await fetch(`${API_BASE}token/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password })
@@ -44,8 +44,10 @@ export function AuthProvider({ children }) {
 
   return (
     <AuthContext.Provider value={{
-      currentUser,
       authTokens,
+      setAuthTokens,
+      currentUser,
+      setCurrentUser,
       loginUser,
       logoutUser
     }}>
