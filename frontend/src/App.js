@@ -1,32 +1,49 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route, Link, useLocation } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Link, Navigate, Outlet, useLocation } from "react-router-dom";
+import { useAuth, AuthProvider } from './AuthContext.js';
 
-//WEBSITE pages
+// Import Components
+import Header from "./components/Header"; 
+
+// Import Public Pages
 import HomePage from "./Pages/HomePage";
 import AboutPage from "./Pages/AboutPage";
-import ContactPage from "./Pages/ContactPage";
-import ChatPage from "./Pages/chatPage";
+import ContactPage from "./Pages/AboutPage";
+import ChatPage from "./Pages/ChatPage";
 
-//APP pages
-import Settings from "./Pages/Settings";
+// Import Protected Pages
 import Dashboard from "./Pages/Dashboard";
+import Settings from "./Pages/Settings";
 
-//components 
-import Header from "./components/Header";  // Common header for all pages
+// Import Authentication Pages
+import LoginPage from "./Auth/LoginPage.js";
+import RegisterPage from "./Auth/RegisterPage.js";
+import ForgotPasswordPage from "./Auth/ForgotPasswordPage.js";
+import ResetPasswordPage from "./Auth/ResetPasswordPage";
 
+// ============================
+// Private Route Wrapper
+// ============================
+function PrivateOutlet() {
+  const { currentUser } = useAuth();
+  return currentUser ? <Outlet /> : <Navigate to="/login" replace />;
+}
+
+// ============================
+// App Content (Handles Navigation & Pages)
+// ============================
 function AppContent() {
-
-  //the use location hook first to find the current url path 
   const location = useLocation();
 
-  // any path in this list will have the navbar hidden (with set hideHeadernav to TRUE)
+  // Hide the navbar on certain pages
   const hideHeaderNav = ["/dashboard", "/settings", "/gamespage"].includes(location.pathname);
-
 
   return (
     <>
-      {/* separated to make it so we can conditionally hide the nav bar*/}
+      {/* Conditionally display the header */}
       {!hideHeaderNav && <Header />}
+
+      {/* Conditionally display the navigation bar */}
       {!hideHeaderNav && (
         <nav style={{ marginTop: "20px", textAlign: "center" }}>
           <Link to="/" style={{ margin: "10px" }}>Home</Link>
@@ -37,28 +54,46 @@ function AppContent() {
         </nav>
       )}
 
-      {/* The Routes for your app */}
-      {/* hideHeaderNav ? makes sure that there isnt a gap if we're on a page w/o the header*/}
+      {/* Routes Handling */}
       <div style={{ textAlign: "center", marginTop: hideHeaderNav ? "0" : "20px" }}>
         <Routes>
+          {/* Public Pages */}
           <Route path="/" element={<HomePage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/LLM" element={<ChatPage />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/settings" element={<Settings />} />
+
+          {/* Authentication Pages */}
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+          <Route path="/reset-password" element={<ResetPasswordPage />} />
+
+          {/* Protected Pages (Only accessible if logged in) */}
+          <Route element={<PrivateOutlet />}>
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/settings" element={<Settings />} />
+          </Route>
+
+          {/* Fallback Route */}
+          <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </div>
     </>
   );
 }
+
+// ============================
+// Main App Component (Wraps Everything)
+// ============================
 function App() {
   return (
     <Router>
-      <AppContent />
+      <AuthProvider>
+        <AppContent />
+      </AuthProvider>
     </Router>
   );
 }
-
 
 export default App;
