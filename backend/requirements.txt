@@ -7,3 +7,6 @@ gradio
 ollama
 httpx
 djangorestframework-simplejwt
+transformers
+torch
+sentencepiece

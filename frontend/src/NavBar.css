@@ -1,0 +1,22 @@
+/* NavBar.css */
+.navbar {
+    background-color: #0c7e0a; /* Light beige background */
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .navbar a {
+    margin: 10px;
+    padding: 10px 15px;
+    text-decoration: none;
+    color: #ffffff; /* Hot pink text */
+    font-weight: bold;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .navbar a:hover {
+    background-color: #288cb0; /* Hot pink background on hover */
+    color: #fff; /* White text on hover */
+  }

@@ -1,81 +1,96 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route, Link, Navigate, Outlet } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Link, Navigate, Outlet, useLocation } from "react-router-dom";
 import { useAuth, AuthProvider } from './AuthContext.js';
-import jwtDecode from 'jwt-decode';
 
+// Import Components
 import Header from "./components/Header"; 
+
+// Import Public Pages
 import HomePage from "./Pages/HomePage";
 import AboutPage from "./Pages/AboutPage";
-import ContactPage from "./Pages/ContactPage";
-import ChatPage from "./Pages/ChatPage.js";
+import ContactPage from "./Pages/AboutPage";
+import ChatPage from "./Pages/ChatPage";
 
-// Import your auth-related components
+// Import Protected Pages
+import Dashboard from "./Pages/Dashboard";
+import Settings from "./Pages/Settings";
+
+// Import Authentication Pages
 import LoginPage from "./Auth/LoginPage.js";
 import RegisterPage from "./Auth/RegisterPage.js";
 import ForgotPasswordPage from "./Auth/ForgotPasswordPage.js";
 import ResetPasswordPage from "./Auth/ResetPasswordPage";
-import DashboardPage from './Auth/Dashboard.js';
 
-// 1) PrivateOutlet checks if user is logged in before rendering child routes
+// ============================
+// Private Route Wrapper
+// ============================
 function PrivateOutlet() {
   const { currentUser } = useAuth();
   return currentUser ? <Outlet /> : <Navigate to="/login" replace />;
 }
 
+// ============================
+// App Content (Handles Navigation & Pages)
+// ============================
+function AppContent() {
+  const location = useLocation();
+
+  // Hide the navbar on certain pages
+  const hideHeaderNav = ["/dashboard", "/settings", "/gamespage"].includes(location.pathname);
+
+  return (
+    <>
+      {/* Conditionally display the header */}
+      {!hideHeaderNav && <Header />}
+
+      {/* Conditionally display the navigation bar */}
+      {!hideHeaderNav && (
+        <nav style={{ marginTop: "20px", textAlign: "center" }}>
+          <Link to="/" style={{ margin: "10px" }}>Home</Link>
+          <Link to="/about" style={{ margin: "10px" }}>About</Link>
+          <Link to="/contact" style={{ margin: "10px" }}>Contact</Link>
+          <Link to="/LLM" style={{ margin: "10px" }}>LLM</Link>
+          <Link to="/dashboard" style={{ margin: "10px" }}>Dashboard</Link>
+        </nav>
+      )}
+
+      {/* Routes Handling */}
+      <div style={{ textAlign: "center", marginTop: hideHeaderNav ? "0" : "20px" }}>
+        <Routes>
+          {/* Public Pages */}
+          <Route path="/" element={<HomePage />} />
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="/contact" element={<ContactPage />} />
+          <Route path="/LLM" element={<ChatPage />} />
+
+          {/* Authentication Pages */}
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+          <Route path="/reset-password" element={<ResetPasswordPage />} />
+
+          {/* Protected Pages (Only accessible if logged in) */}
+          <Route element={<PrivateOutlet />}>
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/settings" element={<Settings />} />
+          </Route>
+
+          {/* Fallback Route */}
+          <Route path="*" element={<Navigate to="/" />} />
+        </Routes>
+      </div>
+    </>
+  );
+}
+
+// ============================
+// Main App Component (Wraps Everything)
+// ============================
 function App() {
   return (
     <Router>
-      {/* Provide Auth context to entire app */}
       <AuthProvider>
-        <Header /> {/* Global header for all pages */}
-        
-        <div style={{ textAlign: "center", marginTop: "20px" }}>
-          {/* 
-            Global nav: 
-            Home, About, Contact = public routes
-            For your LLM or Chat, let's assume it’s protected under /app/LLM, 
-            so the link would be /app/LLM if you want it locked behind login
-          */}
-          <nav>
-            <Link to="/" style={{ margin: "10px" }}>Home</Link>
-            <Link to="/about" style={{ margin: "10px" }}>About</Link>
-            <Link to="/contact" style={{ margin: "10px" }}>Contact</Link>
-            {/* Link to /app/LLM if you want Chat behind auth */}
-            <Link to="/LLM" style={{ margin: "10px" }}>LLM</Link>
-          </nav>
-
-          <Routes>
-            {/* ================================
-                Public (Unprotected) routes
-               ================================ */}
-            <Route path="/" element={<HomePage />} />
-            <Route path="/about" element={<AboutPage />} />
-            <Route path="/contact" element={<ContactPage />} />
-
-            {/* Auth pages (still public) */}
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/register" element={<RegisterPage />} />
-            <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-            <Route path="/reset-password" element={<ResetPasswordPage />} />
-
-            {/* ================================
-                Protected (Nested) routes under /app
-               ================================ */}
-            <Route element={<PrivateOutlet />}>
-              {/*
-                Any route nested under this parent is protected.
-                The user must be logged in to access them.
-              */}
-              <Route path="/LLM" element={<ChatPage />} />
-              {/* You could add more protected pages here, e.g.: */}
-              {/* <Route path="/app/dashboard" element={<DashboardPage />} /> */}
-              {/* <Route path="/app/profile" element={<ProfilePage />} /> */}
-            </Route>
-
-            {/* Catch-all or fallback */}
-            <Route path="*" element={<Navigate to="/" />} />
-          </Routes>
-        </div>
+        <AppContent />
       </AuthProvider>
     </Router>
   );

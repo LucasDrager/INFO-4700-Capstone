@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import path
 from django.http import HttpResponse,JsonResponse
 from django.contrib.auth import views as auth_views
-from .views import parse_pdf, chat_with_ollama, get_chat_history, register_user, RegisterUserView, CustomTokenObtainPairView
+from .views import parse_pdf, chat_with_ollama, get_chat_history, register_user, summarize_text, RegisterUserView, CustomTokenObtainPairView
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 def health_check(request):
@@ -26,6 +26,7 @@ def health_check(request):
 
 urlpatterns = [
     path('', health_check),  # Root URL pattern
+    path('api/summarize/', summarize_text),
     path('api/parse-pdf/', parse_pdf),
     path('admin/', admin.site.urls),
     path("api/chat/", chat_with_ollama),

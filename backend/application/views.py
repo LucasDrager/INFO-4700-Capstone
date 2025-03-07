@@ -2,8 +2,8 @@
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.utils import timezone
-
 ###  SYSTEM IMPORTS  ###
+from transformers import pipeline
 import httpx
 import ollama
 import json
@@ -30,6 +30,10 @@ from application.serializers import UserRegistrationSerializer
 ###  API IMPORTS ###
 from PyPDF2 import PdfReader
 from application.models import Chat, Message
+
+### INITIALIZATION ###
+# Initialize the summarization pipeline with a specific model
+summarizer = pipeline("summarization")
 
 # Parse PDF
 # This works by getting a post request with a pdf file and returning the text extracted from the pdf file.
@@ -154,7 +158,32 @@ def get_chat_history(request):
     return JsonResponse({
         "messages": [{"sender": m.sender, "text": m.content, "sent_at": m.sent_at} for m in messages]
     })
+    
+    
+    # Text summarization endpoint
+@csrf_exempt
+def summarize_text(request):
+    if request.method != "POST":
+        return JsonResponse({"error": "Invalid request method"}, status=400)
 
+    try:
+        data = json.loads(request.body)
+        text = data.get('text', '')
+        
+        if not text:
+            return JsonResponse({'error': 'No text provided'}, status=400)
+
+        # Use BART model for summarization
+        summary = summarizer(text, max_length=130, min_length=30, do_sample=False)
+        
+        return JsonResponse({
+            'summary': summary[0]['summary_text']
+        })
+    except Exception as e:
+        print(f"Error in summarize_text: {str(e)}")
+        traceback.print_exc()
+        return JsonResponse({'error': str(e)}, status=500)
+    
 #################################
 #   SECURITY API INFORMATION
 #################################
