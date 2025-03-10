@@ -6,6 +6,7 @@ import HomePage from "./Pages/HomePage";
 import AboutPage from "./Pages/AboutPage";
 import ContactPage from "./Pages/ContactPage";
 import ChatPage from "./Pages/chatPage";
+import ReadingMode from "./Pages/ReadingMode";
 
 //APP pages
 import Settings from "./Pages/Settings";
@@ -20,7 +21,7 @@ function AppContent() {
   const location = useLocation();
 
   // any path in this list will have the navbar hidden (with set hideHeadernav to TRUE)
-  const hideHeaderNav = ["/dashboard", "/settings", "/gamespage"].includes(location.pathname);
+  const hideHeaderNav = ["/dashboard", "/settings", "/gamespage", "/readingmode"].includes(location.pathname);
 
 
   return (
@@ -34,6 +35,7 @@ function AppContent() {
           <Link to="/contact" style={{ margin: "10px" }}>Contact</Link>
           <Link to="/LLM" style={{ margin: "10px" }}>LLM</Link>
           <Link to="/dashboard" style={{ margin: "10px" }}>Dashboard</Link>
+          <Link to="/readingmode" style={{ margin: "10px" }}>ReadingMode</Link>
         </nav>
       )}
 
@@ -47,6 +49,7 @@ function AppContent() {
           <Route path="/LLM" element={<ChatPage />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/settings" element={<Settings />} />
+          <Route path="/readingmode" element={<ReadingMode />} />
         </Routes>
       </div>
     </>
