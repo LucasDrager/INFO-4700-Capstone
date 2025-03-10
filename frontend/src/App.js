@@ -10,13 +10,14 @@ import HomePage from "./Pages/HomePage";
 import AboutPage from "./Pages/AboutPage";
 import ContactPage from "./Pages/AboutPage";
 import ChatPage from "./Pages/ChatPage";
+import GamesPage from "./Pages/GamesPage";
 
 // Import Protected Pages
 import Dashboard from "./Pages/Dashboard";
 import Settings from "./Pages/Settings";
 
 // Import Authentication Pages
-import LoginPage from "./Auth/LoginPage.js";
+import LoginPage from "./Pages/LoginPage.js";
 import RegisterPage from "./Auth/RegisterPage.js";
 import ForgotPasswordPage from "./Auth/ForgotPasswordPage.js";
 import ResetPasswordPage from "./Auth/ResetPasswordPage";
@@ -51,6 +52,7 @@ function AppContent() {
           <Link to="/contact" style={{ margin: "10px" }}>Contact</Link>
           <Link to="/LLM" style={{ margin: "10px" }}>LLM</Link>
           <Link to="/dashboard" style={{ margin: "10px" }}>Dashboard</Link>
+          <Link to="/gamespage" style={{ margin: "10px" }}>Games</Link>
         </nav>
       )}
 
@@ -62,6 +64,7 @@ function AppContent() {
           <Route path="/about" element={<AboutPage />} />
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/LLM" element={<ChatPage />} />
+          <Route path="/gamespage" element={<GamesPage />} />
 
           {/* Authentication Pages */}
           <Route path="/login" element={<LoginPage />} />
