@@ -17,7 +17,7 @@ import Dashboard from "./Pages/Dashboard";
 import Settings from "./Pages/Settings";
 
 // Import Authentication Pages
-import LoginPage from "./Pages/LoginPage.js";
+import LoginPage from "./Auth/LoginPage.js";
 import RegisterPage from "./Auth/RegisterPage.js";
 import ForgotPasswordPage from "./Auth/ForgotPasswordPage.js";
 import ResetPasswordPage from "./Auth/ResetPasswordPage";
