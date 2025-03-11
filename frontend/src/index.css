@@ -165,6 +165,11 @@ code {
   text-align: center;
 }
 
+.FE-PdfItem:hover {
+  transform: translateY(-3px);
+}
+
+
 /* PDF ICON STYLING */
 .FE-PdfIcon {
   width: 5rem; /* Match MyLibraryWidget */
@@ -173,6 +178,11 @@ code {
   border: 1px solid #aaa;
   border-radius: 4px;
   margin-bottom: 0.5rem;
+}
+
+.FE-PdfIcon:hover {
+  transform: scale(1.05);
+  border-color: #4ba881;
 }
 
 /* PDF TITLE */
@@ -747,4 +757,117 @@ code {
   margin-bottom: 1rem;
   text-align: center;
   font-size: 0.9rem;
+}
+
+
+
+
+
+/* Document Spotlight Sidebar (overall container) */
+.documentSpotlightSidebar {
+  position: fixed;
+  right: 0;
+  top: 0;
+  width: 21.875rem; /* 350px */
+  height: 100vh;
+  background-color: #747272; /* Dark gray matching left sidebar */
+  display: flex;
+  flex-direction: column;
+  overflow: visible; /* ensure the tab is visible */
+  box-shadow: -2px 0 4px rgba(0,0,0,0.2);
+}
+
+/* Inner content area: lighter gray background */
+.documentSpotlightContent {
+  background-color: #919191; /* Lighter inner container */
+  flex: 1;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; /* align to top */
+  gap: 0.3125rem; /* 5px gap between items */
+}
+
+/* Title styling at the top */
+.documentSpotlightTitle {
+  margin: 0;
+  color: white;
+}
+
+/* Row for PDF preview and description */
+.documentSpotlightRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.3125rem; /* 5px gap */
+  margin-top: 0.3125rem; /* 5px gap below title */
+}
+
+/* PDF Preview: same size as the small PDF icons (5rem x 7rem) */
+.documentSpotlightPreview {
+  width: 5rem;
+  height: 7rem;
+  background-color: #ddd;
+  border: 1px solid #999;
+  /* Overhang half its width off the left edge */
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.previewPlaceholder {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+/* Description container: appears immediately to the right of the preview */
+.documentSpotlightDesc {
+  color: white;
+  flex: 1;
+}
+
+/* Action buttons at the bottom */
+.documentSpotlightButtons {
+  margin-top: auto; /* Push to bottom */
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.documentSpotlightButtons button {
+  padding: 0.5rem;
+  border: none;
+  border-radius: 4px;
+  background-color: #4ba881;
+  color: white;
+  cursor: pointer;
+}
+
+/* Tab for closing (mirrored from .sidebar-tab) */
+.documentSpotlightTab {
+  position: absolute;
+  left: -0.9375rem; /* 15px: tab width so it hangs off the left */
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: #747272;
+  width: 0.9375rem;  /* 15px */
+  height: 3.125rem;   /* 50px */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  /* Round the outer (left) edge */
+  border-top-left-radius: 0.25rem;
+  border-bottom-left-radius: 0.25rem;
+}
+
+/* Triangle icon (mirrored arrow) */
+.documentSpotlightTab .triangle {
+  width: 0;
+  height: 0;
+  border-top: 0.625rem solid transparent;
+  border-bottom: 0.625rem solid transparent;
+  border-left: 0.625rem solid white; /* White arrow pointing left */
 }
