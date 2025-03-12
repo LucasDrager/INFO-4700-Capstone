@@ -60,7 +60,7 @@ const RegistrationModal = ({ isOpen, onClose, onRegister }) => {
     password: '',
     confirmPassword: ''
   });
-
+//for when password  doesn't match
   const handleRegistrationSubmit = (e) => {
     e.preventDefault();
     if (registrationData.password !== registrationData.confirmPassword) {
@@ -137,8 +137,6 @@ const LoginPage = () => {
   const [startPos, setStartPos] = useState(0);
   const [currentTranslate, setCurrentTranslate] = useState(0);
   const [prevTranslate, setPrevTranslate] = useState(0);
-  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
-  const autoPlayRef = useRef();
   const navigate = useNavigate();
   const [socialLoginModal, setSocialLoginModal] = useState({
     isOpen: false,
@@ -151,7 +149,7 @@ const LoginPage = () => {
   const slides = [
     {
       title: "Welcome to Lectern",
-      description: "Join our community of learners and educators in an interactive educational experience."
+      description: "Elevate your reading experience."
     },
     {
       title: "Interactive Learning",
@@ -159,24 +157,9 @@ const LoginPage = () => {
     },
     {
       title: "Track Progress",
-      description: "Monitor your learning progress and achievements through our comprehensive dashboard."
+      description: "Monitor your learning progress and achievements through our dashboard."
     }
   ];
-
-  // Auto-play functionality
-  useEffect(() => {
-    if (isAutoPlaying) {
-      autoPlayRef.current = setInterval(() => {
-        goToNextSlide();
-      }, 5000); // Change slide every 5 seconds
-    }
-
-    return () => {
-      if (autoPlayRef.current) {
-        clearInterval(autoPlayRef.current);
-      }
-    };
-  }, [isAutoPlaying, currentSlide]);
 
   const goToNextSlide = () => {
     if (currentSlide < slides.length - 1) {
@@ -198,14 +181,7 @@ const LoginPage = () => {
     }
   };
 
-  // Pause auto-play on hover
-  const handleMouseEnter = () => {
-    setIsAutoPlaying(false);
-  };
 
-  const handleMouseLeave = () => {
-    setIsAutoPlaying(true);
-  };
 
   const handleMouseDown = (e) => {
     setIsDragging(true);
@@ -409,7 +385,6 @@ const LoginPage = () => {
         <div 
           ref={sliderRef}
           className="slider-container"
-          onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeaveSlider}
           onMouseDown={handleMouseDown}
           onMouseMove={handleMouseMove}
