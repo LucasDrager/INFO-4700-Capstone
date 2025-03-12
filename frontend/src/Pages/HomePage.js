@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import { Link } from 'react-router-dom';
 import "bootstrap/dist/css/bootstrap.min.css";
 import ExtractedTextAnnotator from "../components/extracted-text-components/ExtractedTextAnnotator";
 
@@ -76,17 +77,13 @@ const LandingPage = () => {
       </main>
 
       <motion.div
-        className="hero-section text-center"
-        initial={{ opacity: 0, y: -50 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1 }}>
-        <motion.a
-          href="about"
-          className="btn btn-primary btn-lg"
-          whileHover={{ scale: 1.1 }}>
+        className="btn btn-primary btn-lg"
+        whileHover={{ scale: 1.1 }}>
+        <Link to="/about" style={{ color: 'inherit', textDecoration: 'none' }}>
           Learn More About Lectern
-        </motion.a>
+        </Link>
       </motion.div>
+
 
       <div className="container text-center mt-5">
         <motion.div

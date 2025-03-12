@@ -8,19 +8,22 @@ import Header from "./components/Header";
 // Import Public Pages
 import HomePage from "./Pages/HomePage";
 import AboutPage from "./Pages/AboutPage";
-import ContactPage from "./Pages/AboutPage";
+import ContactPage from "./Pages/ContactPage.js";
 import ChatPage from "./Pages/ChatPage";
 import GamesPage from "./Pages/GamesPage";
 
 // Import Protected Pages
 import Dashboard from "./Pages/Dashboard";
 import Settings from "./Pages/Settings";
+import ReadingModePage from "./Pages/ReadingMode";
 
 // Import Authentication Pages
-import LoginPage from "./Pages/LoginPage.js";
+import LoginPage from "./Auth/LoginPage.js";
 import RegisterPage from "./Auth/RegisterPage.js";
 import ForgotPasswordPage from "./Auth/ForgotPasswordPage.js";
 import ResetPasswordPage from "./Auth/ResetPasswordPage";
+
+
 
 // ============================
 // Private Route Wrapper
@@ -37,7 +40,7 @@ function AppContent() {
   const location = useLocation();
 
   // Hide the navbar on certain pages
-  const hideHeaderNav = ["/dashboard", "/settings", "/gamespage"].includes(location.pathname);
+  const hideHeaderNav = ["/dashboard", "/settings", "/gamespage", "/GamesPage", "/reading-mode"].includes(location.pathname);
 
   return (
     <>
@@ -47,13 +50,14 @@ function AppContent() {
       {/* Conditionally display the navigation bar */}
       {!hideHeaderNav && (
         <nav style={{ marginTop: "20px", textAlign: "center" }}>
-          <Link to="/" style={{ margin: "10px" }}>Home</Link>
-          <Link to="/about" style={{ margin: "10px" }}>About</Link>
-          <Link to="/contact" style={{ margin: "10px" }}>Contact</Link>
-          <Link to="/LLM" style={{ margin: "10px" }}>LLM</Link>
-          <Link to="/dashboard" style={{ margin: "10px" }}>Dashboard</Link>
-          <Link to="/gamespage" style={{ margin: "10px" }}>Games</Link>
-        </nav>
+        <Link to="/" style={{ margin: "10px" }}>Home</Link>
+        <Link to="/about" style={{ margin: "10px" }}>About</Link>
+        <Link to="/contact" style={{ margin: "10px" }}>Contact</Link>
+        <Link to="/LLM" style={{ margin: "10px" }}>LLM</Link>
+        <Link to="/dashboard" style={{ margin: "10px" }}>Dashboard</Link>
+        <Link to="/gamespage" style={{ margin: "10px" }}>Games</Link>
+        <Link to="/reading-mode" style={{ margin: "10px" }}>Reading Mode</Link>
+      </nav>
       )}
 
       {/* Routes Handling */}
@@ -61,7 +65,7 @@ function AppContent() {
         <Routes>
           {/* Public Pages */}
           <Route path="/" element={<HomePage />} />
-          <Route path="/about" element={<AboutPage />} />
+          <Route path="/About" element={<AboutPage />} />
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/LLM" element={<ChatPage />} />
           <Route path="/gamespage" element={<GamesPage />} />
@@ -76,6 +80,7 @@ function AppContent() {
           <Route element={<PrivateOutlet />}>
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/settings" element={<Settings />} />
+            <Route path="/reading-mode" element={<ReadingModePage />} />
           </Route>
 
           {/* Fallback Route */}
