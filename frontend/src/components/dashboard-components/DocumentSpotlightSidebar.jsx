@@ -1,6 +1,14 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
+
 
 function DocumentSpotlightSidebar({ documentData, onClose }) {
+  const navigate = useNavigate();
+
+  const handleReadModeClick = () => {
+    navigate('/reading-mode');
+  };
+
   if (!documentData) return null;
 
   const { title, description } = documentData;
@@ -28,7 +36,7 @@ function DocumentSpotlightSidebar({ documentData, onClose }) {
 
         {/* Action buttons at the bottom */}
         <div className="documentSpotlightButtons">
-          <button onClick={() => alert('Go to Read Mode')}>Read Mode</button>
+          <button onClick={handleReadModeClick}>Start Reading</button>
           <button onClick={() => alert('Move doc to new folder...')}>Move Doc</button>
           <button onClick={() => alert('Show document stats...')}>Document Stats</button>
           <button onClick={() => alert('Delete document...')}>Delete Doc</button>
