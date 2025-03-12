@@ -92,6 +92,105 @@
     color: white;
 }
 
+.card:hover {
+    background-color: #a5d6a7;
+    transition: background-color 0.3s ease;
+}
+
 .card.active {
     background-color: #a5d6a7;
+}
+
+/* Modal Styles */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: white;
+    padding: 2rem;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 600px;
+    position: relative;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.close-button {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #666;
+}
+
+.close-button:hover {
+    color: #333;
+}
+
+/* Flashcard Styles */
+.flashcard {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 2rem;
+    margin: 1rem 0;
+    min-height: 200px;
+}
+
+.flashcard-content {
+    text-align: center;
+}
+
+.flashcard-front h3,
+.flashcard-back h3 {
+    color: #333;
+    margin-bottom: 1rem;
+}
+
+.flashcard-front p,
+.flashcard-back p {
+    font-size: 1.1rem;
+    line-height: 1.5;
+    color: #555;
+}
+
+/* Modal Controls */
+.modal-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1rem;
+}
+
+.nav-button {
+    padding: 0.5rem 1rem;
+    background-color: #333;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.nav-button:hover:not(:disabled) {
+    background-color: #444;
+}
+
+.nav-button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.card-counter {
+    font-size: 1rem;
+    color: #666;
 }
