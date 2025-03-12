@@ -85,7 +85,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../components/login-components/loginstyle.css";
-import { useAuth } from "../AuthContext";
+import { useAuth, AuthProvider } from "../AuthContext";
 const API_BASE = process.env.REACT_APP_API_BASE;
 
 // ==============================
@@ -233,7 +233,7 @@ const RegistrationModal = ({ isOpen, onClose, onRegister }) => {
 // ==============================
 function LoginPage() {
   // Authentication state and functions
-  const { authTokens, setAuthTokens, currentUser, setCurrentUser } = useAuth();
+  const { authTokens, setAuthTokens, currentUser, setCurrentUser, loginUser } = useAuth();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
@@ -391,27 +391,39 @@ function LoginPage() {
   // ------------------------------
   // Authentication Handler
   // ------------------------------
+  // const handleLogin = async (e) => {
+  //   e.preventDefault();
+  //   setError(null);
+  //   try {
+  //     const res = await fetch(`${API_BASE}token/`, {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify({ username, password })
+  //     });
+  //     const data = await res.json();
+  //     if (res.ok) {
+  //       localStorage.setItem("authTokens", JSON.stringify(data));
+  //       setAuthTokens(data);
+  //       setCurrentUser({ username: data.username, email: data.email });
+  //       navigate("/dashboard");
+  //     } else {
+  //       setError("Invalid username or password");
+  //     }
+  //   } catch (err) {
+  //     setError("Login failed. Please try again.");
+  //     console.error("Login error:", err);
+  //   }
+  // };
+  //     const data = await res.json();
+
   const handleLogin = async (e) => {
     e.preventDefault();
-    setError(null);
-    try {
-      const res = await fetch(`${API_BASE}token/`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password })
-      });
-      const data = await res.json();
-      if (res.ok) {
-        localStorage.setItem("authTokens", JSON.stringify(data));
-        setAuthTokens(data);
-        setCurrentUser({ username: data.username, email: data.email });
+    const response = await loginUser(username, password);
+    if (response.success) {
         navigate("/dashboard");
-      } else {
-        setError("Invalid username or password");
-      }
-    } catch (err) {
-      setError("Login failed. Please try again.");
-      console.error("Login error:", err);
+    } else {
+      // handle login failure
+      setError(response.message);
     }
   };
 
