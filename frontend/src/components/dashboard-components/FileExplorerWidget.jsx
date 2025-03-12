@@ -1,8 +1,7 @@
 //will eventually contain the actual file explorer logic, but for nowcwill display rectangles as placeholders representing PDFs
 import React, { useState } from 'react';
 
-function FileExplorerWidget() {
-
+function FileExplorerWidget({ onSelectDoc }) {
   const placeholderPdfs = [
     'filename1.pdf',
     'filename2.pdf',
@@ -22,12 +21,26 @@ function FileExplorerWidget() {
     'filename16.pdf',
   ];
 
+  const handleClick = (pdf, e) => {
+    // Prevent the click event from bubbling up.
+    e.stopPropagation();
+    if (onSelectDoc) {
+      onSelectDoc({
+        title: pdf,
+        description: `Description for ${pdf}`
+      });
+    }
+  };
 
   return (
     <div className="FE-WidgetContainer">
       <div className="FE-InnerContainer">
         {placeholderPdfs.map((pdf, index) => (
-          <div key={index} className="FE-PdfItem">
+          <div 
+            key={index} 
+            className="FE-PdfItem"
+            onClick={(e) => handleClick(pdf, e)}
+          >
             <div className="FE-PdfIcon"></div>
             <p className="FE-PdfTitle">{pdf}</p>
           </div>
@@ -38,3 +51,4 @@ function FileExplorerWidget() {
 }
 
 export default FileExplorerWidget;
+
