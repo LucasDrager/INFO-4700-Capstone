@@ -84,32 +84,32 @@ services:
   # #####################
   # # Ollama AI Model   #
   # #####################
-  ollama:
-    build: ./LLM
-    container_name: ollama
-    env_file:
-      - .env
-    restart: unless-stopped
-    volumes:
-      - ollama_data:/root/.ollama
-    ports:
-      - "11434:11434"
-    networks:
-      - backend_net
-    devices:
-    - /dev/dri # Required for Intel & AMD GPUs
-    environment: #Allows the service to take advantage of GPU resorces
-    - NVIDIA_VISIBLE_DEVICES=all # Enables Nvidia GPUs
-    - NVIDIA_DRIVER_CAPABILITIES=compute,utility
-    - ROC_ENABLE_PRE_VEGA=1 # Enables AMD ROCm support (for older AMD GPUs)
-    - OLLAMA_USE_METAL=1 # Enables Apple Metal GPU support
-    deploy:
-        resources:
-          reservations:
-            devices:
-              - driver: nvidia
-                count: all
-                capabilities: [compute, utility]
+  # ollama:
+  #   build: ./LLM
+  #   container_name: ollama
+  #   env_file:
+  #     - .env
+  #   restart: unless-stopped
+  #   volumes:
+  #     - ollama_data:/root/.ollama
+  #   ports:
+  #     - "11434:11434"
+  #   networks:
+  #     - backend_net
+  #   devices:
+  #   - /dev/dri # Required for Intel & AMD GPUs
+  #   environment: #Allows the service to take advantage of GPU resorces
+  #   - NVIDIA_VISIBLE_DEVICES=all # Enables Nvidia GPUs
+  #   - NVIDIA_DRIVER_CAPABILITIES=compute,utility
+  #   - ROC_ENABLE_PRE_VEGA=1 # Enables AMD ROCm support (for older AMD GPUs)
+  #   - OLLAMA_USE_METAL=1 # Enables Apple Metal GPU support
+  #   deploy:
+  #       resources:
+  #         reservations:
+  #           devices:
+  #             - driver: nvidia
+  #               count: all
+  #               capabilities: [compute, utility]
 
 networks:
   backend_net:
