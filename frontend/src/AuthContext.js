@@ -7,6 +7,9 @@ const API_BASE = process.env.REACT_APP_API_BASE;
 
 export const AuthContext = createContext(null);
 
+const API_BASE = process.env.REACT_APP_API_BASE;
+
+
 export function useAuth() {
   return useContext(AuthContext);
 }
