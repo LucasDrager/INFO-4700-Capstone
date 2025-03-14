@@ -3,6 +3,7 @@
 // ============================
 import { createContext, useState, useContext, useEffect } from 'react';
 import jwtDecode from 'jwt-decode';
+const API_BASE = process.env.REACT_APP_API_BASE;
 
 export const AuthContext = createContext(null);
 
