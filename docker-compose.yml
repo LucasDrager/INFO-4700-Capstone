@@ -81,9 +81,25 @@ services:
       backend:
         condition: service_healthy  # Wait for Django backend to be ready
 
-  # #####################
-  # # Ollama AI Model   #
-  # #####################
+#########################
+  # Open WebUI (Svelte)   #
+  #########################
+  webui:
+    container_name: open_webui
+    image: ghcr.io/open-webui/open-webui:main
+    ports:
+      - "8080:8080"
+    environment:
+      - OLLAMA_BASE_URL=http://ollama:11434
+    networks:
+      - backend_net
+    depends_on:
+      - backend
+      - db
+
+  # # #####################
+  # # # Ollama AI Model   #
+  # # #####################
   # ollama:
   #   build: ./LLM
   #   container_name: ollama
@@ -110,7 +126,20 @@ services:
   #             - driver: nvidia
   #               count: all
   #               capabilities: [compute, utility]
-
+  
+#########################
+# Ollama AI Model (Mac Safe)
+#########################
+ollama:
+  image: ollama/ollama
+  container_name: ollama
+  restart: unless-stopped
+  volumes:
+    - ollama_data:/root/.ollama
+  ports:
+    - "11434:11434"
+  networks:
+    - backend_net
 networks:
   backend_net:
   frontend_net:
