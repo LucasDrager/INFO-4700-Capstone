@@ -1,6 +1,9 @@
 // ============================
 // Login Page
 // ============================
+// ============================
+// Login Page
+// ============================
 
 import React, { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
@@ -108,7 +111,8 @@ const SocialLoginModal = ({ isOpen, onClose, provider, onLogin }) => {
 // ==============================
 // Registration Modal Component
 // ==============================
-const RegistrationModal = ({ isOpen, onClose, onRegister }) => {
+const RegistrationModal = ({ isOpen, onClose, onRegister, setError }) => {
+  const navigate = useNavigate();
   const [registrationData, setRegistrationData] = useState({
     username: '',
     email: '',
@@ -117,11 +121,39 @@ const RegistrationModal = ({ isOpen, onClose, onRegister }) => {
   });
 
   const handleRegistrationSubmit = async (e) => {
+  const handleRegistrationSubmit = async (e) => {
     e.preventDefault();
     if (registrationData.password !== registrationData.confirmPassword) {
       alert("Passwords don't match");
+      alert("Passwords don't match");
       return;
     }
+  
+    try {
+      const res = await fetch(`${API_BASE}register/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          username: registrationData.username,
+          email: registrationData.email,
+          password: registrationData.password
+        })
+      });
+  
+      if (res.status === 201) {
+        navigate('/dashboard');  // or wherever users should go after registration
+      } else {
+        const data = await res.json();
+        alert(`Registration error: ${data.message || JSON.stringify(data)}`);
+      }
+    } catch (err) {
+      console.error(err);
+      setError("Something went wrong. Please try again.");
+    }
+  };
+  
   
     try {
       const res = await fetch(`${API_BASE}register/`, {
@@ -363,8 +395,6 @@ function LoginPage() {
     navigate("/dashboard");
   };
 
-  console.log("Using Auth/LoginPage.js");
-
   return (
     <div className="login-container">
       <div className="login-box">
@@ -497,6 +527,7 @@ function LoginPage() {
         isOpen={registrationModal}
         onClose={() => setRegistrationModal(false)}
         onRegister={handleRegistration}
+        setError={setError}
         setError={setError}
       />
     </div>
