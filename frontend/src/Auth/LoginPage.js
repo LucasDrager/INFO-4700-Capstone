@@ -1,9 +1,6 @@
 // ============================
 // Login Page
 // ============================
-// ============================
-// Login Page
-// ============================
 
 import React, { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
@@ -527,7 +524,6 @@ function LoginPage() {
         isOpen={registrationModal}
         onClose={() => setRegistrationModal(false)}
         onRegister={handleRegistration}
-        setError={setError}
         setError={setError}
       />
     </div>
