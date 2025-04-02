@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "../components/games-components/gamesstyle.css";
 
 const GamesPageToggleSidebar = () => {
@@ -9,6 +10,7 @@ const GamesPageToggleSidebar = () => {
   };
 
 const GamesPage = () => {
+    const navigate = useNavigate();
     const [activeTab, setActiveTab] = useState('flashcards');
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [currentFlashcard, setCurrentFlashcard] = useState(0);
@@ -23,14 +25,18 @@ const GamesPage = () => {
         setIsModalOpen(true);
     };
 
+    const handleCardDoubleClick = () => {
+        navigate('/flashcard');
+    };
+
 
     const renderContent = () => {
         if (activeTab === 'flashcards') {
             return (
                 <div className="cards-grid">
-                    <div className="card">
+                    <div className="card" onDoubleClick={handleCardDoubleClick}>
                         <h3 className="card-title">Title of PDF</h3>
-                        <p className="card-subtitle">Flashcards (120)</p>
+                        <p className="card-subtitle">Flashcards (10)</p>
                         <button className="preview-button" onClick={handlePreviewClick}>Preview</button>
                     </div>
                     
