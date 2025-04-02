@@ -8,28 +8,6 @@ import "../components/login-components/loginstyle.css";
 import { useAuth, AuthProvider } from "../AuthContext";
 const API_BASE = process.env.REACT_APP_API_BASE;
 
-// Authentication state and functions
-const { authTokens, setAuthTokens, currentUser, setCurrentUser, loginUser } = useAuth();
-const [username, setUsername] = useState("");
-const [password, setPassword] = useState("");
-const [error, setError] = useState(null);
-const navigate = useNavigate();
-
-// UI states for slider and modals
-const [currentSlide, setCurrentSlide] = useState(0);
-const [isDragging, setIsDragging] = useState(false);
-const [startPos, setStartPos] = useState(0);
-const [currentTranslate, setCurrentTranslate] = useState(0);
-const [prevTranslate, setPrevTranslate] = useState(0);
-const [isAutoPlaying, setIsAutoPlaying] = useState(true);
-const autoPlayRef = useRef();
-const sliderRef = useRef(null);
-const [socialLoginModal, setSocialLoginModal] = useState({
-  isOpen: false,
-  provider: ""
-});
-const [registrationModal, setRegistrationModal] = useState(false);
-
 // Slider content
 const slides = [
   {
@@ -118,7 +96,6 @@ const RegistrationModal = ({ isOpen, onClose, onRegister, setError }) => {
   });
 
   const handleRegistrationSubmit = async (e) => {
-  const handleRegistrationSubmit = async (e) => {
     e.preventDefault();
     if (registrationData.password !== registrationData.confirmPassword) {
       alert("Passwords don't match");
@@ -150,33 +127,6 @@ const RegistrationModal = ({ isOpen, onClose, onRegister, setError }) => {
       setError("Something went wrong. Please try again.");
     }
   };
-  
-  
-    try {
-      const res = await fetch(`${API_BASE}register/`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          username: registrationData.username,
-          email: registrationData.email,
-          password: registrationData.password
-        })
-      });
-  
-      if (res.status === 201) {
-        navigate('/dashboard');  // or wherever users should go after registration
-      } else {
-        const data = await res.json();
-        alert(`Registration error: ${data.message || JSON.stringify(data)}`);
-      }
-    } catch (err) {
-      console.error(err);
-      setError("Something went wrong. Please try again.");
-    }
-  };
-  
 
   if (!isOpen) return null;
 
@@ -245,6 +195,27 @@ const RegistrationModal = ({ isOpen, onClose, onRegister, setError }) => {
 // Merged LoginPage Component
 // ==============================
 function LoginPage() {
+  // Authentication state and functions
+const { authTokens, setAuthTokens, currentUser, setCurrentUser, loginUser } = useAuth();
+const [username, setUsername] = useState("");
+const [password, setPassword] = useState("");
+const [error, setError] = useState(null);
+const navigate = useNavigate();
+
+// UI states for slider and modals
+const [currentSlide, setCurrentSlide] = useState(0);
+const [isDragging, setIsDragging] = useState(false);
+const [startPos, setStartPos] = useState(0);
+const [currentTranslate, setCurrentTranslate] = useState(0);
+const [prevTranslate, setPrevTranslate] = useState(0);
+const [isAutoPlaying, setIsAutoPlaying] = useState(true);
+const autoPlayRef = useRef();
+const sliderRef = useRef(null);
+const [socialLoginModal, setSocialLoginModal] = useState({
+  isOpen: false,
+  provider: ""
+});
+const [registrationModal, setRegistrationModal] = useState(false);
   // Auto-play functionality for the slider
   useEffect(() => {
     if (isAutoPlaying) {
