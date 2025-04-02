@@ -9,7 +9,7 @@ import Header from "./components/Header";
 import HomePage from "./Pages/HomePage";
 import AboutPage from "./Pages/AboutPage";
 import ContactPage from "./Pages/ContactPage.js";
-import ChatPage from "./Pages/ChatPage";
+import ChatPage from "./Pages/ChatPage.js";
 import GamesPage from "./Pages/GamesPage";
 
 // Import Protected Pages
