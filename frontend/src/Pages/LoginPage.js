@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import "../components/login-components/loginstyle.css";
 
@@ -137,8 +137,6 @@ const LoginPage = () => {
   const [startPos, setStartPos] = useState(0);
   const [currentTranslate, setCurrentTranslate] = useState(0);
   const [prevTranslate, setPrevTranslate] = useState(0);
-  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
-  const autoPlayRef = useRef();
   const navigate = useNavigate();
   const [socialLoginModal, setSocialLoginModal] = useState({
     isOpen: false,
@@ -151,7 +149,7 @@ const LoginPage = () => {
   const slides = [
     {
       title: "Welcome to Lectern",
-      description: "Join our community of learners and educators in an interactive educational experience."
+      description: "Elevate your reading experience."
     },
     {
       title: "Interactive Learning",
@@ -159,24 +157,9 @@ const LoginPage = () => {
     },
     {
       title: "Track Progress",
-      description: "Monitor your learning progress and achievements through our comprehensive dashboard."
+      description: "Monitor your learning progress and achievements through our dashboard."
     }
   ];
-
-  // Auto-play functionality
-  useEffect(() => {
-    if (isAutoPlaying) {
-      autoPlayRef.current = setInterval(() => {
-        goToNextSlide();
-      }, 5000); // Change slide every 5 seconds
-    }
-
-    return () => {
-      if (autoPlayRef.current) {
-        clearInterval(autoPlayRef.current);
-      }
-    };
-  }, [isAutoPlaying, currentSlide]);
 
   const goToNextSlide = () => {
     if (currentSlide < slides.length - 1) {
@@ -198,15 +181,6 @@ const LoginPage = () => {
     }
   };
 
-  // Pause auto-play on hover
-  const handleMouseEnter = () => {
-    setIsAutoPlaying(false);
-  };
-
-  const handleMouseLeave = () => {
-    setIsAutoPlaying(true);
-  };
-
   const handleMouseDown = (e) => {
     setIsDragging(true);
     setStartPos(e.clientX);
@@ -223,27 +197,30 @@ const LoginPage = () => {
     const diff = currentPosition - startPos;
     const newTranslate = prevTranslate + diff;
     
-    // Add boundaries
-    const maxTranslate = 0;
-    const minTranslate = -(slides.length - 1) * 100;
+    // Limit sliding to prevent going beyond first and last slides
+    if (newTranslate > 0 || newTranslate < -((slides.length - 1) * 100)) return;
     
-    if (newTranslate <= maxTranslate && newTranslate >= minTranslate) {
-      setCurrentTranslate(newTranslate);
+    setCurrentTranslate(newTranslate);
+    if (sliderRef.current) {
+      sliderRef.current.style.transform = `translateX(${newTranslate}%)`;
     }
   };
 
   const handleMouseUp = () => {
     setIsDragging(false);
+    const movedBy = currentTranslate - prevTranslate;
+    
+    if (movedBy < -100 && currentSlide < slides.length - 1) {
+      goToNextSlide();
+    }
+    if (movedBy > 100 && currentSlide > 0) {
+      goToPrevSlide();
+    }
+    
     if (sliderRef.current) {
       sliderRef.current.style.cursor = 'grab';
+      sliderRef.current.style.transform = `translateX(${currentTranslate}%)`;
     }
-
-    // Snap to closest slide
-    const slideWidth = 100;
-    const newSlide = Math.round(Math.abs(currentTranslate) / slideWidth);
-    setCurrentSlide(newSlide);
-    setCurrentTranslate(-newSlide * slideWidth);
-    setPrevTranslate(-newSlide * slideWidth);
   };
 
   const handleMouseLeaveSlider = () => {
@@ -252,71 +229,10 @@ const LoginPage = () => {
     }
   };
 
-  const handleTouchStart = (e) => {
-    const touch = e.touches[0];
-    setStartPos(touch.clientX);
-    setPrevTranslate(currentTranslate);
-    setIsDragging(true);
-  };
-
-  const handleTouchMove = (e) => {
-    if (!isDragging) return;
-    
-    const touch = e.touches[0];
-    const currentPosition = touch.clientX;
-    const diff = currentPosition - startPos;
-    const newTranslate = prevTranslate + diff;
-    
-    // Add boundaries
-    const maxTranslate = 0;
-    const minTranslate = -(slides.length - 1) * 100;
-    
-    if (newTranslate <= maxTranslate && newTranslate >= minTranslate) {
-      setCurrentTranslate(newTranslate);
-    }
-  };
-
-  const handleTouchEnd = () => {
-    setIsDragging(false);
-    
-    // Snap to closest slide
-    const slideWidth = 100;
-    const newSlide = Math.round(Math.abs(currentTranslate) / slideWidth);
-    setCurrentSlide(newSlide);
-    setCurrentTranslate(-newSlide * slideWidth);
-    setPrevTranslate(-newSlide * slideWidth);
-  };
-
-  const handleDotClick = (index) => {
-    setCurrentSlide(index);
-    setCurrentTranslate(-index * 100);
-    setPrevTranslate(-index * 100);
-  };
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prevState => ({
-      ...prevState,
-      [name]: value
-    }));
-    setError('');
-  };
-
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    setError('');
-
-    try {
-      if (formData.username && formData.password) {
-        console.log('Login successful:', formData.username);
-        navigate('/dashboard');
-      } else {
-        setError('Please fill in all fields');
-      }
-    } catch (err) {
-      setError('Login failed. Please try again.');
-      console.error('Login error:', err);
-    }
+    // Add your login logic here
+    navigate('/dashboard');
   };
 
   const handleSocialLogin = (provider) => {
@@ -327,147 +243,95 @@ const LoginPage = () => {
   };
 
   const handleSocialLoginSubmit = (data) => {
-    console.log(`${socialLoginModal.provider} login:`, data);
+    // Add your social login logic here
+    console.log(`Logging in with ${socialLoginModal.provider}:`, data);
     navigate('/dashboard');
   };
 
   const handleRegistration = (data) => {
+    // Add your registration logic here
     console.log('Registration data:', data);
     navigate('/dashboard');
   };
 
   return (
-    <div className="login-container">
-      <div className="login-box">
-        <h1>Lectern</h1>
-        <p className="subtitle">Your gateway to interactive learning</p>
-        
-        <form onSubmit={handleSubmit}>
+    <div className="login-page">
+      <div className="login-container">
+        <div className="login-form">
+          <h2>Login to Lectern</h2>
           {error && <div className="error-message">{error}</div>}
+          <form onSubmit={handleSubmit}>
+            <div className="form-group">
+              <input
+                type="text"
+                placeholder="Username"
+                value={formData.username}
+                onChange={(e) => setFormData({...formData, username: e.target.value})}
+                required
+              />
+            </div>
+            <div className="form-group">
+              <input
+                type="password"
+                placeholder="Password"
+                value={formData.password}
+                onChange={(e) => setFormData({...formData, password: e.target.value})}
+                required
+              />
+            </div>
+            <button type="submit" className="login-button">Login</button>
+          </form>
           
-          <div className="form-group">
-            <input
-              type="text"
-              name="username"
-              placeholder="Username"
-              value={formData.username}
-              onChange={handleChange}
-              required
-            />
+          <div className="social-login">
+            <button onClick={() => handleSocialLogin('Google')} className="google-login">
+              Login with Google
+            </button>
+            <button onClick={() => handleSocialLogin('Facebook')} className="facebook-login">
+              Login with Facebook
+            </button>
           </div>
           
-          <div className="form-group">
-            <input
-              type="password"
-              name="password"
-              placeholder="Password"
-              value={formData.password}
-              onChange={handleChange}
-              required
-            />
+          <div className="register-link">
+            <p>Don't have an account? <button onClick={() => setRegistrationModal(true)}>Register</button></p>
           </div>
-          
-          <button type="submit" className="login-button">
-            Login
-          </button>
-        </form>
-
-        <div className="divider">
-          <span>or</span>
         </div>
-
-        <div className="social-login">
-          <button 
-            className="social-button facebook" 
-            aria-label="Login with Facebook"
-            onClick={() => handleSocialLogin('Facebook')}
-          >
-            <i className="fab fa-facebook-f"></i>
-          </button>
-          <button 
-            className="social-button google" 
-            aria-label="Login with Google"
-            onClick={() => handleSocialLogin('Google')}
-          >
-            <i className="fab fa-google"></i>
-          </button>
-          <button 
-            className="social-button github" 
-            aria-label="Login with GitHub"
-            onClick={() => handleSocialLogin('GitHub')}
-          >
-            <i className="fab fa-github"></i>
-          </button>
-        </div>
-
-        <p className="signup-text">
-          Don't have an Account? <button onClick={() => setRegistrationModal(true)} className="signup-link">Sign Up</button>
-        </p>
-      </div>
-
-      <div className="login-image">
+        
         <div 
           ref={sliderRef}
           className="slider-container"
-          onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeaveSlider}
           onMouseDown={handleMouseDown}
           onMouseMove={handleMouseMove}
           onMouseUp={handleMouseUp}
-          onTouchStart={handleTouchStart}
-          onTouchMove={handleTouchMove}
-          onTouchEnd={handleTouchEnd}
         >
-          <button 
-            className="slider-arrow prev" 
-            onClick={goToPrevSlide}
-            style={{ visibility: currentSlide === 0 ? 'hidden' : 'visible' }}
-          >
-            &#8249;
-          </button>
-          <button 
-            className="slider-arrow next" 
-            onClick={goToNextSlide}
-            style={{ visibility: currentSlide === slides.length - 1 ? 'hidden' : 'visible' }}
-          >
-            &#8250;
-          </button>
-          <div 
-            className="slider-track"
-            style={{
-              transform: `translateX(${currentTranslate}%)`,
-              transition: isDragging ? 'none' : 'transform 0.3s ease-out'
-            }}
-          >
+          <div className="slider" style={{ transform: `translateX(${currentTranslate}%)` }}>
             {slides.map((slide, index) => (
               <div key={index} className="slide">
-                <div className="floating-card">
-                  <h3>{slide.title}</h3>
-                  <p>{slide.description}</p>
-                </div>
+                <h2>{slide.title}</h2>
+                <p>{slide.description}</p>
               </div>
             ))}
           </div>
-        </div>
-        <div className="dots">
-          {slides.map((_, index) => (
-            <span
-              key={index}
-              className={`dot ${currentSlide === index ? 'active' : ''}`}
-              onClick={() => {
-                setCurrentSlide(index);
-                setCurrentTranslate(-index * 100);
-                setPrevTranslate(-index * 100);
-              }}
-            />
-          ))}
+          <div className="slider-nav">
+            {slides.map((_, index) => (
+              <button
+                key={index}
+                className={`nav-dot ${currentSlide === index ? 'active' : ''}`}
+                onClick={() => {
+                  setCurrentSlide(index);
+                  setCurrentTranslate(-index * 100);
+                  setPrevTranslate(-index * 100);
+                }}
+              />
+            ))}
+          </div>
         </div>
       </div>
 
       <SocialLoginModal
         isOpen={socialLoginModal.isOpen}
+        onClose={() => setSocialLoginModal({...socialLoginModal, isOpen: false})}
         provider={socialLoginModal.provider}
-        onClose={() => setSocialLoginModal({ isOpen: false, provider: '' })}
         onLogin={handleSocialLoginSubmit}
       />
 

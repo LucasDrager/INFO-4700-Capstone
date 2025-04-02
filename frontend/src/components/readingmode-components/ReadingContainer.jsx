@@ -1,10 +1,7 @@
 import React from 'react';
 
-function ReadingContainer({ isSidebarCollapsed }) {
-  const placeholderPdfs = [
-    'filename.pdf',
-  ];
-
+function ReadingContainer({ isSidebarCollapsed, file }) {
+  const placeholderPdfs = ['filename.pdf'];
   const sidebarWidth = isSidebarCollapsed ? '40px' : '300px'; // Adjust the width based on the sidebar state
 
   return (
@@ -36,34 +33,48 @@ function ReadingContainer({ isSidebarCollapsed }) {
           textAlign: 'center',
         }}
       >
-        {placeholderPdfs.map((pdf, index) => (
-          <div 
-            key={index} 
-            className="FE-PdfItem"
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'center',
-              backgroundColor: '#fff',
-              borderRadius: '5px',
-              padding: '20px',
-              width: '100%',
-              height: '100%',
-            }}
-          >
-            <p 
-              className="FE-PdfTitle"
+        {file ? (
+          // If a file is provided, show the embedded PDF
+          <div className="pdf-embed" style={{ width: '80%', margin: '0 auto' }}>
+            <iframe
+              src={file.url}
+              title={file.name}
+              width="100%"
+              height="600px"
+              style={{ border: 'none' }}
+            />
+          </div>
+        ) : (
+          // Otherwise, show the original placeholder(s)
+          placeholderPdfs.map((pdf, index) => (
+            <div 
+              key={index} 
+              className="FE-PdfItem"
               style={{
-                fontSize: '24px', // Larger text
-                fontWeight: 'bold',
-                textAlign: 'center',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                backgroundColor: '#fff',
+                borderRadius: '5px',
+                padding: '20px',
+                width: '100%',
+                height: '100%',
               }}
             >
-              {pdf}
-            </p>
-          </div>
-        ))}
+              <p 
+                className="FE-PdfTitle"
+                style={{
+                  fontSize: '24px', // Larger text
+                  fontWeight: 'bold',
+                  textAlign: 'center',
+                }}
+              >
+                {pdf}
+              </p>
+            </div>
+          ))
+        )}
       </div>
     </div>
   );
