@@ -20,6 +20,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.permissions import IsAuthenticated
 #AUTH
 from django.contrib.auth import get_user_model, authenticate, login, logout
 from django.contrib.auth.models import User
@@ -77,7 +78,8 @@ def parse_pdf(request):
 OLLAMA_API_URL = os.environ.get('OLLAMA_APP_API_URL')  # API URL for inter-container calls
 
 @csrf_exempt
-@login_required  # Ensures user is logged in before sending messages
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
 def chat_with_ollama(request):  
     if request.method != "POST":
         return JsonResponse({"error": "Invalid request method"}, status=400)
@@ -146,8 +148,9 @@ def chat_with_ollama(request):
         return JsonResponse({"error": f"Ollama HTTP error: {http_err.response.text}"}, status=http_err.response.status_code)
 
 
-# **Get chat history for the logged-in user**
-@login_required
+# Get chat history for the logged-in user
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
 def get_chat_history(request):
     user = request.user  
     chat = Chat.objects.filter(user=user).first()  # Get user's chat
@@ -160,7 +163,7 @@ def get_chat_history(request):
     })
     
     
-    # Text summarization endpoint
+# Text summarization endpoint
 @csrf_exempt
 def summarize_text(request):
     if request.method != "POST":
