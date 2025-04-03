@@ -81,8 +81,8 @@ services:
       backend:
         condition: service_healthy  # Wait for Django backend to be ready
 
-#########################
-  # Open WebUI (Svelte)   #
+  #########################
+  # Open WebUI            #
   #########################
   webui:
     container_name: open_webui
@@ -97,9 +97,10 @@ services:
       - backend
       - db
 
-  # # #####################
-  # # # Ollama AI Model   #
-  # # #####################
+ 
+  #####################
+  # Ollama AI Model   #
+  #####################
   # ollama:
   #   build: ./LLM
   #   container_name: ollama

@@ -11,6 +11,8 @@ import AboutPage from "./Pages/AboutPage";
 import ContactPage from "./Pages/ContactPage.js";
 import ChatPage from "./Pages/ChatPage.js";
 import GamesPage from "./Pages/GamesPage";
+import Flashcard from "./Pages/Flashcard";
+import PracticeTest from "./Pages/PracticeTest";
 
 // Import Protected Pages
 import Dashboard from "./Pages/Dashboard";
@@ -40,7 +42,7 @@ function AppContent() {
   const location = useLocation();
 
   // Hide the navbar on certain pages
-  const hideHeaderNav = ["/dashboard", "/settings", "/gamespage", "/GamesPage", "/reading-mode"].includes(location.pathname);
+  const hideHeaderNav = ["/dashboard", "/settings", "/gamespage", "/GamesPage", "/reading-mode", "/flashcard"].includes(location.pathname);
 
   return (
     <>
@@ -69,6 +71,7 @@ function AppContent() {
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/LLM" element={<ChatPage />} />
           <Route path="/gamespage" element={<GamesPage />} />
+          <Route path="/flashcard" element={<Flashcard />} />
 
           {/* Authentication Pages */}
           <Route path="/login" element={<LoginPage />} />
