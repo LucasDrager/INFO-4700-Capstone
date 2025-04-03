@@ -171,7 +171,7 @@ function AppContent() {
           transition: "background-color 0.3s, box-shadow 0.3s",
           "&:hover": {
             backgroundColor: "#e0e0e0",
-            boxShadow: "0 4px 8px rgba(84, 84, 84, 0.2)",
+            boxShadow: "0 4px 8px rgb(84, 84, 84)",
           },
           display: "inline-block",
           textAlign: "center",
