@@ -1,92 +1,31 @@
-// // ============================
-// // Login Page
-// // ============================
+// ============================
+// Login Page
+// ============================
 
-// import React, { useState, useEffect, createContext, useContext } from "react";
-// import { BrowserRouter as Router, Routes, Route, Link, useNavigate, Navigate, useLocation } from "react-router-dom";
-// import 'bootstrap/dist/css/bootstrap.min.css';
-// import { useAuth, AuthProvider } from '../AuthContext';
-// const API_BASE = process.env.REACT_APP_API_BASE;
-
-// function LoginPage() {
-  
-//   const { loginUser, authTokens, setAuthTokens, currentUser, setCurrentUser } = useAuth();
-//   const [username, setUsername] = useState("");
-//   const [password, setPassword] = useState("");
-//   const [error, setError] = useState(null);
-//   const navigate = useNavigate();
-
-//   const handleLogin = async (e) => {
-//     e.preventDefault();
-    
-//     // Debugging: Check if useAuth() is returning the correct values
-//     console.log("useAuth values:", { loginUser, authTokens, setAuthTokens, currentUser, setCurrentUser });
-
-//     const res = await fetch(`${process.env.REACT_APP_API_BASE}token/`, {
-//       method: 'POST',
-//       headers: { 'Content-Type': 'application/json' },
-//       body: JSON.stringify({ username, password })  
-//     });
-
-//     const data = await res.json();
-
-//     if (res.ok) {
-//       localStorage.setItem('authTokens', JSON.stringify(data));  
-//       setAuthTokens(data);
-//       setCurrentUser({ username: data.username, email: data.email });
-//       navigate("/dashboard");  
-//     } else {
-//       setError("Invalid username or password");
-//     }
-//   };
-//   console.log("Using Auth/LoginPage.js");
-//   return (
-//     <div className="container mt-5" style={{ maxWidth: '400px' }}>
-//       <h2>Login</h2>
-//       {error && <div className="alert alert-danger">{error}</div>}
-//       <form onSubmit={handleLogin}>
-//         <div className="form-group mb-3">
-//           <label>Username</label>
-//           <input
-//             type="text"
-//             className="form-control"
-//             value={username}
-//             onChange={(e) => setUsername(e.target.value)}
-//             required
-//           />
-//         </div>
-//         <div className="form-group mb-3">
-//           <label>Password</label>
-//           <input
-//             type="password"
-//             className="form-control"
-//             value={password}
-//             onChange={(e) => setPassword(e.target.value)}
-//             required
-//           />
-//         </div>
-//         <div className="mb-3">
-//           <Link to="/forgot-password">Forgot Password?</Link>
-//         </div>
-//         <button type="submit" className="btn btn-primary">Login</button>
-//       </form>
-//       <div className="mt-3">
-//         <span>Don't have an account? <Link to="/register">Register</Link></span>
-//       </div>
-//     </div>
-//   );
-// }
-
-// export default LoginPage;
-
-
-
-//new merged version 
 import React, { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../components/login-components/loginstyle.css";
 import { useAuth, AuthProvider } from "../AuthContext";
 const API_BASE = process.env.REACT_APP_API_BASE;
+
+// Slider content
+const slides = [
+  {
+    title: "Welcome to Lectern",
+    description:
+      "Join our community of learners and educators in an interactive educational experience."
+  },
+  {
+    title: "Interactive Learning",
+    description:
+      "Engage with our interactive learning tools and games to enhance your educational journey."
+  },
+  {
+    title: "Track Progress",
+    description:
+      "Monitor your learning progress and achievements through our comprehensive dashboard."
+  }
+];
 
 // ==============================
 // Social Login Modal Component
@@ -147,7 +86,8 @@ const SocialLoginModal = ({ isOpen, onClose, provider, onLogin }) => {
 // ==============================
 // Registration Modal Component
 // ==============================
-const RegistrationModal = ({ isOpen, onClose, onRegister }) => {
+const RegistrationModal = ({ isOpen, onClose, onRegister, setError }) => {
+  const navigate = useNavigate();
   const [registrationData, setRegistrationData] = useState({
     username: '',
     email: '',
@@ -155,14 +95,37 @@ const RegistrationModal = ({ isOpen, onClose, onRegister }) => {
     confirmPassword: ''
   });
 
-  const handleRegistrationSubmit = (e) => {
+  const handleRegistrationSubmit = async (e) => {
     e.preventDefault();
     if (registrationData.password !== registrationData.confirmPassword) {
-      alert("Passwords don't match!");
+      alert("Passwords don't match");
+      alert("Passwords don't match");
       return;
     }
-    onRegister(registrationData);
-    onClose();
+  
+    try {
+      const res = await fetch(`${API_BASE}register/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          username: registrationData.username,
+          email: registrationData.email,
+          password: registrationData.password
+        })
+      });
+  
+      if (res.status === 201) {
+        navigate('/dashboard');  // or wherever users should go after registration
+      } else {
+        const data = await res.json();
+        alert(`Registration error: ${data.message || JSON.stringify(data)}`);
+      }
+    } catch (err) {
+      console.error(err);
+      setError("Something went wrong. Please try again.");
+    }
   };
 
   if (!isOpen) return null;
@@ -233,46 +196,26 @@ const RegistrationModal = ({ isOpen, onClose, onRegister }) => {
 // ==============================
 function LoginPage() {
   // Authentication state and functions
-  const { authTokens, setAuthTokens, currentUser, setCurrentUser, loginUser } = useAuth();
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState(null);
-  const navigate = useNavigate();
+const { authTokens, setAuthTokens, currentUser, setCurrentUser, loginUser } = useAuth();
+const [username, setUsername] = useState("");
+const [password, setPassword] = useState("");
+const [error, setError] = useState(null);
+const navigate = useNavigate();
 
-  // UI states for slider and modals
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const [isDragging, setIsDragging] = useState(false);
-  const [startPos, setStartPos] = useState(0);
-  const [currentTranslate, setCurrentTranslate] = useState(0);
-  const [prevTranslate, setPrevTranslate] = useState(0);
-  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
-  const autoPlayRef = useRef();
-  const sliderRef = useRef(null);
-  const [socialLoginModal, setSocialLoginModal] = useState({
-    isOpen: false,
-    provider: ""
-  });
-  const [registrationModal, setRegistrationModal] = useState(false);
-
-  // Slider content
-  const slides = [
-    {
-      title: "Welcome to Lectern",
-      description:
-        "Join our community of learners and educators in an interactive educational experience."
-    },
-    {
-      title: "Interactive Learning",
-      description:
-        "Engage with our interactive learning tools and games to enhance your educational journey."
-    },
-    {
-      title: "Track Progress",
-      description:
-        "Monitor your learning progress and achievements through our comprehensive dashboard."
-    }
-  ];
-
+// UI states for slider and modals
+const [currentSlide, setCurrentSlide] = useState(0);
+const [isDragging, setIsDragging] = useState(false);
+const [startPos, setStartPos] = useState(0);
+const [currentTranslate, setCurrentTranslate] = useState(0);
+const [prevTranslate, setPrevTranslate] = useState(0);
+const [isAutoPlaying, setIsAutoPlaying] = useState(true);
+const autoPlayRef = useRef();
+const sliderRef = useRef(null);
+const [socialLoginModal, setSocialLoginModal] = useState({
+  isOpen: false,
+  provider: ""
+});
+const [registrationModal, setRegistrationModal] = useState(false);
   // Auto-play functionality for the slider
   useEffect(() => {
     if (isAutoPlaying) {
@@ -391,30 +334,6 @@ function LoginPage() {
   // ------------------------------
   // Authentication Handler
   // ------------------------------
-  // const handleLogin = async (e) => {
-  //   e.preventDefault();
-  //   setError(null);
-  //   try {
-  //     const res = await fetch(`${API_BASE}token/`, {
-  //       method: "POST",
-  //       headers: { "Content-Type": "application/json" },
-  //       body: JSON.stringify({ username, password })
-  //     });
-  //     const data = await res.json();
-  //     if (res.ok) {
-  //       localStorage.setItem("authTokens", JSON.stringify(data));
-  //       setAuthTokens(data);
-  //       setCurrentUser({ username: data.username, email: data.email });
-  //       navigate("/dashboard");
-  //     } else {
-  //       setError("Invalid username or password");
-  //     }
-  //   } catch (err) {
-  //     setError("Login failed. Please try again.");
-  //     console.error("Login error:", err);
-  //   }
-  // };
-  //     const data = await res.json();
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -443,8 +362,6 @@ function LoginPage() {
     console.log("Registration data:", data);
     navigate("/dashboard");
   };
-
-  console.log("Using Auth/LoginPage.js");
 
   return (
     <div className="login-container">
@@ -578,6 +495,7 @@ function LoginPage() {
         isOpen={registrationModal}
         onClose={() => setRegistrationModal(false)}
         onRegister={handleRegistration}
+        setError={setError}
       />
     </div>
   );

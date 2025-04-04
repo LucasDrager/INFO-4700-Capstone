@@ -1,0 +1,58 @@
+# .dockerignore file for optimal Docker builds
+
+# Node.js specific
+node_modules/
+*.log
+npm-debug.log*
+yarn-debug.log*
+
+# Python specific
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+.coverage
+
+# General development artifacts
+.idea/
+.vscode/
+*.swp
+*.swo
+dist/
+build/
+out/
+
+# Version control
+.git/
+.gitignore
+
+# Environment and secrets
+.env*
+*.env
+*.pem
+*.key
+*.crt
+
+# Project-specific patterns
+docs/
+*.md
+README*
+Dockerfile*
+docker-compose*
+tmp/
+temp/
+*.tmp
+.local/
+local/
+
+# Exclude specific files and directories
+frontend/public/
+frontend/src/
+backend/application/migrations/
+backend/application/__pycache__/
+backend/application/__pycache__/*
+
+# Allow necessary files
+!frontend/public/index.html
+!frontend/src/index.js
+!backend/application/settings.py
