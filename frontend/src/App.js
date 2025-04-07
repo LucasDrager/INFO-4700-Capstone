@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Link, Navigate, Outlet, useLoca
 import { useAuth, AuthProvider } from './AuthContext.js';
 
 // Import Components
-import Header from "./components/Header"; 
+import Header from "./components/Header";
 
 // Import Public Pages
 import HomePage from "./Pages/HomePage";
@@ -15,6 +15,7 @@ import Flashcard from "./Pages/Flashcard";
 import PracticeTest from "./Pages/PracticeTest";
 
 // Import Protected Pages
+import ThemeProvider from './ThemeContext'; /* rory's settings button test: can a user toggle light dark mode? */
 import Dashboard from "./Pages/Dashboard";
 import Settings from "./Pages/Settings";
 import ReadingModePage from "./Pages/ReadingMode";
@@ -24,6 +25,7 @@ import LoginPage from "./Auth/LoginPage.js";
 import RegisterPage from "./Auth/RegisterPage.js";
 import ForgotPasswordPage from "./Auth/ForgotPasswordPage.js";
 import ResetPasswordPage from "./Auth/ResetPasswordPage";
+
 
 
 
@@ -64,29 +66,30 @@ function AppContent() {
 
       {/* Routes Handling */}
       <div style={{ textAlign: "center", marginTop: hideHeaderNav ? "0" : "20px" }}>
-        <Routes>
-          {/* Public Pages */}
-          <Route path="/" element={<HomePage />} />
-          <Route path="/About" element={<AboutPage />} />
-          <Route path="/contact" element={<ContactPage />} />
-          <Route path="/LLM" element={<ChatPage />} />
-          <Route path="/gamespage" element={<GamesPage />} />
-          <Route path="/flashcard" element={<Flashcard />} />
+        <Routes location={location}>
 
-          {/* Authentication Pages */}
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-          <Route path="/reset-password" element={<ResetPasswordPage />} />
+            {/* Public Pages */}
+            <Route path="/" element={<HomePage />} />
+            <Route path="/About" element={<AboutPage />} />
+            <Route path="/contact" element={<ContactPage />} />
+            <Route path="/LLM" element={<ChatPage />} />
+            <Route path="/gamespage" element={<GamesPage />} />
+            <Route path="/flashcard" element={<Flashcard />} />
 
-          {/* Protected Pages (Only accessible if logged in) */}
-          <Route element={<PrivateOutlet />}>
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/settings" element={<Settings />} />
-            <Route path="/reading-mode" element={<ReadingModePage />} />
-          </Route>
+            {/* Authentication Pages */}
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+            <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+            <Route path="/reset-password" element={<ResetPasswordPage />} />
 
-          {/* Fallback Route */}
+            {/* Protected Pages (Only accessible if logged in) */}
+            < Route element={<PrivateOutlet />}>
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/settings" element={<Settings />} />
+              <Route path="/reading-mode" element={<ReadingModePage />} />
+            </Route>
+
+            {/* Fallback Route */}
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </div>
@@ -99,11 +102,13 @@ function AppContent() {
 // ============================
 function App() {
   return (
-    <Router>
-      <AuthProvider>
-        <AppContent />
-      </AuthProvider>
-    </Router>
+    <ThemeProvider>
+      <Router>
+        <AuthProvider>
+          <AppContent />
+        </AuthProvider>
+      </Router>
+    </ThemeProvider>
   );
 }
 

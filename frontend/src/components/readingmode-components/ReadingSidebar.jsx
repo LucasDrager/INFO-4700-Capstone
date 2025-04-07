@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import ReadingBreadcrumbs from './ReadingBreadcrumbs';
+
 
 const SidebarDashboard = () => {
   const navigate = useNavigate();
@@ -35,14 +37,14 @@ const SidebarDashboard = () => {
   };
 
   return (
-    <div 
+    <div
       className={`sidebar-dashboard ${isCollapsed ? 'collapsed' : ''}`}
       style={{
         position: 'fixed',
-        right: 0, 
+        right: 0,
         top: 0,
         height: '100%',
-        width: isCollapsed ? '0px' : '300px',   
+        width: isCollapsed ? '0px' : '300px',
         backgroundColor: isCollapsed ? 'transparent' : '#f4f4f4', //  Hide background when collapsed
         transition: 'width 0.3s ease, background-color 0.3s ease',
         overflow: 'hidden',  //  Prevents content from showing when collapsed
@@ -53,29 +55,30 @@ const SidebarDashboard = () => {
         alignItems: 'center', // Center items horizontally
       }}
     >
-      <div 
-        className="sidebar-dashboardContainer" 
-        style={{ 
-          width: '100%', 
-          height: '100%', 
+      <ReadingBreadcrumbs />
+      <div
+        className="sidebar-dashboardContainer"
+        style={{
+          width: '100%',
+          height: '100%',
           overflowY: 'auto', // Enable vertical scrolling
         }}
       >
         {/* Sticky notes */}
         {!isCollapsed && stickyNotes.map(note => (
-          <div 
+          <div
             key={note.id}
-            className="sticky-note" 
+            className="sticky-note"
             style={{
               position: 'relative', // Required for positioning the delete button
               backgroundColor: '#ffeb3b',
               padding: '10px',
-              margin: '10px auto', 
+              margin: '10px auto',
               borderRadius: '5px',
               boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
               textAlign: 'center',
               fontWeight: 'bold',
-              width: '90%', // 
+              width: '90%', //
               display: 'flex',
               justifyContent: 'center', // Center content horizontally
               alignItems: 'center', // Center content vertically
@@ -95,7 +98,7 @@ const SidebarDashboard = () => {
                 fontSize: '16px',
               }}
             />
-            <button 
+            <button
               onClick={() => handleDeleteStickyNote(note.id)}
               style={{
                 position: 'absolute',
@@ -113,8 +116,8 @@ const SidebarDashboard = () => {
         ))}
         {/* Button to add a new sticky note */}
         {!isCollapsed && (
-          <button 
-            onClick={handleAddStickyNote} 
+          <button
+            onClick={handleAddStickyNote}
             style={{
               margin: '10px',
               padding: '10px 20px',
@@ -127,16 +130,16 @@ const SidebarDashboard = () => {
         )}
       </div>
       {/* Button to collapse the sidebar */}
-      <div 
-        className="sidebar-tab" 
-        onClick={handleCollapse} 
-        style={{ cursor: 'pointer', padding: '17px' }} 
+      <div
+        className="sidebar-tab"
+        onClick={handleCollapse}
+        style={{ cursor: 'pointer', padding: '17px' }}
       >
         <div>
           {/* Collapse button icon */}
-          <div 
+          <div
             style={{
-              fontSize: '24px', 
+              fontSize: '24px',
               fontWeight: 'bold',
             }}
           >

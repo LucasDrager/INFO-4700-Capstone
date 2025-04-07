@@ -1,8 +1,6 @@
 import React from 'react';
-
 import ReadingSidebar from '../components/readingmode-components/ReadingSidebar';
 import ReadingContainer from '../components/readingmode-components/ReadingContainer';
-
 
 function ReadingModePage() {
     return (
@@ -14,6 +12,5 @@ function ReadingModePage() {
         </div>
     );
 }
-
 
 export default ReadingModePage;

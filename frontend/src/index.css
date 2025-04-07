@@ -1,52 +1,101 @@
+/* ===================================================================
+   GLOBAL STYLES & VARIABLES
+   =================================================================== */
 
+/* Global Variables: used across all pages for consistent theming */
+:root {
+  /* Global CSS variables for colors */
+  --primary: #1f4e79;       /* Primary blue used mainly on headers, buttons */
+  --secondary: #e3f2fd;     /* Light secondary background color */
+  --text: #1a1a1a;          /* Default text color */
+  --bg-light: #f0f4f8;       /* Light background used in gradients and cards */
+  --accent: #aabfd8;        /* Accent color used for borders and highlights */
+  --header-text: #ffffff;
+  --card-start: #ffffff;
+  --card-end: #f6f9fc;
+  --button-hvr: #d0e7ff;
+  --pdf-icon-bg: #ffffff;
+  --pdf-title-color: #000000;
+  --hover-bg: #e0e0e0;
+}
 
+/* Dark theme variables */
+:root.dark {
+  --primary: #1f4e79;
+  --secondary: #2b5278;
+  --text: #e0e0e0;
+  --bg-light: #2d3e50;
+  --accent: #4a6b8c;
+  --header-text: #e0e0e0;
+  --card-start: #2d3e50;
+  --card-end: #3a4a5d;
+  --button-hvr: #3f5c70;
+  --hover-bg: #3f5c70;
+  --pdf-icon-bg: #3a4a5d;
+  --pdf-title-color: #e0e0e0;
+  color: var(--bg-hvr);
+}
+
+/* Base styles for HTML and Body */
 html {
-  font-size: 16px; /* DO NOT CHANGE!! we use root ems which needs this to stay at 16. */
+  font-size: 16px; /* Base font size. DO NOT CHANGE because rem values depend on it */
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden; /* Hide horizontal scroll globally */
 }
 
 body {
-  margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Code blocks styling for consistency */
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
 
+/* Header: Likely used on multiple pages (e.g., Home, Dashboard, etc.) */
 .header {
-  background-color: #4ba881;
-  color: white;
+  background-color: var(--primary);
+  color: var(--header-text);
   padding: 1rem;
   text-align: center;
 }
 
-/* DASHBOARD */
-/* LARGER PAGE CONTAINER: hold elements side by side */
+
+/* ===================================================================
+   DASHBOARD PAGE STYLES
+   =================================================================== */
+
+/* Container holding sidebar and main content on the Dashboard page */
 .dashboard-container {
   display: flex;
+  overflow-y: hidden;
+  margin-left: 0;
   flex-direction: row;
 }
 
-/* MAIN CONTENT OF DASHBOARD PAGE*/
-.dashboard-mainContentArea { 
+/* Main Content Area on Dashboard: offset to accommodate sidebar */
+.dashboard-mainContentArea {
   flex: 1;
   padding: 1rem;
-  flex-direction: column;
-  margin-left: 21.875rem; /* sidebar isnt a flex item, so we need to offset it's width so content doesnt fold under it*/
+  margin-left: clamp(21.875rem, 21vw, 25rem);
+  /* This margin ensures the content doesn't fold under the fixed sidebar */
 }
 
-/* MY LIBRARY WIDGET */ 
-.myLib-DashboardWidget { 
-  height: 10rem;
-  width: 65rem; 
+/* MY LIBRARY WIDGET (Dashboard related) */
+.myLib-DashboardWidget {
+  height: 5rem;
+  width: 65rem;
   min-height: 150px;
-  background-color: white;
-  border: .5px solid #ccc;
+  /* Soft vertical gradient for a card look */
+  background: linear-gradient(to bottom,var(--card-start), var(--card-end));
+  border: 0.5px solid var(--accent);
   border-radius: 8px;
   box-sizing: border-box;
   padding: 1rem;
@@ -56,10 +105,12 @@ code {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
+/* Modified state that expands widget – used via a class toggle */
 .myLib-DashboardWidget.open {
-  height: 22rem;              
+  height: 20rem;
 }
 
+/* Header in the Library widget */
 .myLib-Header {
   display: flex;
   justify-content: space-between;
@@ -67,72 +118,63 @@ code {
   margin-bottom: 1rem;
 }
 
-.myLib-Search { 
+/* Search Input in the Library widget */
+.myLib-Search {
   width: 30rem;
   padding: 0.5rem;
-  border: 1px solid #ccc;
+  background-color: var(--secondary);
+  border: 1px solid var(--accent);
   border-radius: 4px;
+  box-shadow: inset 0 1px 2px rgba(31,78,121,0.2);
+}
+.myLib-Search:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(31,78,121,0.2);
 }
 
-.myLib-Folders { 
+/* Folders Box in Library */
+.myLib-Folders {
   display: flex;
-  gap: 1rem; /* spacing between folder buttons */
+  gap: 1rem;       /* Spacing between folder buttons */
   justify-content: center;
   flex-wrap: wrap;
 }
 
+/* Folder Button inside Library widget */
 .folder-button {
-  background-color: #ccc;
+  background-color: var(--accent);
   border: none;
   border-radius: 4px;
   padding: 0.5rem 1rem;
   cursor: pointer;
   font-size: 0.9rem;
+  transition: background 0.2s ease, transform 0.2s ease;
 }
-
 .folder-button:hover {
-  background-color: #bbb;
+  background-color: #aaa;
+  transform: translateY(-1px);
 }
-
 .myLib-PDFSection {
   display: flex;
   gap: 1rem;
-  background-color: #e6ffe6; /* Light green background, */
+  background-color: var(--secondary); /* Light green background, */
   border-radius: 4px;
   margin-top: 1rem;
-}
-
-/* PDF ITEMS CSS */
-.pdf-item {
-  display: flex;
-  flex-direction: column;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  width: 80px; 
-  text-align: center;
-}
-
-/* Placeholder for an actual PDF icon */
-.pdf-icon {
-  width: 5rem;            /*  60px (3.75rem if 1rem = 16px) */
-  height: 7rem;              /*  80px */
-  background-color: #ccc;    /* Placeholder color */
-  border: 1px solid #999;
-  border-radius: 4px;
-  margin-bottom: 0.5rem;
-}
+ }
 
 
-/* FILE EXPLORER */ 
+/* ===================================================================
+   FILE EXPLORER & PDF ITEMS (Dashboard / Library pages)
+   =================================================================== */
 
-/* FILE EXPLORER MAIN CONTAINER */
+/* Wrapper for file explorer widget  */
 .FE-WidgetContainer {
-  height: 25rem; 
-  width: 65rem; /* Match MyLibraryWidget width */
+  height: 25rem;
+  width: 65rem; /* Matches MyLibraryWidget width */
   min-height: 150px;
-  border: .5px solid #ccc;
+  border: 0.5px solid var(--accent);
   border-radius: 8px;
-  background-color: white;
+  background: linear-gradient(to bottom, var(--card-start), var(--card-end));
   box-sizing: border-box;
   padding: 1rem;
   display: flex;
@@ -141,13 +183,13 @@ code {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-/* INNER CONTAINER WITH SHADOW EFFECT */
+/* Inner container in the File Explorer */
 .FE-InnerContainer {
   width: 100%;
   height: 100%;
-  background-color: #e0e0e0;
+  background-color: var(-secondary);
   border-radius: 8px;
-  padding: 1rem; /* delete this and the docs will not be tightly packed*/
+  padding: 1rem;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-around;
@@ -155,278 +197,298 @@ code {
   box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-/* PDF ITEM CONTAINER */
+/* Individual PDF item preview */
 .FE-PdfItem {
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 6rem; /* Adjusted for proportion */
+  width: 6rem;
   margin: 0.5rem;
   text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
 }
 
 .FE-PdfItem:hover {
-  transform: translateY(-3px);
+  transform: translateY(-4px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
+.FE-PdfItem:after {
+  content: "double click";
+  position: absolute;
+  bottom: calc(-1.5rem + 25px);
+  left: 0;
+  width: 100%;
+  font-size: 0.7rem;
+  color: var(--primary);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
 
-/* PDF ICON STYLING */
+.FE-PdfItem:hover:after {
+  opacity: 1;
+}
+
+/* PDF icon style */
 .FE-PdfIcon {
-  width: 5rem; /* Match MyLibraryWidget */
-  height: 7rem; /* Maintain document proportions */
-  background-color: white;
-  border: 1px solid #aaa;
+  width: 5rem;
+  height: 7rem;
+  background-color: var(--pdf-icon-bg);
+  border: 1px solid var(--accent);
   border-radius: 4px;
   margin-bottom: 0.5rem;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
 }
-
 .FE-PdfIcon:hover {
   transform: scale(1.05);
-  border-color: #4ba881;
+  border-color: var(--primary);
 }
 
-/* PDF TITLE */
+/* PDF Title styling */
 .FE-PdfTitle {
   font-size: 0.85rem;
-  color: black;
+  color: var(--text);
 }
 
-/*BUTTOSN*/
+/* ===================================================================
+   BUTTONS (Dashboard & Other Pages)
+   =================================================================== */
 
+/* Container for the buttons dashboard section */
 .BDW-Container {
-  width: 65rem; /* Same as MyLibrary and FileExplorer */
+  width: 65rem;
   display: flex;
   justify-content: space-around;
   align-items: center;
-  position: relative; /* Ensures it gets covered when MyLibrary expands */
-  height: 12.5rem; /* 200px, as seen in the screenshot */
+  position: relative;
   margin-top: 1rem;
 }
 
-/* BUTTON STYLING */
+/* Main Dashboard Buttons styling */
 .BDW-Button {
-  width: 10rem; /* Square shape */
+  width: 10rem;
   height: 10rem;
   border: none;
   border-radius: 8px;
-  background-color: #f0f0f0; /* Light gray to match UI */
+  background: linear-gradient(135deg, var(--bg-light), var(--bg-light));
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 3rem; /* Icon size */
+  font-size: 3rem;
   cursor: pointer;
-  transition: background 0.2s ease-in-out;
+  transition: background 0.2s ease-in-out, transform 0.2s ease;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .BDW-Button:hover {
-  background-color: #d9d9d9;
+  background: linear-gradient(135deg, var(--bg-light), var(--hover-bg));
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+
 }
 
 .BDW-Icon {
   font-size: 4rem;
 }
 
-/* SidebarDashboard.jsx */
-/* Sidebar itself */
+/* ===================================================================
+   SIDEBAR DASHBOARD
+   (Used on the Dashboard page – left-hand fixed sidebar)
+   =================================================================== */
+
+/* Sidebar Dashboard container */
 .sidebar-dashboard {
   position: fixed;
   left: 0;
   top: 0;
-  width: 21.875rem; /* 350px converted: 350/16 */
+  width: clamp(21.875rem, 21vw, 25rem);
   height: 100vh;
-  padding: 1.5625rem; /* 25px */
-  background-color: #747272;
+  padding: 1.5625rem;
+  background: linear-gradient(135deg, #1e2e3e, #243b54); /* Dark blue gradient */
   display: flex;
   flex-direction: column;
   justify-content: space-between;
 }
 
-/* Container for rightmost column of sidebar */
+/* Inner container of the dashboard sidebar */
 .sidebar-dashboardContainer {
-  width: 18.75rem; /* 300px */
+  width: 18.75rem;
   height: 100%;
   display: flex;
   flex-direction: column;
-  background-color: #919191;
 }
 
-/* All widgets inside sidebar */
+/* User profile and upload widget spacing in dashboard sidebar */
 .sidebar-top,
 .sidebar-upload {
-  margin-bottom: 1.25rem; /* 20px */
+  margin-bottom: 1.25rem;
 }
 
-/* Sidebar upload widget */
+/* Hide default file input within the upload widget */
+.upload-widget input[type="file"] {
+  display: none;
+}
+
+/* Resize upload widget container within dashboard sidebar */
 .sidebar-upload {
-  height: 4.6875rem; /* 75px */
+  height: 4.6875rem;
   width: 80%;
-  margin: 0 1.875rem; /* 30px */
-  background-color: gray;
+  margin: 0 1.875rem;
 }
 
-/* Sidebar tab for settings */
-.sidebar-tab {
-  left: 100%;
-  position: absolute;
-  top: 45%;
-  transform: translateX(-50%);
+/* Upload Button within dashboard sidebar */
+.btn-upload {
+  padding: 0.75rem 1.25rem;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(90deg, var(--primary), var(--secondary));
+  color: var(--header-text);
+  font-weight: 500;
+  font-size: 1rem;
   cursor: pointer;
-  background-color: #747272;
-  height: 3.125rem; /* 50px */
-  width: 0.9375rem;  /* 15px */
-  border-radius: 0.25rem; /* 4px */
+  transition: background 0.2s ease, transform 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  width: 100%;
 }
 
-/* Sidebar tab triangle icon */
+.btn-upload:hover {
+  background: linear-gradient(135deg, var(--secondary), var(--button-hvr));
+  transform: translateY(-2px);
+  color: var(--text)
+}
+
+/* Folder Button within dashboard sidebar */
+.btn-folder {
+  margin-top: 0.5rem;
+  padding: 0.65rem 1rem;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(90deg, var(--primary), var(--secondary));
+  color: var(--header-text);
+  font-weight: 500;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.btn-folder:hover {
+  background: linear-gradient(135deg, #d0e7ff, #bcd9f0);
+  transform: translateY(-1px);
+}
+
+/* Sidebar Tab for collapse/expand in dashboard sidebar */
+.sidebar-tab {
+  position: absolute;
+  right: calc(1.5625rem - 0.9375rem);
+  top: 50%;
+  transform: translate(100%, -50%);
+  display: flex;
+  cursor: pointer;
+  background: linear-gradient(135deg, #1e2e3e, #243b54);
+  height: 3.125rem;
+  align-items: center;
+  justify-content: center;
+  width: 0.9375rem;
+  border-radius: 0.25rem;
+  transition: background 0.2s ease;
+  z-index: 999; /* Sits above other content */
+}
+
+.sidebar-tab:hover {
+  background-color: var(--bg-light);
+}
+
+/* Triangle icons used for arrow indicators in sidebar */
 .triangle {
   width: 0;
   height: 0;
-  transform: translateY(65%);
-  border-top: 0.625rem solid transparent;   /* 10px */
-  border-bottom: 0.625rem solid transparent; /* 10px */
-  border-left: 0.625rem solid white;         /* 10px */
+  border-top: 0.625rem solid transparent;
+  border-bottom: 0.625rem solid transparent;
+  border-left: 0.625rem solid white;
+  transform: scaleX(-1);
 }
 
 .rightTriangle {
   width: 0;
   height: 0;
-  transform: translateY(65%);
   border-top: 0.625rem solid transparent;
   border-bottom: 0.625rem solid transparent;
-  border-right: 0.625rem solid white; /* 10px */
+  border-right: 0.625rem solid white;
 }
 
-.sidebar-tab a {
-  color: white;
-  text-decoration: none;
-}
+/* ===================================================================
+   SIDEBAR SETTINGS
+   (Used on the Settings page – a fixed sidebar mimicking the dashboard thing that slides in from left)
+   =================================================================== */
 
-/* Sidebar plant widget */
-.sidebar-plant {
-  height: 18.75rem; /* 300px */
-  width: 15.625rem; /* 250px */
-  margin: 0 1.5625rem; /* 25px */
-  background-color: lightblue;
-  position: absolute;
-  bottom: 3vh; /* keep using vh if you want relative to viewport height */
-}
-
-/* SETTINGS */
-
-
-/* SETTINGS WIDGETS */ 
-/* SETTINGS WIDGETS CONTAINER */
-.SW-Container {
-  display: flex;
-  width: 60rem; /* Matches sidebar-settingsMainContent */
-  height: 47.84rem; /* 765.5px converted to rem */
-  gap: 1.5625rem; /* 25px spacing */
-  padding: 1.25rem; /* 20px padding inside */
-}
-
-
-/* SETTINGS WIDGETS CONTAINER */
-.SW-Container {
-  display: flex;
-  flex-direction: row;
-  width: 55rem; 
-  height: 47.8rem; 
-  gap: 1.5rem;
-  padding: 1.5rem; 
-}
-
-.SW-Left {
-  display: flex;
-  flex-direction: column;
-  width: 50%; 
-  gap: 1.5rem;
-}
-
-.SW-TallWidget {
-  height: 25rem; 
-  background-color: #d9d9d9;
-  border-radius: 1rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 1.5rem;
-  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
-}
-
-.SW-SquareWidget {
-  width: 100%; 
-  height: 18rem; 
-  background-color: #e6e6e6;
-  border-radius: 1rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 1.5rem;
-  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
-}
-
-/* Settings version of the sidebar from dashboard */
+/* Main container for the Settings page sidebar */
 .sidebar-settings {
   position: fixed;
   top: 0;
-  width: 80rem; 
+  width: 80rem;
   height: 100%;
-  padding: 1.5625rem; /* 25px */
-  background-color: #747272;
+  padding: 1.5625rem;
+  background: linear-gradient(135deg, #1e2e3e, #243b54); /* Dark gradient */
   display: flex;
   flex-direction: row;
-  gap: 1.5625rem; /* 25px */
+  gap: 1.5625rem;
   justify-content: space-between;
 }
 
+/* Main content area in Settings page (for settings widgets etc.) */
 .sidebar-settingsMainContent {
-  width: 60rem; 
+  width: 60rem;
   height: 100%;
 }
 
-/* SETTINGS version of sidebar */
+/* Mimic sidebar on Settings page to visually match the dashboard sidebar */
 .sidebar-settingsMimic {
-  width: 18.75rem; /* 300px */
+  width: 18.75rem;
   height: 100%;
   flex: 0 0 auto;
-  border-radius: .5rem;
+  border-radius: 0.5rem;
   display: flex;
   flex-direction: column;
   background-color: #919191;
 }
 
-/* Widgets inside settings sidebar */
+/* Spacing in the settings sidebar mimic section */
 .sidebar-settingsTop,
 .sidebar-settingsUpload {
-  margin-bottom: 1.25rem; /* 20px */
+  margin-bottom: 1.25rem;
 }
 
-.sidebar-Top {
-  height: 1.25rem; /* 20px */
-  margin: 1.25rem 0; /* 20px */
-}
-
+/* Settings page specific tab for expand/collapse */
 .sidebar-settingsTab {
   left: 100%;
   position: absolute;
   top: 45%;
   transform: translateX(-50%);
   cursor: pointer;
-  background-color: #747272;
-  height: 3.125rem; /* 50px */
-  width: 0.9375rem;  /* 15px */
+  background: linear-gradient(135deg, #1e2e3e, #243b54);
+  height: 3.125rem;
+  width: 0.9375rem;
   text-align: center;
-  border-radius: 0.25rem; /* 4px */
+  border-radius: 0.25rem;
 }
-
 .sidebar-settingsTab a {
   color: white;
   text-decoration: none;
 }
 
-
-/*Login page*/
+/* ===================================================================
+   LOGIN PAGE
+   (Styling for the Login page forms and container)
+   =================================================================== */
 
 .login-container {
   display: flex;
@@ -447,7 +509,7 @@ code {
 .login-box h1 {
   font-size: 2.5rem;
   margin-bottom: 1rem;
-  color: #333;
+  color: var(--text);
 }
 
 .subtitle {
@@ -470,99 +532,24 @@ code {
 .login-button {
   width: 100%;
   padding: 0.8rem;
-  background-color: #7FB77E;
+  background: linear-gradient(135deg, var(--primary), #163f66);
   color: white;
   border: none;
   border-radius: 4px;
   font-size: 1rem;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: background-color 0.3s, transform 0.3s;
 }
-
 .login-button:hover {
-  background-color: #6da76c;
+  background: linear-gradient(135deg, #163f66, #122b4a);
+  transform: translateY(-2px);
 }
 
-.divider {
-  text-align: center;
-  margin: 1.5rem 0;
-  position: relative;
-}
+/* ===================================================================
+   SLIDER & MODAL STYLES
+   (Used on pages with carousels and modals )
+   =================================================================== */
 
-.divider::before,
-.divider::after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  width: 45%;
-  height: 1px;
-  background-color: #ddd;
-}
-
-.divider::before {
-  left: 0;
-}
-
-.divider::after {
-  right: 0;
-}
-
-.divider span {
-  background-color: white;
-  padding: 0 10px;
-  color: #666;
-}
-
-.social-login {
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-}
-
-.social-button {
-  width: 40px;
-  height: 40px;
-  border: 1px solid #ddd;
-  border-radius: 50%;
-  background: none;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background-color 0.3s;
-}
-
-.social-button:hover {
-  background-color: #f5f5f5;
-}
-
-.signup-text {
-  text-align: center;
-  color: #666;
-}
-
-.signup-text a {
-  color: #7FB77E;
-  text-decoration: none;
-}
-
-.signup-text a:hover {
-  text-decoration: underline;
-}
-
-.login-image {
-  flex: 1;
-  background-color: #f5f5f5;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 2rem;
-  position: relative;
-}
-
-/* New Slider Styles */
 .slider-container {
   position: relative;
   width: 100%;
@@ -573,18 +560,15 @@ code {
   cursor: grab;
   user-select: none;
 }
-
 .slider-container:active {
   cursor: grabbing;
 }
-
 .slider-track {
   display: flex;
   width: 100%;
   height: 100%;
   will-change: transform;
 }
-
 .slide {
   min-width: 100%;
   height: 100%;
@@ -594,6 +578,7 @@ code {
   padding: 0 20px;
 }
 
+/* Floating card used in slider items */
 .floating-card {
   background: white;
   padding: 1.5rem;
@@ -603,28 +588,25 @@ code {
   max-width: 400px;
   transition: transform 0.3s ease;
 }
-
 .floating-card:hover {
   transform: translateY(-5px);
 }
-
 .floating-card h3 {
   margin-bottom: 0.5rem;
-  color: #333;
+  color: var(--text);
 }
-
 .floating-card p {
   color: #666;
   font-size: 0.9rem;
   line-height: 1.5;
 }
 
+/* Dots navigation for slider */
 .dots {
   display: flex;
   gap: 0.5rem;
   margin-top: 1rem;
 }
-
 .dot {
   width: 10px;
   height: 10px;
@@ -633,31 +615,15 @@ code {
   cursor: pointer;
   transition: all 0.3s ease;
 }
-
 .dot:hover {
-  background-color: #bbb;
+  background-color: #aaa;
 }
-
 .dot.active {
-  background-color: #7FB77E;
+  background-color: var(--primary);
   transform: scale(1.2);
 }
 
-.link-button {
-  background: none;
-  border: none;
-  color: #7FB77E;
-  cursor: pointer;
-  font-size: inherit;
-  padding: 0;
-  text-decoration: underline;
-}
-
-.link-button:hover {
-  color: #6da76c;
-}
-
-/* Slider Arrow Styles */
+/* Slider arrow buttons */
 .slider-arrow {
   position: absolute;
   top: 50%;
@@ -674,24 +640,21 @@ code {
   cursor: pointer;
   z-index: 10;
   transition: all 0.3s ease;
-  color: #333;
+  color: var(--text);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
-
 .slider-arrow:hover {
   background: white;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
-
 .slider-arrow.prev {
   left: 10px;
 }
-
 .slider-arrow.next {
   right: 10px;
 }
 
-/* Modal Styles */
+/* Modal overlay and content for pop-ups */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -704,7 +667,6 @@ code {
   align-items: center;
   z-index: 1000;
 }
-
 .modal-content {
   background: white;
   padding: 2rem;
@@ -714,122 +676,95 @@ code {
   position: relative;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
-
 .modal-content h2 {
   margin-bottom: 1.5rem;
-  color: #333;
+  color: var(--text);
   text-align: center;
 }
-
 .close-button {
   width: 100%;
   padding: 0.8rem;
   margin-top: 1rem;
   background-color: #f5f5f5;
-  color: #333;
+  color: var(--text);
   border: 1px solid #ddd;
   border-radius: 4px;
   font-size: 1rem;
   cursor: pointer;
   transition: background-color 0.3s;
 }
-
 .close-button:hover {
   background-color: #e5e5e5;
 }
 
-.signup-link {
-  background: none;
-  border: none;
-  color: #7FB77E;
-  cursor: pointer;
-  padding: 0;
-  font: inherit;
-  text-decoration: underline;
-}
+/* ===================================================================
+   DOCUMENT SPOTLIGHT SIDEBAR
+   (Used on pages where document previews are shown -- dashboard page right sidebar)
+   =================================================================== */
 
-.signup-link:hover {
-  color: #6da76c;
-}
-
-.error-message {
-  color: #dc3545;
-  margin-bottom: 1rem;
-  text-align: center;
-  font-size: 0.9rem;
-}
-
-
-
-
-
-/* Document Spotlight Sidebar (overall container) */
 .documentSpotlightSidebar {
   position: fixed;
   right: 0;
   top: 0;
-  width: 21.875rem; /* 350px */
+  width: 21.875rem;
   height: 100vh;
-  background-color: #747272; /* Dark gray matching left sidebar */
+  background: linear-gradient(135deg, #1e2e3e, #243b54);
   display: flex;
   flex-direction: column;
-  overflow: visible; /* ensure the tab is visible */
+  z-index: 100;
+  transition: transform 0.3s ease;
+  animation: slideIn 0.3s ease forwards;
+  overflow: visible;
   box-shadow: -2px 0 4px rgba(0,0,0,0.2);
 }
-
-/* Inner content area: lighter gray background */
 .documentSpotlightContent {
-  background-color: #919191; /* Lighter inner container */
   flex: 1;
   padding: 1rem;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start; /* align to top */
-  gap: 0.3125rem; /* 5px gap between items */
+  justify-content: flex-start;
+  gap: 0.3125rem;
 }
 
-/* Title styling at the top */
+@keyframes slideIn {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
 .documentSpotlightTitle {
   margin: 0;
   color: white;
 }
 
-/* Row for PDF preview and description */
 .documentSpotlightRow {
   display: flex;
   align-items: flex-start;
-  gap: 0.3125rem; /* 5px gap */
-  margin-top: 0.3125rem; /* 5px gap below title */
+  gap: 0.3125rem;
+  margin-top: 0.3125rem;
 }
 
-/* PDF Preview: same size as the small PDF icons (5rem x 7rem) */
 .documentSpotlightPreview {
-  width: 5rem;
-  height: 7rem;
+  width: 10rem;
+  height: 14rem;
   background-color: #ddd;
   border: 1px solid #999;
-  /* Overhang half its width off the left edge */
   transform: translateX(-50%);
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
 }
-
 .previewPlaceholder {
   font-size: 0.9rem;
   color: #666;
 }
 
-/* Description container: appears immediately to the right of the preview */
 .documentSpotlightDesc {
-  color: white;
+  color: var(--header-text);
   flex: 1;
 }
 
-/* Action buttons at the bottom */
 .documentSpotlightButtons {
-  margin-top: auto; /* Push to bottom */
+  margin-top: auto;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
@@ -839,35 +774,125 @@ code {
   padding: 0.5rem;
   border: none;
   border-radius: 4px;
-  background-color: #4ba881;
+  background-color: var(--primary);
   color: white;
   cursor: pointer;
 }
 
-/* Tab for closing (mirrored from .sidebar-tab) */
 .documentSpotlightTab {
   position: absolute;
-  left: -0.9375rem; /* 15px: tab width so it hangs off the left */
+  left: -0.9375rem;
   top: 50%;
   transform: translateY(-50%);
-  background-color: #747272;
-  width: 0.9375rem;  /* 15px */
-  height: 3.125rem;   /* 50px */
+  background: linear-gradient(135deg, #1e2e3e, #243b54);
+  width: 0.9375rem;
+  height: 3.125rem;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   z-index: 10;
-  /* Round the outer (left) edge */
   border-top-left-radius: 0.25rem;
   border-bottom-left-radius: 0.25rem;
+  transition: background-color 0.3s ease;
 }
 
-/* Triangle icon (mirrored arrow) */
 .documentSpotlightTab .triangle {
   width: 0;
   height: 0;
   border-top: 0.625rem solid transparent;
   border-bottom: 0.625rem solid transparent;
-  border-left: 0.625rem solid white; /* White arrow pointing left */
+  border-left: 0.625rem solid white;
+}
+
+/* ===================================================================
+   SETTINGS PAGE TWO-COLUMN LAYOUT
+   (Used on the Settings page when displaying side-by-side content)
+   =================================================================== */
+
+.sidebar-settings-layout {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 100vh;
+  background-color: var(--primary);
+}
+
+.settings-mainContent {
+  flex: 1;
+  background: linear-gradient(135deg, #1e2e3e, #243b54);
+  padding: 1.5rem;
+  overflow-y: auto;
+}
+
+.sidebar-dashboard-settingsView {
+  width: 21.875rem;
+  position: relative;
+  padding: 1.5625rem;
+  box-sizing: border-box;
+}
+.sidebar-dashboard-settingsView .sidebar-tab {
+  position: absolute;
+  left: 100%;
+  top: 45%;
+  transform: translateX(-50%);
+}
+
+/* ===================================================================
+   READING SIDEBAR & BREADCRUMBS
+   (Used on the Reading Mode page)
+   =================================================================== */
+
+.reading-sidebar {
+  width: 300px;  /* Custom width for the reading sidebar */
+  padding: 1rem;
+  background: linear-gradient(135deg, #1e2e3e, #243b54);
+}
+.reading-breadcrumbs {
+  display: flex;
+  align-items: center;
+  color: var(--bg-light);
+  margin-bottom: 1rem;
+}
+.breadcrumb-arrow {
+  background: none;
+  border: none;
+  color: var(--bg-light);
+  font-size: 1.25rem;
+  cursor: pointer;
+  margin-right: 0.5rem;
+}
+.breadcrumb-item {
+  cursor: pointer;
+  font-size: 1rem;
+  color: var(--bg-light);
+}
+.breadcrumb-separator {
+  margin: 0 0.5rem;
+  color: var(--bg-light);
+}
+.breadcrumb-item.active {
+  font-weight: bold;
+}
+
+
+/* page animations */
+
+.page-enter {
+  opacity: 0;
+  transform: translateX(10%);
+}
+.page-enter-active {
+  opacity: 1;
+  transform: translateX(0);
+  transition: opacity 300ms ease, transform 300ms ease;
+}
+.page-exit {
+  opacity: 1;
+  transform: translateX(0);
+}
+.page-exit-active {
+  opacity: 0;
+  transform: translateX(-10%);
+  transition: opacity 300ms ease, transform 300ms ease;
 }
