@@ -108,10 +108,11 @@ DATABASES = {
     }
 }
 
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
 # For local dev, you might allow all hosts for simplicity
 ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '').split(',')  # If multiple hosts, comma-separated
-
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators

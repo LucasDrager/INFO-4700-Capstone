@@ -31,6 +31,9 @@ from application.serializers import UserRegistrationSerializer
 ###  API IMPORTS ###
 from PyPDF2 import PdfReader
 from application.models import Chat, Message
+### DATABASE IMPORTS ###
+from rest_framework.parsers import MultiPartParser, FormParser
+from .serializers import FileUploadSerializer
 
 ### INITIALIZATION ###
 # Initialize the summarization pipeline with a specific model
@@ -71,6 +74,23 @@ def parse_pdf(request):
             return JsonResponse({"message": f"Error processing PDF: {str(e)}"}, status=500)
 
     return JsonResponse({"message": "Please upload a PDF file"})
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+@parser_classes([MultiPartParser, FormParser])
+def upload_pdf(request):
+    serializer = FileUploadSerializer(data=request.data, context={'request': request})
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def list_pdfs(request):
+    files = File.objects.all()
+    serializer = FileUploadSerializer(files, many=True)
+    return Response(serializer.data)
 
 #################################
 #     LLM API INFORMATION

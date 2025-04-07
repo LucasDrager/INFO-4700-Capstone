@@ -12,10 +12,11 @@ class ReaderProfile(models.Model):
     bio = models.TextField(blank=True)
     stats = models.JSONField(default=dict)
 
+# Storing meta data of file uploads in DB file system handled by django
 class File(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="files")
     file_name = models.CharField(max_length=255)
-    file_path = models.TextField()
+    file = models.FileField(upload_to='pdfs/')
     uploaded_at = models.DateTimeField(auto_now_add=True)
 
 class Annotation(models.Model):
