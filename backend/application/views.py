@@ -30,8 +30,9 @@ from .serializers import UserRegistrationSerializer, CustomTokenObtainPairSerial
 from application.serializers import UserRegistrationSerializer
 ###  API IMPORTS ###
 from PyPDF2 import PdfReader
-from application.models import Chat, Message
+from application.models import Chat, Message, File
 ### DATABASE IMPORTS ###
+from rest_framework.decorators import parser_classes
 from rest_framework.parsers import MultiPartParser, FormParser
 from .serializers import FileUploadSerializer
 

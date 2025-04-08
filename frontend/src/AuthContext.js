@@ -28,6 +28,8 @@ export function AuthProvider({ children }) {
         setAuthTokens(data);
         setCurrentUser(data.username);
         localStorage.setItem('authTokens', JSON.stringify(data));
+        localStorage.setItem('access_token', data.access);
+        localStorage.setItem('refresh_token', data.refresh);
         return { success: true };
       } else {
         return { success: false, message: "Invalid credentials." };

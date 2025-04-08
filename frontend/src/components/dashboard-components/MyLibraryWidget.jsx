@@ -1,29 +1,48 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
 function MyLibraryWidget({ onSelectDoc }) {
-  const folderData = [
-    { id: 1, name: 'Folder 1', pdfs: ['file1.pdf', 'file2.pdf', 'file3.pdf'] },
-    { id: 2, name: 'Folder 2', pdfs: ['docA.pdf', 'docB.pdf'] },
-    { id: 3, name: 'Folder 3', pdfs: ['project.pdf'] },
-    { id: 4, name: 'Folder 4', pdfs: ['example.pdf', 'example2.pdf'] },
-    { id: 5, name: 'Folder 5', pdfs: ['report.pdf'] },
-  ];
+  const [files, setFiles] = useState([]);
+  const [openFolder, setOpenFolder] = useState(null);
 
-  const [openFolderId, setOpenFolderId] = useState(null);
+  useEffect(() => {
+    const fetchFiles = async () => {
+      try {
+        const response = await axios.get('http://localhost:8000/list-pdfs/', {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+          }
+        });
+        setFiles(response.data);
+      } catch (error) {
+        console.error('Error fetching files:', error);
+      }
+    };
 
-  function handleFolderClick(folderId) {
-    if (folderId === openFolderId) {
-      setOpenFolderId(null);
+    fetchFiles();
+  }, []);
+
+  // Group files by "folder" - we'll use upload date as a pseudo-folder
+  const folders = files.reduce((acc, file) => {
+    const date = new Date(file.uploaded_at);
+    const folderName = `${date.getFullYear()}-${date.getMonth() + 1}`;
+    if (!acc[folderName]) acc[folderName] = [];
+    acc[folderName].push(file);
+    return acc;
+  }, {});
+
+  const handleFolderClick = (folderName) => {
+    if (folderName === openFolder) {
+      setOpenFolder(null);
     } else {
-      setOpenFolderId(folderId);
+      setOpenFolder(folderName);
     }
-  }
+  };
 
-  const widgetClass = openFolderId ? "myLib-DashboardWidget open" : "myLib-DashboardWidget";
+  const widgetClass = openFolder ? "myLib-DashboardWidget open" : "myLib-DashboardWidget";
 
   return (
     <div className={widgetClass}>
-      {/* Header + Search Row */}
       <div className="myLib-Header">
         <h2>my Library</h2>
         <input
@@ -33,42 +52,38 @@ function MyLibraryWidget({ onSelectDoc }) {
         />
       </div>
 
-      {/* Folders Section */}
       <div className="myLib-Folders">
-        {folderData.map((folder) => (
+        {Object.keys(folders).map((folderName) => (
           <button
-            key={folder.id}
+            key={folderName}
             className="folder-button"
-            onClick={() => handleFolderClick(folder.id)}
+            onClick={() => handleFolderClick(folderName)}
           >
-            {folder.name}
+            {folderName}
           </button>
         ))}
       </div>
 
-      {/* PDFs in the open folder */}
-      {openFolderId !== null && (
+      {openFolder && (
         <div className="myLib-PDFSection">
-          {folderData
-            .find((folder) => folder.id === openFolderId)
-            ?.pdfs.map((pdfName, index) => (
-              <div 
-                key={index} 
-                className="FE-PdfItem"
-                onClick={() => {
-                  if (onSelectDoc) {
-                    onSelectDoc({
-                      title: pdfName,
-                      description: `Description for ${pdfName}`
-                    });
-                  }
-                }}
-              >
-                <div className="FE-PdfIcon"></div>
-                <p className="FE-PdfTitle">{pdfName}</p>
-              </div>
-            ))
-          }
+          {folders[openFolder].map((file) => (
+            <div
+              key={file.id}
+              className="FE-PdfItem"
+              onClick={() => {
+                if (onSelectDoc) {
+                  onSelectDoc({
+                    title: file.file_name,
+                    description: `Uploaded at ${new Date(file.uploaded_at).toLocaleString()}`,
+                    fileUrl: `http://localhost:8000/media/${file.file}`
+                  });
+                }
+              }}
+            >
+              <div className="FE-PdfIcon"></div>
+              <p className="FE-PdfTitle">{file.file_name}</p>
+            </div>
+          ))}
         </div>
       )}
     </div>

@@ -1,33 +1,33 @@
-//will eventually contain the actual file explorer logic, but for nowcwill display rectangles as placeholders representing PDFs
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
 function FileExplorerWidget({ onSelectDoc }) {
-  const placeholderPdfs = [
-    'filename1.pdf',
-    'filename2.pdf',
-    'filename3.pdf',
-    'filename4.pdf',
-    'filename5.pdf',
-    'filename6.pdf',
-    'filename7.pdf',
-    'filename8.pdf',
-    'filename9.pdf',
-    'filename10.pdf',
-    'filename11.pdf',
-    'filename12.pdf',
-    'filename13.pdf',
-    'filename14.pdf',
-    'filename15.pdf',
-    'filename16.pdf',
-  ];
+  const [pdfFiles, setPdfFiles] = useState([]);
 
-  const handleClick = (pdf, e) => {
-    // Prevent the click event from bubbling up.
+  useEffect(() => {
+    const fetchFiles = async () => {
+      try {
+        const response = await axios.get('http://localhost:8000/list-pdfs/', {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+          }
+        });
+        setPdfFiles(response.data);
+      } catch (error) {
+        console.error('Error fetching files:', error);
+      }
+    };
+
+    fetchFiles();
+  }, []);
+
+  const handleClick = (file, e) => {
     e.stopPropagation();
     if (onSelectDoc) {
       onSelectDoc({
-        title: pdf,
-        description: `Description for ${pdf}`
+        title: file.file_name,
+        description: `Uploaded at ${new Date(file.uploaded_at).toLocaleString()}`,
+        fileUrl: `http://localhost:8000/media/${file.file}`
       });
     }
   };
@@ -35,14 +35,14 @@ function FileExplorerWidget({ onSelectDoc }) {
   return (
     <div className="FE-WidgetContainer">
       <div className="FE-InnerContainer">
-        {placeholderPdfs.map((pdf, index) => (
-          <div 
-            key={index} 
+        {pdfFiles.map((file) => (
+          <div
+            key={file.id}
             className="FE-PdfItem"
-            onClick={(e) => handleClick(pdf, e)}
+            onClick={(e) => handleClick(file, e)}
           >
             <div className="FE-PdfIcon"></div>
-            <p className="FE-PdfTitle">{pdf}</p>
+            <p className="FE-PdfTitle">{file.file_name}</p>
           </div>
         ))}
       </div>
@@ -51,4 +51,3 @@ function FileExplorerWidget({ onSelectDoc }) {
 }
 
 export default FileExplorerWidget;
-

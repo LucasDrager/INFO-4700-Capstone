@@ -21,6 +21,8 @@ from django.contrib.auth import views as auth_views
 from .views import list_pdfs, parse_pdf, chat_with_ollama, get_chat_history, register_user, summarize_text, RegisterUserView, CustomTokenObtainPairView
 from .views import upload_pdf, list_pdfs
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+from django.conf.urls.static import static
+from django.conf import settings
 
 def health_check(request):
     return JsonResponse({"status":"ok"}, status=200)
