@@ -1,0 +1,29 @@
+.sidebar {
+  background-color: #f4f4f4;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: width 0.3s;
+}
+
+.sidebar.open {
+  width: 300px;
+}
+
+.sidebar button {
+  margin: 10px;
+}
+
+.sidebar iframe {
+  width: 100%;
+  height: calc(100% - 40px);
+  border: none;
+}
+
+.main-content {
+  flex: 1;
+  padding: 20px;
+}
+
+.main-content button {
+  margin-bottom: 10px;
+}
