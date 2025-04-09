@@ -81,9 +81,9 @@ services:
       backend:
         condition: service_healthy  # Wait for Django backend to be ready
 
-  # #####################
-  # # Ollama AI Model   #
-  # #####################
+  #####################
+  # Ollama AI Model   #
+  #####################
   # ollama:
   #   build: ./LLM
   #   container_name: ollama

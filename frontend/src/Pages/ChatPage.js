@@ -21,10 +21,16 @@ function App() {
         setQuery(""); // Clear input box
 
         try {
+            const tokenData = localStorage.getItem("authTokens");
+            const { access } = JSON.parse(tokenData);
+
             const res = await fetch(API_URL, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ query, use_web_search: useWebSearch })
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${access}`
+            },
+            body: JSON.stringify({ query, use_web_search: useWebSearch })
             });
 
             if (!res.ok) {
@@ -53,17 +59,36 @@ function App() {
     // Retrieve chat history on load
     useEffect(() => {
         const fetchHistory = async () => {
-            try {
-                const res = await fetch("http://localhost:8000/api/chat-history/");
-                const data = await res.json();
-                setMessages(data.messages);
-            } catch (error) {
-                console.error("Error loading chat history:", error);
+          try {
+            const tokenData = localStorage.getItem("authTokens");
+            if (!tokenData) {
+              console.warn("No token found, skipping chat history fetch.");
+              return;
             }
+      
+            const { access } = JSON.parse(tokenData);
+      
+            const res = await fetch("http://localhost:8000/api/chat-history/", {
+              headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${access}`
+              }
+            });
+      
+            if (!res.ok) {
+              throw new Error(`HTTP error ${res.status}`);
+            }
+      
+            const data = await res.json();
+            setMessages(data.messages);
+          } catch (error) {
+            console.error("Error loading chat history:", error);
+          }
         };
-
+      
         fetchHistory();
-    }, []);
+      }, []);
+      
 
     return (
         <div style={{ padding: 20, maxWidth: 600, margin: "auto", fontFamily: "Arial" }}>

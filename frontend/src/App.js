@@ -11,6 +11,9 @@ import AboutPage from "./Pages/AboutPage";
 import ContactPage from "./Pages/ContactPage.js";
 import ChatPage from "./Pages/ChatPage";
 import GamesPage from "./Pages/GamesPage";
+import Flashcard from "./Pages/Flashcard";
+import PracticeTest from "./Pages/PracticeTest";
+import ReadingMode from "./Pages/ReadingMode";
 
 // Import Protected Pages
 import Dashboard from "./Pages/Dashboard";
@@ -39,8 +42,9 @@ function PrivateOutlet() {
 function AppContent() {
   const location = useLocation();
 
-  // Hide the navbar on certain pages
-  const hideHeaderNav = ["/dashboard", "/settings", "/gamespage", "/GamesPage", "/reading-mode"].includes(location.pathname);
+  // any path in this list will have the navbar hidden (with set hideHeadernav to TRUE)
+  const hideHeaderNav = ["/dashboard", "/settings", "/gamespage", "/GamesPage", "/reading-mode", "/flashcard", "/readingmode"].includes(location.pathname);
+
 
   return (
     <>
@@ -50,132 +54,14 @@ function AppContent() {
       {/* Conditionally display the navigation bar */}
       {!hideHeaderNav && (
         <nav style={{ marginTop: "20px", textAlign: "center" }}>
-        <Link to="/" style={{ margin: "10px",
-            fontSize: "24px",
-            fontWeight: "bold",
-            textDecoration: "none",
-            color: "#0072e5",
-            cursor: "pointer",
-            padding: "10px 20px",
-            borderRadius: "5px",
-            backgroundColor: "#f0f0f0",
-            boxShadow: "0 2px 4px rgba(0, 114, 32, 0.1)",
-            transition: "background-color 0.3s, box-shadow 0.3s",
-            "&:hover": {
-              backgroundColor: "#e0e0e0",
-              boxShadow: "0 4px 8px rgba(84, 84, 84, 0.2)",
-            },
-            display: "inline-block",
-            textAlign: "center",
-         }}>Home</Link>
-        <Link to="/about" style={{ margin: "10px",
-          fontSize: "24px",
-          fontWeight: "bold",
-          textDecoration: "none",
-          color: "#0072e5",
-          cursor: "pointer",
-          padding: "10px 20px",
-          borderRadius: "5px",
-          backgroundColor: "#f0f0f0",
-          boxShadow: "0 2px 4px rgba(0, 114, 32, 0.1)",
-          transition: "background-color 0.3s, box-shadow 0.3s",
-          "&:hover": {
-            backgroundColor: "#e0e0e0",
-            boxShadow: "0 4px 8px rgba(84, 84, 84, 0.2)",
-          },
-          display: "inline-block",
-          textAlign: "center",
-         }}>About</Link>
-        <Link to="/contact" style={{ margin: "10px",
-          fontSize: "24px",
-          fontWeight: "bold",
-          textDecoration: "none",
-          color: "#0072e5",
-          cursor: "pointer",
-          padding: "10px 20px",
-          borderRadius: "5px",
-          backgroundColor: "#f0f0f0",
-          boxShadow: "0 2px 4px rgba(0, 114, 32, 0.1)",
-          transition: "background-color 0.3s, box-shadow 0.3s",
-          "&:hover": {
-            backgroundColor: "#e0e0e0",
-            boxShadow: "0 4px 8px rgba(84, 84, 84, 0.2)",
-          },
-          display: "inline-block",
-          textAlign: "center",
-         }}>Contact</Link>
-        <Link to="/LLM" style={{ margin: "10px",
-          fontSize: "24px",
-          fontWeight: "bold",
-          textDecoration: "none",
-          color: "#0072e5",
-          cursor: "pointer",
-          padding: "10px 20px",
-          borderRadius: "5px",
-          backgroundColor: "#f0f0f0",
-          boxShadow: "0 2px 4px rgba(0, 114, 32, 0.1)",
-          transition: "background-color 0.3s, box-shadow 0.3s",
-          "&:hover": {
-            backgroundColor: "#e0e0e0",
-            boxShadow: "0 4px 8px rgba(84, 84, 84, 0.2)",
-          },
-          display: "inline-block",
-          textAlign: "center",
-         }}>LLM</Link>
-        <Link to="/dashboard" style={{ margin: "10px",
-          fontSize: "24px",
-          fontWeight: "bold",
-          textDecoration: "none",
-          color: "#0072e5",
-          cursor: "pointer",
-          padding: "10px 20px",
-          borderRadius: "5px",
-          backgroundColor: "#f0f0f0",
-          boxShadow: "0 2px 4px rgba(0, 114, 32, 0.1)",
-          transition: "background-color 0.3s, box-shadow 0.3s",
-          "&:hover": {
-            backgroundColor: "#e0e0e0",
-            boxShadow: "0 4px 8px rgba(84, 84, 84, 0.2)",
-          },
-          display: "inline-block",
-          textAlign: "center",
-         }}>Dashboard</Link>
-        <Link to="/gamespage" style={{ margin: "10px",
-          fontSize: "24px",
-          fontWeight: "bold",
-          textDecoration: "none",
-          color: "#0072e5",
-          cursor: "pointer",
-          padding: "10px 20px",
-          borderRadius: "5px",
-          backgroundColor: "#f0f0f0",
-          boxShadow: "0 2px 4px rgba(0, 114, 32, 0.1)",
-          transition: "background-color 0.3s, box-shadow 0.3s",
-          "&:hover": {
-            backgroundColor: "#e0e0e0",
-            boxShadow: "0 4px 8px rgba(84, 84, 84, 0.2)",
-          },
-          display: "inline-block",
-          textAlign: "center",
-         }}>Games</Link>
-        <Link to="/reading-mode" style={{ margin: "10px",
-          fontSize: "24px",
-          fontWeight: "bold",
-          textDecoration: "none",
-          color: "#0072e5",
-          cursor: "pointer",
-          padding: "10px 20px",
-          borderRadius: "5px",
-          backgroundColor: "#f0f0f0",
-          boxShadow: "0 2px 4px rgba(0, 114, 32, 0.1)",
-          transition: "background-color 0.3s, box-shadow 0.3s",
-          "&:hover": {
-            backgroundColor: "#e0e0e0",
-            boxShadow: "0 4px 8px rgb(84, 84, 84)",
-          },
-          display: "inline-block",
-          textAlign: "center",
-         }}>Reading Mode</Link>
+        <Link to="/" style={{ margin: "10px" }}>Home</Link>
+        <Link to="/about" style={{ margin: "10px" }}>About</Link>
+        <Link to="/contact" style={{ margin: "10px" }}>Contact</Link>
+        <Link to="/LLM" style={{ margin: "10px" }}>LLM</Link>
+        <Link to="/dashboard" style={{ margin: "10px" }}>Dashboard</Link>
+        <Link to="/gamespage" style={{ margin: "10px" }}>Games</Link>
+        <Link to="/reading-mode" style={{ margin: "10px" }}>Reading Mode</Link>
+          <Link to="/readingmode" style={{ margin: "10px" }}>ReadingMode</Link>
       </nav>
       )}
 
@@ -188,6 +74,7 @@ function AppContent() {
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/LLM" element={<ChatPage />} />
           <Route path="/gamespage" element={<GamesPage />} />
+          <Route path="/flashcard" element={<Flashcard />} />
 
           {/* Authentication Pages */}
           <Route path="/login" element={<LoginPage />} />
@@ -204,6 +91,7 @@ function AppContent() {
 
           {/* Fallback Route */}
           <Route path="*" element={<Navigate to="/" />} />
+          <Route path="/readingmode" element={<ReadingMode />} />
         </Routes>
       </div>
     </>
