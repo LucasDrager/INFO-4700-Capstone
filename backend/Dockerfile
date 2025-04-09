@@ -12,5 +12,5 @@ COPY . /app
 
 EXPOSE 8000
 
-# Default command will be overridden by docker-compose "command"
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+# Run migrations before starting the server
+CMD ["sh", "-c", "python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"]

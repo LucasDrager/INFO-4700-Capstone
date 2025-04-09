@@ -27,7 +27,6 @@ export function AuthProvider({ children }) {
         const data = await res.json();
         setAuthTokens(data);
         setCurrentUser(data.username);
-        localStorage.setItem('authTokens', JSON.stringify(data));
         localStorage.setItem('access_token', data.access);
         localStorage.setItem('refresh_token', data.refresh);
         return { success: true };
