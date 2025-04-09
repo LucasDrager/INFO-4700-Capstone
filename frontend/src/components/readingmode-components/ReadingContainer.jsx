@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import ReadingModeAnnotator from './ReadingModeAnnotator';
 
-function ReadingContainer({ isSidebarCollapsed }) {
+function ReadingContainer({ isSidebarCollapsed, onTextExtraction, currentPage, onPageChange, pdfText, notes, onAddNote, onDeleteNote, onUpdateNote, interactiveTextRef }) {
+  const [annotationPanelVisible, setAnnotationPanelVisible] = useState(false);
   const [files, setFiles] = useState([]);
   const [parsedText, setParsedText] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -55,7 +57,16 @@ function ReadingContainer({ isSidebarCollapsed }) {
         throw new Error(data.message || 'Error processing PDF file');
       }
 
-      setParsedText(data.texts || []);
+      const texts = data.texts || [];
+      setParsedText(texts);
+      
+      // Pass extracted text to parent component
+      if (onTextExtraction) {
+        onTextExtraction(texts);
+      }
+      
+      // Start timer when text is extracted
+      setTimerRunning(true);
     } catch (error) {
       console.error('Error uploading PDF:', error);
     } finally {
@@ -101,60 +112,97 @@ function ReadingContainer({ isSidebarCollapsed }) {
           position: 'relative',
         }}
       >
-        {/* Reading Timer */}
-      <div
-        className="reading-timer"
-        style={{
-          backgroundColor: '#a5d6a7',
-          color: '#333',
-          fontWeight: 'bold',
-          padding: '6px 12px', // Reduced padding to make it smaller
-          borderRadius: '5px', // Adjust border radius to match the button's radius
-          fontSize: '14px', // Reduced font size to make it smaller
-          opacity: 0.8, // Keep it more opaque
-          marginBottom: '20px', // Add some space below the timer
-          textAlign: 'center',
-          position: 'absolute',
-          top: '10px',
-          left: '50%',
-          transform: 'translateX(-50%)', // Center the timer horizontally
-  }}
->
-  {formatTime(timer)}
-</div>
-
-
-        {/* Switch View Button */}
-        {files.length > 0 && parsedText.length > 0 && (
-          <button
-            onClick={() => setViewMode(viewMode === 'text' ? 'pdf' : 'text')}
+        {/* Reading Timer and Controls Panel */}
+        <div
+          className="controls-panel"
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            gap: '15px',
+            position: 'absolute',
+            top: '10px',
+            left: '0',
+            right: '0',
+            zIndex: 10
+          }}
+        >
+          {/* Reading Timer */}
+          <div
+            className="reading-timer"
             style={{
-              position: 'absolute',
-              top: '10px',
-              right: '10px',
               backgroundColor: '#a5d6a7',
               color: '#333',
-              border: 'none',
-              padding: '8px 16px',
-              borderRadius: '5px',
-              cursor: 'pointer',
               fontWeight: 'bold',
+              padding: '6px 12px',
+              borderRadius: '5px',
               fontSize: '14px',
-              opacity: 0.7, // Button is more opaque by default
-              transition: 'opacity 0.3s, background-color 0.3s', // Smooth transition for opacity and background-color
-            }}
-            onMouseEnter={(e) => {
-              e.target.style.opacity = 1; // Full opacity on hover
-              e.target.style.backgroundColor = '#81c784'; // Darker shade of the original color
-            }}
-            onMouseLeave={(e) => {
-              e.target.style.opacity = 0.7; // Revert back to more opaque state
-              e.target.style.backgroundColor = '#a5d6a7'; // Original color on hover leave
+              opacity: 0.8,
+              textAlign: 'center',
             }}
           >
-            Switch to {viewMode === 'text' ? 'PDF View' : 'Text View'}
-          </button>
-        )}
+            {formatTime(timer)}
+          </div>
+          
+          {/* Mode Controls */}
+          {files.length > 0 && parsedText.length > 0 && (
+            <div className="mode-controls" style={{ display: 'flex', gap: '10px' }}>
+              {/* View Mode Toggle */}
+              <button
+                onClick={() => {
+                  const newViewMode = viewMode === 'text' ? 'pdf' : 'text';
+                  setViewMode(newViewMode);
+                  
+                  // Notify parent component about view mode change
+                  if (onPageChange) {
+                    onPageChange(currentPage, newViewMode);
+                  }
+                }}
+                style={{
+                  backgroundColor: '#a5d6a7',
+                  color: '#333',
+                  border: 'none',
+                  padding: '6px 12px',
+                  borderRadius: '5px',
+                  cursor: 'pointer',
+                  fontWeight: 'bold',
+                  fontSize: '14px',
+                  opacity: 0.8,
+                  transition: 'opacity 0.3s, background-color 0.3s',
+                }}
+              >
+                {viewMode === 'text' ? 'PDF View' : 'Text View'}
+              </button>
+              
+              {/* Annotation Panel Toggle Button */}
+              {viewMode === 'text' && (
+                <button
+                  onClick={() => setAnnotationPanelVisible(!annotationPanelVisible)}
+                  style={{
+                    backgroundColor: annotationPanelVisible ? '#f44336' : '#4caf50',
+                    color: 'white',
+                    border: 'none',
+                    padding: '6px 12px',
+                    borderRadius: '5px',
+                    cursor: 'pointer',
+                    fontWeight: 'bold',
+                    fontSize: '14px',
+                    opacity: 0.8,
+                    transition: 'opacity 0.3s, background-color 0.3s',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px'
+                  }}
+                >
+                  <span style={{ fontSize: '16px' }}>
+                    {annotationPanelVisible ? '✕' : '✎'}
+                  </span>
+                  {annotationPanelVisible ? 'Close' : 'Annotate'}
+                </button>
+              )}
+            </div>
+          )}
+        </div>
 
         {/* File Upload Section */}
         {!files.length && (
@@ -180,33 +228,85 @@ function ReadingContainer({ isSidebarCollapsed }) {
           </div>
         )}
 
-        {/* Interactive Text View */}
+        {/* Interactive Text View with slide-out annotation panel */}
         {viewMode === 'text' && parsedText.length > 0 && (
-          <div
-            className="interactive-text"
-            style={{
-              width: '100%',
-              height: '100%',
-              overflowY: 'auto',
-              textAlign: 'left',
-              padding: '20px',
-              whiteSpace: 'pre-wrap',
-              fontFamily: 'Georgia, serif',
-              fontSize: '16px',
-              lineHeight: '1.6',
-              color: '#333',
-              backgroundColor: '#fdfdfd',
-              borderRadius: '6px',
-              boxShadow: 'inset 0 0 4px rgba(0, 0, 0, 0.05)',
-              marginTop: '60px', // Add some margin to avoid overlap with the timer and button
-            }}
-          >
-            {parsedText.map((pageText, index) => (
-              <div key={index} style={{ marginBottom: '40px' }}>
-                <h4 style={{ marginBottom: '10px', color: '#555' }}>Page {index + 1}</h4>
-                <div>{pageText}</div>
-              </div>
-            ))}
+          <div className="interactive-text-container" style={{ position: 'relative', width: '100%', height: '100%' }}>
+            <div
+              ref={interactiveTextRef}
+              className="interactive-text"
+              onClick={() => onPageChange && onPageChange(currentPage + 1)}
+              onMouseUp={(e) => {
+                // Capture text selection and inform the annotation panel
+                const selection = window.getSelection();
+                const selectedText = selection.toString().trim();
+                // Store the selection in a data attribute that ReadingModeAnnotator can access
+                if (selectedText) {
+                  document.getElementById('selected-text-container').textContent = selectedText;
+                  // Trigger a custom event that ReadingModeAnnotator can listen for
+                  const event = new CustomEvent('textSelected', { detail: selectedText });
+                  document.dispatchEvent(event);
+                }
+              }}
+              style={{
+                width: '100%',
+                height: '100%',
+                overflowY: 'auto',
+                textAlign: 'left',
+                padding: '20px',
+                whiteSpace: 'pre-wrap',
+                fontFamily: 'Georgia, serif',
+                fontSize: '16px',
+                lineHeight: '1.6',
+                color: '#333',
+                backgroundColor: '#fdfdfd',
+                borderRadius: '6px',
+                boxShadow: 'inset 0 0 4px rgba(0, 0, 0, 0.05)',
+                marginTop: '60px', // Add some margin to avoid overlap with the timer and button
+              }}
+            >
+              {Array.isArray(parsedText) 
+                ? parsedText.map((pageText, index) => (
+                    <div key={index} style={{ marginBottom: '40px' }}>
+                      <h4 style={{ marginBottom: '10px', color: '#555' }}>Page {index + 1}</h4>
+                      <div>{pageText}</div>
+                    </div>
+                  ))
+                : parsedText
+              }
+            </div>
+            
+            {/* Hidden container to store selected text */}
+            <div id="selected-text-container" style={{ display: 'none' }}></div>
+            
+            {/* Slide-out Annotation Panel */}
+            <div className="annotation-panel-overlay" 
+              style={{
+                position: 'absolute',
+                top: '60px',
+                bottom: '0',
+                right: annotationPanelVisible ? '0' : '-350px',
+                width: '350px', 
+                backgroundColor: 'white',
+                boxShadow: '-2px 0 10px rgba(0, 0, 0, 0.1)',
+                transition: 'right 0.3s ease',
+                overflow: 'auto',
+                borderTopLeftRadius: '8px',
+                borderBottomLeftRadius: '8px',
+                zIndex: 10
+              }}
+            >
+              {annotationPanelVisible && (
+                <ReadingModeAnnotator 
+                  pdfText={pdfText.length > 0 ? pdfText : parsedText} 
+                  currentPage={currentPage}
+                  onPageClick={onPageChange}
+                  notes={notes}
+                  onAddNote={onAddNote}
+                  onDeleteNote={onDeleteNote}
+                  onUpdateNote={onUpdateNote}
+                />
+              )}
+            </div>
           </div>
         )}
 
@@ -228,14 +328,3 @@ function ReadingContainer({ isSidebarCollapsed }) {
 }
 
 export default ReadingContainer;
-
-
-
-
-
-
-
-
-
-
-
