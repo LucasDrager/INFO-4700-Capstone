@@ -1,0 +1,12 @@
+# Exclude Python cache files and directories
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Exclude other unnecessary files
+*.log
+*.tmp
+*.bak
+*.swp
+*.DS_Store
