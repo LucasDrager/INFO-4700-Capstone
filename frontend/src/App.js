@@ -9,7 +9,6 @@ import Header from "./components/Header";
 import HomePage from "./Pages/HomePage";
 import AboutPage from "./Pages/AboutPage";
 import ContactPage from "./Pages/ContactPage.js";
-import ChatPage from "./Pages/ChatPage.js";
 import GamesPage from "./Pages/GamesPage";
 import Flashcard from "./Pages/Flashcard";
 import PracticeTest from "./Pages/PracticeTest";
@@ -57,7 +56,6 @@ function AppContent() {
         <Link to="/" style={{ margin: "10px" }}>Home</Link>
         <Link to="/about" style={{ margin: "10px" }}>About</Link>
         <Link to="/contact" style={{ margin: "10px" }}>Contact</Link>
-        <Link to="/LLM" style={{ margin: "10px" }}>LLM</Link>
         <Link to="/dashboard" style={{ margin: "10px" }}>Dashboard</Link>
         <Link to="/gamespage" style={{ margin: "10px" }}>Games</Link>
         <Link to="/reading-mode" style={{ margin: "10px" }}>Reading Mode</Link>
@@ -72,7 +70,6 @@ function AppContent() {
           <Route path="/" element={<HomePage />} />
           <Route path="/About" element={<AboutPage />} />
           <Route path="/contact" element={<ContactPage />} />
-          <Route path="/LLM" element={<ChatPage />} />
           <Route path="/gamespage" element={<GamesPage />} />
           <Route path="/flashcard" element={<Flashcard />} />
 
