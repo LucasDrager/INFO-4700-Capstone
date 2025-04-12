@@ -6,22 +6,30 @@ function ReadingContainer({ isSidebarCollapsed, onTextExtraction, currentPage, o
   const [files, setFiles] = useState([]);
   const [parsedText, setParsedText] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [viewMode, setViewMode] = useState('text'); // 'text' or 'pdf'
-  const [timer, setTimer] = useState(0); // Timer for tracking reading time
-  const [timerRunning, setTimerRunning] = useState(false); // To control timer's state
+  const [viewMode, setViewMode] = useState('text');
+  const [timer, setTimer] = useState(0);
+  const [timerRunning, setTimerRunning] = useState(false);
   const sidebarWidth = isSidebarCollapsed ? '40px' : '300px';
+
+  useEffect(() => {
+    const savedTime = localStorage.getItem('totalReadingTime');
+    if (savedTime) {
+      setTimer(parseInt(savedTime, 10));
+    }
+  }, []);
 
   useEffect(() => {
     let interval;
     if (timerRunning) {
       interval = setInterval(() => {
-        setTimer((prevTime) => prevTime + 1);
+        setTimer((prevTime) => {
+          const newTime = prevTime + 1;
+          localStorage.setItem('totalReadingTime', newTime);
+          return newTime;
+        });
       }, 1000);
-    } else {
-      clearInterval(interval);
     }
-
-    return () => clearInterval(interval); // Cleanup interval on component unmount
+    return () => clearInterval(interval);
   }, [timerRunning]);
 
   const handleFileUpload = async (event) => {
@@ -39,8 +47,7 @@ function ReadingContainer({ isSidebarCollapsed, onTextExtraction, currentPage, o
     selectedFiles.forEach(file => formData.append('pdf_files', file));
 
     setIsLoading(true);
-    setTimer(0); // Reset timer when new file is uploaded
-    setTimerRunning(true); // Start the timer as soon as a file is uploaded
+    setTimerRunning(true);
 
     try {
       const response = await fetch('http://localhost:8000/api/parse-pdf/', {
@@ -59,13 +66,11 @@ function ReadingContainer({ isSidebarCollapsed, onTextExtraction, currentPage, o
 
       const texts = data.texts || [];
       setParsedText(texts);
-      
-      // Pass extracted text to parent component
+
       if (onTextExtraction) {
         onTextExtraction(texts);
       }
-      
-      // Start timer when text is extracted
+
       setTimerRunning(true);
     } catch (error) {
       console.error('Error uploading PDF:', error);
@@ -112,7 +117,7 @@ function ReadingContainer({ isSidebarCollapsed, onTextExtraction, currentPage, o
           position: 'relative',
         }}
       >
-        {/* Reading Timer and Controls Panel */}
+        {/* Controls Panel */}
         <div
           className="controls-panel"
           style={{
@@ -127,7 +132,7 @@ function ReadingContainer({ isSidebarCollapsed, onTextExtraction, currentPage, o
             zIndex: 10
           }}
         >
-          {/* Reading Timer */}
+          {/* Reading Timer with Jackson improvements */}
           <div
             className="reading-timer"
             style={{
@@ -137,23 +142,30 @@ function ReadingContainer({ isSidebarCollapsed, onTextExtraction, currentPage, o
               padding: '6px 12px',
               borderRadius: '5px',
               fontSize: '14px',
-              opacity: 0.8,
+              opacity: 0.7,
+              transition: 'opacity 0.3s, background-color 0.3s',
               textAlign: 'center',
+              cursor: 'default',
+            }}
+            onMouseEnter={(e) => {
+              e.target.style.opacity = 1;
+              e.target.style.backgroundColor = '#81c784';
+            }}
+            onMouseLeave={(e) => {
+              e.target.style.opacity = 0.7;
+              e.target.style.backgroundColor = '#a5d6a7';
             }}
           >
             {formatTime(timer)}
           </div>
-          
+
           {/* Mode Controls */}
           {files.length > 0 && parsedText.length > 0 && (
             <div className="mode-controls" style={{ display: 'flex', gap: '10px' }}>
-              {/* View Mode Toggle */}
               <button
                 onClick={() => {
                   const newViewMode = viewMode === 'text' ? 'pdf' : 'text';
                   setViewMode(newViewMode);
-                  
-                  // Notify parent component about view mode change
                   if (onPageChange) {
                     onPageChange(currentPage, newViewMode);
                   }
@@ -173,8 +185,7 @@ function ReadingContainer({ isSidebarCollapsed, onTextExtraction, currentPage, o
               >
                 {viewMode === 'text' ? 'PDF View' : 'Text View'}
               </button>
-              
-              {/* Annotation Panel Toggle Button */}
+
               {viewMode === 'text' && (
                 <button
                   onClick={() => setAnnotationPanelVisible(!annotationPanelVisible)}
@@ -204,7 +215,6 @@ function ReadingContainer({ isSidebarCollapsed, onTextExtraction, currentPage, o
           )}
         </div>
 
-        {/* File Upload Section */}
         {!files.length && (
           <>
             <h2 style={{ marginBottom: '20px' }}>Reading Mode</h2>
@@ -219,7 +229,6 @@ function ReadingContainer({ isSidebarCollapsed, onTextExtraction, currentPage, o
           </>
         )}
 
-        {/* Loading Spinner */}
         {isLoading && (
           <div className="mt-3">
             <div className="spinner-border text-primary" role="status">
@@ -228,7 +237,7 @@ function ReadingContainer({ isSidebarCollapsed, onTextExtraction, currentPage, o
           </div>
         )}
 
-        {/* Interactive Text View with slide-out annotation panel */}
+        {/* Interactive Text View with Annotation Panel */}
         {viewMode === 'text' && parsedText.length > 0 && (
           <div className="interactive-text-container" style={{ position: 'relative', width: '100%', height: '100%' }}>
             <div
@@ -236,13 +245,10 @@ function ReadingContainer({ isSidebarCollapsed, onTextExtraction, currentPage, o
               className="interactive-text"
               onClick={() => onPageChange && onPageChange(currentPage + 1)}
               onMouseUp={(e) => {
-                // Capture text selection and inform the annotation panel
                 const selection = window.getSelection();
                 const selectedText = selection.toString().trim();
-                // Store the selection in a data attribute that ReadingModeAnnotator can access
                 if (selectedText) {
                   document.getElementById('selected-text-container').textContent = selectedText;
-                  // Trigger a custom event that ReadingModeAnnotator can listen for
                   const event = new CustomEvent('textSelected', { detail: selectedText });
                   document.dispatchEvent(event);
                 }
@@ -261,31 +267,27 @@ function ReadingContainer({ isSidebarCollapsed, onTextExtraction, currentPage, o
                 backgroundColor: '#fdfdfd',
                 borderRadius: '6px',
                 boxShadow: 'inset 0 0 4px rgba(0, 0, 0, 0.05)',
-                marginTop: '60px', // Add some margin to avoid overlap with the timer and button
+                marginTop: '60px',
               }}
             >
-              {Array.isArray(parsedText) 
-                ? parsedText.map((pageText, index) => (
-                    <div key={index} style={{ marginBottom: '40px' }}>
-                      <h4 style={{ marginBottom: '10px', color: '#555' }}>Page {index + 1}</h4>
-                      <div>{pageText}</div>
-                    </div>
-                  ))
-                : parsedText
-              }
+              {parsedText.map((pageText, index) => (
+                <div key={index} style={{ marginBottom: '40px' }}>
+                  <h4 style={{ marginBottom: '10px', color: '#555' }}>Page {index + 1}</h4>
+                  <div>{Array.isArray(pageText) ? pageText.join('\n') : pageText}</div>
+                </div>
+              ))}
             </div>
-            
-            {/* Hidden container to store selected text */}
+
             <div id="selected-text-container" style={{ display: 'none' }}></div>
-            
-            {/* Slide-out Annotation Panel */}
-            <div className="annotation-panel-overlay" 
+
+            <div
+              className="annotation-panel-overlay"
               style={{
                 position: 'absolute',
                 top: '60px',
                 bottom: '0',
                 right: annotationPanelVisible ? '0' : '-350px',
-                width: '350px', 
+                width: '350px',
                 backgroundColor: 'white',
                 boxShadow: '-2px 0 10px rgba(0, 0, 0, 0.1)',
                 transition: 'right 0.3s ease',
@@ -296,8 +298,8 @@ function ReadingContainer({ isSidebarCollapsed, onTextExtraction, currentPage, o
               }}
             >
               {annotationPanelVisible && (
-                <ReadingModeAnnotator 
-                  pdfText={pdfText.length > 0 ? pdfText : parsedText} 
+                <ReadingModeAnnotator
+                  pdfText={pdfText.length > 0 ? pdfText : parsedText}
                   currentPage={currentPage}
                   onPageClick={onPageChange}
                   notes={notes}
@@ -310,9 +312,17 @@ function ReadingContainer({ isSidebarCollapsed, onTextExtraction, currentPage, o
           </div>
         )}
 
-        {/* PDF View */}
         {viewMode === 'pdf' && files.length > 0 && (
-          <div className="pdf-embed" style={{ width: '100%', height: '100%', marginTop: '60px' }}>
+          <div
+            className="pdf-embed"
+            style={{
+              width: '100%',
+              height: '100%',
+              marginTop: '60px',
+              borderRadius: '6px',
+              overflow: 'hidden',
+            }}
+          >
             <iframe
               src={files[0].url}
               title={files[0].name}
