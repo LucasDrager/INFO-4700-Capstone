@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
-const SidebarDashboard = ({ interactiveTextRef }) => {
+const SidebarDashboard = ({ interactiveTextRef, notes, onAddNote, onDeleteNote, onUpdateNote }) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const [stickyNotes, setStickyNotes] = useState([{ id: 1, text: 'Sticky Note' }]);
   const [searchTerm, setSearchTerm] = useState('');
 
   const handleCollapse = () => {
@@ -10,26 +9,18 @@ const SidebarDashboard = ({ interactiveTextRef }) => {
   };
 
   const handleStickyNoteChange = (id, event) => {
-    const newStickyNotes = stickyNotes.map(note => {
-      if (note.id === id) {
-        return { ...note, text: event.target.value };
-      }
-      return note;
-    });
-    setStickyNotes(newStickyNotes);
+    // Use the shared note update handler
+    onUpdateNote(id, event.target.value);
   };
 
   const handleAddStickyNote = (initialText = 'Sticky Note') => {
-    const newNote = {
-      id: stickyNotes.length + 1,
-      text: initialText,
-    };
-    setStickyNotes([...stickyNotes, newNote]);
+    // Use the shared note add handler
+    onAddNote(initialText, '');
   };
 
   const handleDeleteStickyNote = (id) => {
-    const newStickyNotes = stickyNotes.filter(note => note.id !== id);
-    setStickyNotes(newStickyNotes);
+    // Use the shared note delete handler
+    onDeleteNote(id);
   };
 
   const handleTextHighlight = () => {
@@ -44,24 +35,12 @@ const SidebarDashboard = ({ interactiveTextRef }) => {
     setSearchTerm(e.target.value);
   };
 
-  const filteredNotes = stickyNotes.filter(note =>
+  const filteredNotes = notes ? notes.filter(note =>
     note.text.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  ) : [];
 
-  useEffect(() => {
-    const target = interactiveTextRef?.current;
-    if (!target) return;
-
-    const handleMouseUp = () => {
-      const selection = window.getSelection();
-      if (selection && selection.toString().trim().length > 0) {
-        handleAddStickyNote(selection.toString());
-      }
-    };
-
-    target.addEventListener('mouseup', handleMouseUp);
-    return () => target.removeEventListener('mouseup', handleMouseUp);
-  }, [interactiveTextRef]);
+  // This effect is no longer needed since we're using the shared notes system
+  // and text selection is handled by ReadingContainer
 
   return (
     <div 
@@ -115,34 +94,48 @@ const SidebarDashboard = ({ interactiveTextRef }) => {
             style={{
               position: 'relative',
               backgroundColor: '#84c59b',
-              padding: '10px',
+              padding: '15px',
               margin: '10px auto', 
-              borderRadius: '5px',
+              borderRadius: '8px',
               boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
-              textAlign: 'center',
-              fontWeight: 'bold',
               width: '90%',
               display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
+              flexDirection: 'column',
+              justifyContent: 'flex-start',
+              alignItems: 'flex-start',
               color: '#fff',
             }}
           >
-            <textarea
-              value={note.text}
-              onChange={(event) => handleStickyNoteChange(note.id, event)}
-              style={{
-                width: '100%',
-                height: '100px',
-                border: 'none',
-                backgroundColor: 'transparent',
-                resize: 'none',
-                textAlign: 'center',
-                fontWeight: 'bold',
-                fontSize: '16px',
-                color: '#fff',
-              }}
-            />
+            <div style={{ display: 'flex', flexDirection: 'column', width: '100%', height: '100%' }}>
+              <textarea
+                value={note.text}
+                onChange={(event) => handleStickyNoteChange(note.id, event)}
+                style={{
+                  width: '100%',
+                  height: '70px',
+                  border: 'none',
+                  backgroundColor: 'transparent',
+                  resize: 'none',
+                  textAlign: 'left',
+                  fontWeight: 'bold',
+                  fontSize: '14px',
+                  color: '#fff',
+                  marginBottom: '5px',
+                }}
+              />
+              {note.comment && (
+                <div style={{
+                  fontSize: '12px',
+                  color: '#ffffffcc',
+                  textAlign: 'left',
+                  borderTop: '1px solid #ffffff33',
+                  paddingTop: '5px',
+                  fontStyle: 'italic'
+                }}>
+                  {note.comment}
+                </div>
+              )}
+            </div>
             <button 
               onClick={() => handleDeleteStickyNote(note.id)}
               style={{
@@ -165,14 +158,18 @@ const SidebarDashboard = ({ interactiveTextRef }) => {
           <button 
             onClick={() => handleAddStickyNote()} 
             style={{
-              margin: '10px',
+              margin: '15px auto',
               padding: '10px 20px',
               fontSize: '16px',
               cursor: 'pointer',
-              backgroundColor: '#84c59b',
+              backgroundColor: '#4caf50',
               color: 'white',
               border: 'none',
-              borderRadius: '6px'
+              borderRadius: '8px',
+              display: 'block',
+              boxShadow: '0 2px 5px rgba(0, 0, 0, 0.2)',
+              fontWeight: 'bold',
+              transition: 'all 0.2s ease'
             }}
           >
             Add Sticky Note
