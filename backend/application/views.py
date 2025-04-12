@@ -208,6 +208,11 @@ def summarize_text(request):
         print(f"Error in summarize_text: {str(e)}")
         traceback.print_exc()
         return JsonResponse({'error': str(e)}, status=500)
+
+    except ValueError as e:
+        print(f"Error in summarize_text: {str(e)}")
+        traceback.print_exc()
+        return JsonResponse({'error': str(e)}, status=400)
     
 #################################
 #   SECURITY API INFORMATION
