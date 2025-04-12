@@ -30,11 +30,6 @@ services:
     container_name: django_app
     env_file:
       - .env
-    # Assure that DB Table connections are established and
-    # Run the Django dev server on port 8000
-    command: >
-      sh -c "python manage.py migrate &&
-             python manage.py runserver 0.0.0.0:8000"
     volumes:
       - ./backend:/app  # Bind mount our backend code
     ports:
@@ -50,6 +45,7 @@ services:
         condition: service_healthy  # Wait for PostgreSQL to be ready
     networks:
       - backend_net
+    # Assure that DB Table connections are established and ready before Django starts
     healthcheck:
       test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/').status"]
       interval: 30s

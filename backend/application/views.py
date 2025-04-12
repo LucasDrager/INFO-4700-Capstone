@@ -80,6 +80,7 @@ def parse_pdf(request):
 @permission_classes([IsAuthenticated])
 @parser_classes([MultiPartParser, FormParser])
 def upload_pdf(request):
+    print("UPLOAD_PDF VIEW HAS BEEN CALLED")
     serializer = FileUploadSerializer(data=request.data, context={'request': request})
     if serializer.is_valid():
         serializer.save()

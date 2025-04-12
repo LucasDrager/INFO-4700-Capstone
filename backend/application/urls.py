@@ -42,6 +42,6 @@ urlpatterns = [
     path('password-reset/', auth_views.PasswordResetView.as_view(), name='password_reset'),
     path('password-reset-confirm/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
     path('api/register/', register_user, name='register_user'),
-    path('upload-pdf/', upload_pdf, name='upload-pdf'),
+    path('api/upload_pdf/', upload_pdf, name='upload-pdf'),
     path('list-pdfs/', list_pdfs, name='list-pdfs'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

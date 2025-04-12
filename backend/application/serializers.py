@@ -55,10 +55,12 @@ class FileUploadSerializer(serializers.ModelSerializer):
     class Meta:
         model = File
         fields = ['id', 'file', 'file_name', 'uploaded_at']
+        read_only_fields = ['file_name', 'uploaded_at', 'id']
 
     def create(self, validated_data):
         validated_data['file_name'] = validated_data['file'].name
         validated_data['user'] = self.context['request'].user
         return super().create(validated_data)
+
 
         
