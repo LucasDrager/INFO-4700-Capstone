@@ -17,6 +17,11 @@
   --pdf-icon-bg: #ffffff;
   --pdf-title-color: #000000;
   --hover-bg: #e0e0e0;
+
+  /* NEW DESIGN VARIABLES */
+  --design-width: 1440;
+  --design-height: 812;
+  --scale: 1;
 }
 
 /* Dark theme variables */
@@ -34,11 +39,17 @@
   --pdf-icon-bg: #3a4a5d;
   --pdf-title-color: #e0e0e0;
   color: var(--bg-hvr);
+
+  /* NEW DESIGN VARIABLES in dark theme */
+  --design-width: 1440;
+  --design-height: 812;
+  --scale: 1;
 }
 
 /* Base styles for HTML and Body */
 html {
-  font-size: 16px; /* Base font size. DO NOT CHANGE because rem values depend on it */
+  /* Originally fixed at 16px; now set to scale with –scale */
+  font-size: calc(16px * var(--scale));
 }
 
 html, body {
@@ -63,8 +74,17 @@ code {
 .header {
   background-color: var(--primary);
   color: var(--header-text);
-  padding: 1rem;
+  padding: calc(1rem * var(--scale));
   text-align: center;
+}
+/* Outer wrapper: always fills the full viewport width */
+
+/* Fixed design container: calibrated to 1440px */
+.app-frame {
+  margin: 0 auto;
+  width: 100%;
+  width: calc(var(--design-width) * 1px);
+  height: calc(var(--design-height) * 1px);
 }
 
 
@@ -83,31 +103,31 @@ code {
 /* Main Content Area on Dashboard: offset to accommodate sidebar */
 .dashboard-mainContentArea {
   flex: 1;
-  padding: 1rem;
-  margin-left: clamp(21.875rem, 21vw, 25rem);
+  padding: calc(1rem * var(--scale));
+  /* Replacing clamp() with uniform scaling */
+  margin-left: calc(21.875rem * var(--scale));
   /* This margin ensures the content doesn't fold under the fixed sidebar */
 }
 
 /* MY LIBRARY WIDGET (Dashboard related) */
 .myLib-DashboardWidget {
-  height: 5rem;
-  width: 65rem;
-  min-height: 150px;
+  height: calc(10rem * var(--scale));
+  width: calc(65rem * var(--scale));
   /* Soft vertical gradient for a card look */
-  background: linear-gradient(to bottom,var(--card-start), var(--card-end));
-  border: 0.5px solid var(--accent);
-  border-radius: 8px;
+  background: linear-gradient(to bottom, var(--card-start), var(--card-end));
+  border: calc(0.5px * var(--scale)) solid var(--accent);
+  border-radius: calc(8px * var(--scale));
   box-sizing: border-box;
-  padding: 1rem;
+  padding: calc(1rem * var(--scale));
   display: flex;
-  margin-bottom: 1rem;
+  margin-bottom: calc(1rem * var(--scale));
   flex-direction: column;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 calc(2px * var(--scale)) calc(4px * var(--scale)) rgba(0, 0, 0, 0.1);
 }
 
 /* Modified state that expands widget – used via a class toggle */
 .myLib-DashboardWidget.open {
-  height: 20rem;
+  height: calc(20rem * var(--scale));
 }
 
 /* Header in the Library widget */
@@ -115,27 +135,28 @@ code {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1rem;
+  margin-bottom: calc(1rem * var(--scale));
 }
 
 /* Search Input in the Library widget */
 .myLib-Search {
-  width: 30rem;
-  padding: 0.5rem;
+  width: calc(30rem * var(--scale));
+  padding: calc(0.5rem * var(--scale));
   background-color: var(--secondary);
-  border: 1px solid var(--accent);
-  border-radius: 4px;
-  box-shadow: inset 0 1px 2px rgba(31,78,121,0.2);
+  border: calc(1px * var(--scale)) solid var(--accent);
+  border-radius: calc(4px * var(--scale));
+  box-shadow: inset 0 calc(1px * var(--scale)) calc(2px * var(--scale)) rgba(31,78,121,0.2);
 }
+
 .myLib-Search:focus {
   outline: none;
-  box-shadow: 0 0 0 3px rgba(31,78,121,0.2);
+  box-shadow: 0 0 0 calc(3px * var(--scale)) rgba(31,78,121,0.2);
 }
 
 /* Folders Box in Library */
 .myLib-Folders {
-  display: flex;
-  gap: 1rem;       /* Spacing between folder buttons */
+  display: flex;     /* Spacing between folder buttons */
+  gap: 5%;
   justify-content: center;
   flex-wrap: wrap;
 }
@@ -144,24 +165,25 @@ code {
 .folder-button {
   background-color: var(--accent);
   border: none;
-  border-radius: 4px;
-  padding: 0.5rem 1rem;
+  border-radius: calc(4px * var(--scale));
+  padding: calc(0.5rem * var(--scale)) calc(1rem * var(--scale));
   cursor: pointer;
-  font-size: 0.9rem;
+  font-size: calc(0.9rem * var(--scale));
   transition: background 0.2s ease, transform 0.2s ease;
 }
+
 .folder-button:hover {
-  background-color: #aaa;
-  transform: translateY(-1px);
+  background-color: var(--secondary);
+  transform: translateY(calc(-1px * var(--scale)));
 }
+
 .myLib-PDFSection {
   display: flex;
-  gap: 1rem;
+  gap: calc(1rem * var(--scale));
   background-color: var(--secondary); /* Light green background, */
-  border-radius: 4px;
-  margin-top: 1rem;
- }
-
+  border-radius: calc(4px * var(--scale));
+  margin-top: calc(1rem * var(--scale));
+}
 
 /* ===================================================================
    FILE EXPLORER & PDF ITEMS (Dashboard / Library pages)
@@ -169,32 +191,32 @@ code {
 
 /* Wrapper for file explorer widget  */
 .FE-WidgetContainer {
-  height: 25rem;
-  width: 65rem; /* Matches MyLibraryWidget width */
-  min-height: 150px;
-  border: 0.5px solid var(--accent);
-  border-radius: 8px;
+  height: calc(25rem * var(--scale));
+  width: calc(65rem * var(--scale)); /* Matches MyLibraryWidget width */
+  min-height: calc(150px * var(--scale));
+  border: calc(0.5px * var(--scale)) solid var(--accent);
+  border-radius: calc(8px * var(--scale));
   background: linear-gradient(to bottom, var(--card-start), var(--card-end));
   box-sizing: border-box;
-  padding: 1rem;
+  padding: calc(1rem * var(--scale));
   display: flex;
   justify-content: center;
   align-items: center;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 calc(2px * var(--scale)) calc(4px * var(--scale)) rgba(0, 0, 0, 0.1);
 }
 
 /* Inner container in the File Explorer */
 .FE-InnerContainer {
   width: 100%;
   height: 100%;
-  background-color: var(-secondary);
-  border-radius: 8px;
-  padding: 1rem;
+  background-color: var(--secondary); /* Fixed typo: var(-secondary) -> var(--secondary) */
+  border-radius: calc(8px * var(--scale));
+  padding: calc(1rem * var(--scale));
   display: flex;
   flex-wrap: wrap;
   justify-content: space-around;
   align-items: center;
-  box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: inset 0 calc(4px * var(--scale)) calc(8px * var(--scale)) rgba(0, 0, 0, 0.2);
 }
 
 /* Individual PDF item preview */
@@ -202,8 +224,8 @@ code {
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 6rem;
-  margin: 0.5rem;
+  width: calc(6rem * var(--scale));
+  margin: calc(0.5rem * var(--scale));
   text-align: center;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -211,17 +233,17 @@ code {
 }
 
 .FE-PdfItem:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transform: translateY(calc(-4px * var(--scale)));
+  box-shadow: 0 calc(4px * var(--scale)) calc(8px * var(--scale)) rgba(0, 0, 0, 0.1);
 }
 
 .FE-PdfItem:after {
   content: "double click";
   position: absolute;
-  bottom: calc(-1.5rem + 25px);
+  bottom: calc((-1.5rem + 25px) * var(--scale));
   left: 0;
   width: 100%;
-  font-size: 0.7rem;
+  font-size: calc(0.7rem * var(--scale));
   color: var(--primary);
   opacity: 0;
   transition: opacity 0.2s ease;
@@ -233,13 +255,13 @@ code {
 
 /* PDF icon style */
 .FE-PdfIcon {
-  width: 5rem;
-  height: 7rem;
+  width: calc(5rem * var(--scale));
+  height: calc(7rem * var(--scale));
   background-color: var(--pdf-icon-bg);
-  border: 1px solid var(--accent);
-  border-radius: 4px;
-  margin-bottom: 0.5rem;
-  box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+  border: calc(1px * var(--scale)) solid var(--accent);
+  border-radius: calc(4px * var(--scale));
+  margin-bottom: calc(0.5rem * var(--scale));
+  box-shadow: inset 0 calc(1px * var(--scale)) calc(2px * var(--scale)) rgba(0,0,0,0.1);
 }
 .FE-PdfIcon:hover {
   transform: scale(1.05);
@@ -248,7 +270,7 @@ code {
 
 /* PDF Title styling */
 .FE-PdfTitle {
-  font-size: 0.85rem;
+  font-size: calc(0.85rem * var(--scale));
   color: var(--text);
 }
 
@@ -258,39 +280,38 @@ code {
 
 /* Container for the buttons dashboard section */
 .BDW-Container {
-  width: 65rem;
+  width: calc(65rem * var(--scale));
   display: flex;
   justify-content: space-around;
   align-items: center;
   position: relative;
-  margin-top: 1rem;
+  margin-top: calc(1rem * var(--scale));
 }
 
 /* Main Dashboard Buttons styling */
 .BDW-Button {
-  width: 10rem;
-  height: 10rem;
+  width: calc(10rem * var(--scale));
+  height: calc(10rem * var(--scale));
   border: none;
-  border-radius: 8px;
+  border-radius: calc(8px * var(--scale));
   background: linear-gradient(135deg, var(--bg-light), var(--bg-light));
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 3rem;
+  font-size: calc(3rem * var(--scale));
   cursor: pointer;
   transition: background 0.2s ease-in-out, transform 0.2s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 calc(2px * var(--scale)) calc(4px * var(--scale)) rgba(0, 0, 0, 0.1);
 }
 
 .BDW-Button:hover {
   background: linear-gradient(135deg, var(--bg-light), var(--hover-bg));
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-
+  transform: translateY(calc(-2px * var(--scale)));
+  box-shadow: 0 calc(4px * var(--scale)) calc(8px * var(--scale)) rgba(0, 0, 0, 0.2);
 }
 
 .BDW-Icon {
-  font-size: 4rem;
+  font-size: calc(4rem * var(--scale));
 }
 
 /* ===================================================================
@@ -303,10 +324,11 @@ code {
   position: fixed;
   left: 0;
   top: 0;
-  width: clamp(21.875rem, 21vw, 25rem);
+  /* Replace clamp() with uniform scaling */
+  width: calc(21.875rem * var(--scale));
   height: 100vh;
-  padding: 1.5625rem;
-  background: linear-gradient(135deg, #1e2e3e, #243b54); /* Dark blue gradient */
+  padding: calc(1.5625rem * var(--scale));
+  background: linear-gradient(to bottom right, var(--primary), var(--accent));
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -314,7 +336,7 @@ code {
 
 /* Inner container of the dashboard sidebar */
 .sidebar-dashboardContainer {
-  width: 18.75rem;
+  width: calc(18.75rem * var(--scale));
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -323,7 +345,7 @@ code {
 /* User profile and upload widget spacing in dashboard sidebar */
 .sidebar-top,
 .sidebar-upload {
-  margin-bottom: 1.25rem;
+  margin-bottom: calc(1.25rem * var(--scale));
 }
 
 /* Hide default file input within the upload widget */
@@ -333,72 +355,72 @@ code {
 
 /* Resize upload widget container within dashboard sidebar */
 .sidebar-upload {
-  height: 4.6875rem;
+  height: calc(4.6875rem * var(--scale));
   width: 80%;
-  margin: 0 1.875rem;
+  margin: 0 calc(1.875rem * var(--scale));
 }
 
 /* Upload Button within dashboard sidebar */
 .btn-upload {
-  padding: 0.75rem 1.25rem;
+  padding: calc(0.75rem * var(--scale)) calc(1.25rem * var(--scale));
   border: none;
-  border-radius: 8px;
-  background: linear-gradient(90deg, var(--primary), var(--secondary));
+  border-radius: calc(8px * var(--scale));
+  background: var(--primary);
   color: var(--header-text);
   font-weight: 500;
-  font-size: 1rem;
+  font-size: calc(1rem * var(--scale));
   cursor: pointer;
   transition: background 0.2s ease, transform 0.2s ease;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  gap: calc(0.5rem * var(--scale));
+  box-shadow: 0 calc(2px * var(--scale)) calc(4px * var(--scale)) rgba(0,0,0,0.1);
   width: 100%;
 }
 
 .btn-upload:hover {
-  background: linear-gradient(135deg, var(--secondary), var(--button-hvr));
-  transform: translateY(-2px);
-  color: var(--text)
+  background: linear-gradient(90deg, var(--primary), var(--secondary));
+  transform: translateY(calc(-2px * var(--scale)));
+  color: var(--header-text);
 }
 
 /* Folder Button within dashboard sidebar */
 .btn-folder {
-  margin-top: 0.5rem;
-  padding: 0.65rem 1rem;
+  margin-top: calc(0.5rem * var(--scale));
+  padding: calc(0.65rem * var(--scale)) calc(1rem * var(--scale));
   border: none;
-  border-radius: 8px;
-  background: linear-gradient(90deg, var(--primary), var(--secondary));
+  border-radius: calc(8px * var(--scale));
+  background: var(--primary);
   color: var(--header-text);
   font-weight: 500;
-  font-size: 0.95rem;
+  font-size: calc(0.95rem * var(--scale));
   cursor: pointer;
   transition: background 0.2s ease, transform 0.2s ease;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: calc(0.5rem * var(--scale));
   width: 100%;
 }
 
 .btn-folder:hover {
-  background: linear-gradient(135deg, #d0e7ff, #bcd9f0);
-  transform: translateY(-1px);
+  background: linear-gradient(90deg, var(--primary), var(--secondary));
+  transform: translateY(calc(-1px * var(--scale)));
 }
 
 /* Sidebar Tab for collapse/expand in dashboard sidebar */
 .sidebar-tab {
   position: absolute;
-  right: calc(1.5625rem - 0.9375rem);
+  right: calc((1.5625rem - 0.9375rem) * var(--scale));
   top: 50%;
-  transform: translate(100%, -50%);
+  transform: translate(calc(100% * var(--scale)), -50%);
   display: flex;
   cursor: pointer;
-  background: linear-gradient(135deg, #1e2e3e, #243b54);
-  height: 3.125rem;
+  background: var(--primary);
+  height: calc(3.125rem * var(--scale));
   align-items: center;
   justify-content: center;
-  width: 0.9375rem;
-  border-radius: 0.25rem;
+  width: calc(0.9375rem * var(--scale));
+  border-radius: calc(0.25rem * var(--scale));
   transition: background 0.2s ease;
   z-index: 999; /* Sits above other content */
 }
@@ -411,18 +433,18 @@ code {
 .triangle {
   width: 0;
   height: 0;
-  border-top: 0.625rem solid transparent;
-  border-bottom: 0.625rem solid transparent;
-  border-left: 0.625rem solid white;
+  border-top: calc(0.625rem * var(--scale)) solid transparent;
+  border-bottom: calc(0.625rem * var(--scale)) solid transparent;
+  border-left: calc(0.625rem * var(--scale)) solid white;
   transform: scaleX(-1);
 }
 
 .rightTriangle {
   width: 0;
   height: 0;
-  border-top: 0.625rem solid transparent;
-  border-bottom: 0.625rem solid transparent;
-  border-right: 0.625rem solid white;
+  border-top: calc(0.625rem * var(--scale)) solid transparent;
+  border-bottom: calc(0.625rem * var(--scale)) solid transparent;
+  border-right: calc(0.625rem * var(--scale)) solid white;
 }
 
 /* ===================================================================
@@ -434,37 +456,36 @@ code {
 .sidebar-settings {
   position: fixed;
   top: 0;
-  width: 80rem;
+  width: calc(80rem * var(--scale));
   height: 100%;
-  padding: 1.5625rem;
-  background: linear-gradient(135deg, #1e2e3e, #243b54); /* Dark gradient */
+  padding: calc(1.5625rem * var(--scale));
+  background: linear-gradient(135deg, var(--primary), var(--accent)); /* Dark gradient */
   display: flex;
   flex-direction: row;
-  gap: 1.5625rem;
+  gap: calc(1.5625rem * var(--scale));
   justify-content: space-between;
 }
 
 /* Main content area in Settings page (for settings widgets etc.) */
 .sidebar-settingsMainContent {
-  width: 60rem;
+  width: calc(60rem * var(--scale));
   height: 100%;
 }
 
 /* Mimic sidebar on Settings page to visually match the dashboard sidebar */
 .sidebar-settingsMimic {
-  width: 18.75rem;
+  width: calc(18.75rem * var(--scale));
   height: 100%;
   flex: 0 0 auto;
-  border-radius: 0.5rem;
+  border-radius: calc(0.5rem * var(--scale));
   display: flex;
   flex-direction: column;
-  background-color: #919191;
 }
 
 /* Spacing in the settings sidebar mimic section */
 .sidebar-settingsTop,
 .sidebar-settingsUpload {
-  margin-bottom: 1.25rem;
+  margin-bottom: calc(1.25rem * var(--scale));
 }
 
 /* Settings page specific tab for expand/collapse */
@@ -474,11 +495,11 @@ code {
   top: 45%;
   transform: translateX(-50%);
   cursor: pointer;
-  background: linear-gradient(135deg, #1e2e3e, #243b54);
-  height: 3.125rem;
-  width: 0.9375rem;
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  height: calc(3.125rem * var(--scale));
+  width: calc(0.9375rem * var(--scale));
   text-align: center;
-  border-radius: 0.25rem;
+  border-radius: calc(0.25rem * var(--scale));
 }
 .sidebar-settingsTab a {
   color: white;
@@ -498,51 +519,51 @@ code {
 
 .login-box {
   flex: 1;
-  padding: 2rem;
+  padding: calc(2rem * var(--scale));
   display: flex;
   flex-direction: column;
   justify-content: center;
-  max-width: 400px;
+  max-width: calc(400px * var(--scale));
   margin: 0 auto;
 }
 
 .login-box h1 {
-  font-size: 2.5rem;
-  margin-bottom: 1rem;
+  font-size: calc(2.5rem * var(--scale));
+  margin-bottom: calc(1rem * var(--scale));
   color: var(--text);
 }
 
 .subtitle {
   color: #666;
-  margin-bottom: 2rem;
+  margin-bottom: calc(2rem * var(--scale));
 }
 
 .form-group {
-  margin-bottom: 1rem;
+  margin-bottom: calc(1rem * var(--scale));
 }
 
 .form-group input {
   width: 100%;
-  padding: 0.8rem;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 1rem;
+  padding: calc(0.8rem * var(--scale));
+  border: calc(1px * var(--scale)) solid #ddd;
+  border-radius: calc(4px * var(--scale));
+  font-size: calc(1rem * var(--scale));
 }
 
 .login-button {
   width: 100%;
-  padding: 0.8rem;
+  padding: calc(0.8rem * var(--scale));
   background: linear-gradient(135deg, var(--primary), #163f66);
   color: white;
   border: none;
-  border-radius: 4px;
-  font-size: 1rem;
+  border-radius: calc(4px * var(--scale));
+  font-size: calc(1rem * var(--scale));
   cursor: pointer;
   transition: background-color 0.3s, transform 0.3s;
 }
 .login-button:hover {
   background: linear-gradient(135deg, #163f66, #122b4a);
-  transform: translateY(-2px);
+  transform: translateY(calc(-2px * var(--scale)));
 }
 
 /* ===================================================================
@@ -553,9 +574,9 @@ code {
 .slider-container {
   position: relative;
   width: 100%;
-  max-width: 500px;
-  height: 300px;
-  margin-bottom: 2rem;
+  max-width: calc(500px * var(--scale));
+  height: calc(300px * var(--scale));
+  margin-bottom: calc(2rem * var(--scale));
   overflow: hidden;
   cursor: grab;
   user-select: none;
@@ -575,41 +596,41 @@ code {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0 20px;
+  padding: 0 calc(20px * var(--scale));
 }
 
 /* Floating card used in slider items */
 .floating-card {
   background: white;
-  padding: 1.5rem;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: calc(1.5rem * var(--scale));
+  border-radius: calc(8px * var(--scale));
+  box-shadow: 0 calc(4px * var(--scale)) calc(6px * var(--scale)) rgba(0, 0, 0, 0.1);
   width: 100%;
-  max-width: 400px;
+  max-width: calc(400px * var(--scale));
   transition: transform 0.3s ease;
 }
 .floating-card:hover {
-  transform: translateY(-5px);
+  transform: translateY(calc(-5px * var(--scale)));
 }
 .floating-card h3 {
-  margin-bottom: 0.5rem;
+  margin-bottom: calc(0.5rem * var(--scale));
   color: var(--text);
 }
 .floating-card p {
   color: #666;
-  font-size: 0.9rem;
+  font-size: calc(0.9rem * var(--scale));
   line-height: 1.5;
 }
 
 /* Dots navigation for slider */
 .dots {
   display: flex;
-  gap: 0.5rem;
-  margin-top: 1rem;
+  gap: calc(0.5rem * var(--scale));
+  margin-top: calc(1rem * var(--scale));
 }
 .dot {
-  width: 10px;
-  height: 10px;
+  width: calc(10px * var(--scale));
+  height: calc(10px * var(--scale));
   border-radius: 50%;
   background-color: #ddd;
   cursor: pointer;
@@ -630,10 +651,10 @@ code {
   transform: translateY(-50%);
   background: rgba(255, 255, 255, 0.8);
   border: none;
-  width: 40px;
-  height: 40px;
+  width: calc(40px * var(--scale));
+  height: calc(40px * var(--scale));
   border-radius: 50%;
-  font-size: 24px;
+  font-size: calc(24px * var(--scale));
   display: flex;
   align-items: center;
   justify-content: center;
@@ -641,17 +662,17 @@ code {
   z-index: 10;
   transition: all 0.3s ease;
   color: var(--text);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 calc(2px * var(--scale)) calc(4px * var(--scale)) rgba(0, 0, 0, 0.1);
 }
 .slider-arrow:hover {
   background: white;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 calc(4px * var(--scale)) calc(8px * var(--scale)) rgba(0, 0, 0, 0.2);
 }
 .slider-arrow.prev {
-  left: 10px;
+  left: calc(10px * var(--scale));
 }
 .slider-arrow.next {
-  right: 10px;
+  right: calc(10px * var(--scale));
 }
 
 /* Modal overlay and content for pop-ups */
@@ -669,27 +690,27 @@ code {
 }
 .modal-content {
   background: white;
-  padding: 2rem;
-  border-radius: 8px;
+  padding: calc(2rem * var(--scale));
+  border-radius: calc(8px * var(--scale));
   width: 90%;
-  max-width: 400px;
+  max-width: calc(400px * var(--scale));
   position: relative;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 calc(4px * var(--scale)) calc(6px * var(--scale)) rgba(0, 0, 0, 0.1);
 }
 .modal-content h2 {
-  margin-bottom: 1.5rem;
+  margin-bottom: calc(1.5rem * var(--scale));
   color: var(--text);
   text-align: center;
 }
 .close-button {
   width: 100%;
-  padding: 0.8rem;
-  margin-top: 1rem;
+  padding: calc(0.8rem * var(--scale));
+  margin-top: calc(1rem * var(--scale));
   background-color: #f5f5f5;
   color: var(--text);
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 1rem;
+  border: calc(1px * var(--scale)) solid #ddd;
+  border-radius: calc(4px * var(--scale));
+  font-size: calc(1rem * var(--scale));
   cursor: pointer;
   transition: background-color 0.3s;
 }
@@ -706,24 +727,24 @@ code {
   position: fixed;
   right: 0;
   top: 0;
-  width: 21.875rem;
+  width: calc(21.875rem * var(--scale));
   height: 100vh;
-  background: linear-gradient(135deg, #1e2e3e, #243b54);
+  background: linear-gradient(135deg, var(--primary), var(--accent));
   display: flex;
   flex-direction: column;
   z-index: 100;
   transition: transform 0.3s ease;
   animation: slideIn 0.3s ease forwards;
   overflow: visible;
-  box-shadow: -2px 0 4px rgba(0,0,0,0.2);
+  box-shadow: -calc(2px * var(--scale)) 0 calc(4px * var(--scale)) rgba(0,0,0,0.2);
 }
 .documentSpotlightContent {
   flex: 1;
-  padding: 1rem;
+  padding: calc(1rem * var(--scale));
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  gap: 0.3125rem;
+  gap: calc(0.3125rem * var(--scale));
 }
 
 @keyframes slideIn {
@@ -738,15 +759,15 @@ code {
 .documentSpotlightRow {
   display: flex;
   align-items: flex-start;
-  gap: 0.3125rem;
-  margin-top: 0.3125rem;
+  gap: calc(0.3125rem * var(--scale));
+  margin-top: calc(0.3125rem * var(--scale));
 }
 
 .documentSpotlightPreview {
-  width: 10rem;
-  height: 14rem;
+  width: calc(10rem * var(--scale));
+  height: calc(14rem * var(--scale));
   background-color: #ddd;
-  border: 1px solid #999;
+  border: calc(1px * var(--scale)) solid #999;
   transform: translateX(-50%);
   display: flex;
   align-items: center;
@@ -754,7 +775,7 @@ code {
   flex-shrink: 0;
 }
 .previewPlaceholder {
-  font-size: 0.9rem;
+  font-size: calc(0.9rem * var(--scale));
   color: #666;
 }
 
@@ -764,16 +785,16 @@ code {
 }
 
 .documentSpotlightButtons {
-  margin-top: auto;
+  margin-top: calc(0.5rem * var(--scale));
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: calc(0.5rem * var(--scale));
 }
 
 .documentSpotlightButtons button {
-  padding: 0.5rem;
+  padding: calc(0.5rem * var(--scale));
   border: none;
-  border-radius: 4px;
+  border-radius: calc(4px * var(--scale));
   background-color: var(--primary);
   color: white;
   cursor: pointer;
@@ -781,28 +802,28 @@ code {
 
 .documentSpotlightTab {
   position: absolute;
-  left: -0.9375rem;
+  left: calc(-0.9375rem * var(--scale));
   top: 50%;
   transform: translateY(-50%);
-  background: linear-gradient(135deg, #1e2e3e, #243b54);
-  width: 0.9375rem;
-  height: 3.125rem;
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  width: calc(0.9375rem * var(--scale));
+  height: calc(3.125rem * var(--scale));
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   z-index: 10;
-  border-top-left-radius: 0.25rem;
-  border-bottom-left-radius: 0.25rem;
+  border-top-left-radius: calc(0.25rem * var(--scale));
+  border-bottom-left-radius: calc(0.25rem * var(--scale));
   transition: background-color 0.3s ease;
 }
 
 .documentSpotlightTab .triangle {
   width: 0;
   height: 0;
-  border-top: 0.625rem solid transparent;
-  border-bottom: 0.625rem solid transparent;
-  border-left: 0.625rem solid white;
+  border-top: calc(0.625rem * var(--scale)) solid transparent;
+  border-bottom: calc(0.625rem * var(--scale)) solid transparent;
+  border-left: calc(0.625rem * var(--scale)) solid white;
 }
 
 /* ===================================================================
@@ -820,15 +841,15 @@ code {
 
 .settings-mainContent {
   flex: 1;
-  background: linear-gradient(135deg, #1e2e3e, #243b54);
-  padding: 1.5rem;
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  padding: calc(1.5rem * var(--scale));
   overflow-y: auto;
 }
 
 .sidebar-dashboard-settingsView {
-  width: 21.875rem;
+  width: calc(21.875rem * var(--scale));
   position: relative;
-  padding: 1.5625rem;
+  padding: calc(1.5625rem * var(--scale));
   box-sizing: border-box;
 }
 .sidebar-dashboard-settingsView .sidebar-tab {
@@ -844,37 +865,36 @@ code {
    =================================================================== */
 
 .reading-sidebar {
-  width: 300px;  /* Custom width for the reading sidebar */
-  padding: 1rem;
-  background: linear-gradient(135deg, #1e2e3e, #243b54);
+  width: calc(300px * var(--scale));  /* Custom width for the reading sidebar */
+  padding: calc(1rem * var(--scale));
+  background: linear-gradient(135deg, var(--primary), var(--accent));
 }
 .reading-breadcrumbs {
   display: flex;
   align-items: center;
   color: var(--bg-light);
-  margin-bottom: 1rem;
+  margin-bottom: calc(1rem * var(--scale));
 }
 .breadcrumb-arrow {
   background: none;
   border: none;
   color: var(--bg-light);
-  font-size: 1.25rem;
+  font-size: calc(1.25rem * var(--scale));
   cursor: pointer;
-  margin-right: 0.5rem;
+  margin-right: calc(0.5rem * var(--scale));
 }
 .breadcrumb-item {
   cursor: pointer;
-  font-size: 1rem;
+  font-size: calc(1rem * var(--scale));
   color: var(--bg-light);
 }
 .breadcrumb-separator {
-  margin: 0 0.5rem;
+  margin: 0 calc(0.5rem * var(--scale));
   color: var(--bg-light);
 }
 .breadcrumb-item.active {
   font-weight: bold;
 }
-
 
 /* page animations */
 

@@ -1,4 +1,4 @@
-import React from "react";
+import {React, useEffect} from "react";
 import { BrowserRouter as Router, Routes, Route, Link, Navigate, Outlet, useLocation } from "react-router-dom";
 import { useAuth, AuthProvider } from './AuthContext.js';
 
@@ -26,9 +26,6 @@ import RegisterPage from "./Auth/RegisterPage.js";
 import ForgotPasswordPage from "./Auth/ForgotPasswordPage.js";
 import ResetPasswordPage from "./Auth/ResetPasswordPage";
 
-
-
-
 // ============================
 // Private Route Wrapper
 // ============================
@@ -48,6 +45,8 @@ function AppContent() {
 
   return (
     <>
+    <div className="app-wrapper">
+    <div className="app-frame">
       {/* Conditionally display the header */}
       {!hideHeaderNav && <Header />}
 
@@ -93,6 +92,8 @@ function AppContent() {
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </div>
+    </div>
+    </div>
     </>
   );
 }
@@ -101,6 +102,41 @@ function AppContent() {
 // Main App Component (Wraps Everything)
 // ============================
 function App() {
+  useEffect(() => {
+    const designWidth = 1440;
+    const designHeight = 812;
+
+    function updateDimensions() {
+      // Calculate scale as the smaller ratio of current viewport vs. design dimensions.
+      const scale = Math.min(window.innerWidth / designWidth, window.innerHeight / designHeight);
+
+      // Update the CSS custom property for scale (if you use it elsewhere)
+      document.documentElement.style.setProperty("--scale", scale);
+
+      // Now compute the adjusted dimensions.
+      const adjustedWidth = designWidth * scale;
+      const adjustedHeight = designHeight * scale;
+
+      // Update the .app-frame element to reflect these dimensions.
+      const frame = document.querySelector(".app-frame");
+      if (frame) {
+        // Remove the transform so that the element's box model matches the visual size.
+        frame.style.width = `${adjustedWidth}px`;
+        frame.style.height = `${adjustedHeight}px`;
+        // Center the frame in the viewport.
+        frame.style.position = "absolute";
+        frame.style.left = `${(window.innerWidth - adjustedWidth) / 2}px`;
+        frame.style.top = `${(window.innerHeight - adjustedHeight) / 2}px`;
+      }
+      // For debugging, log the computed values.
+      console.log("Scale:", scale, "Width:", adjustedWidth, "Height:", adjustedHeight);
+    }
+
+    window.addEventListener("resize", updateDimensions);
+    updateDimensions();
+    return () => window.removeEventListener("resize", updateDimensions);
+  }, []);
+
   return (
     <ThemeProvider>
       <Router>

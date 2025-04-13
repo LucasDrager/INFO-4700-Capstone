@@ -1,5 +1,3 @@
-
-
 //DASHBOARD: contains sidebar on the left, and then larger main content area for the dashboard itself.
 // in the main content area, theres going to be a column of three things: a myLibrary widget, the file explorer, and then the games buttons.
 
@@ -100,7 +98,8 @@ function DashboardPage() {
           />
         )}
       </div>
-    )}
+    )
+}
 
 
 export default DashboardPage;
