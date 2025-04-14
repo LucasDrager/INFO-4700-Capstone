@@ -90,7 +90,8 @@ def upload_pdf(request):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def list_pdfs(request):
-    files = File.objects.all()
+    user = request.user  # This is the user from the JWT token
+    files = File.objects.filter(user=user)
     serializer = FileUploadSerializer(files, many=True)
     return Response(serializer.data)
 
