@@ -41,7 +41,7 @@ function DashboardPage() {
 
   const handleSelectDoc = (docData) => {
     if (docData && docData.fileUrl) {
-      navigate(`/reading-mode?fileUrl=${encodeURIComponent(docData.fileUrl)}&title=${encodeURIComponent(docData.title)}`);
+      navigate(`/reading-mode?fileUrl=${`http://localhost:8000/media/pdfs/`+encodeURIComponent(docData.title)}&title=${encodeURIComponent(docData.title)}`);
     }
   };
 

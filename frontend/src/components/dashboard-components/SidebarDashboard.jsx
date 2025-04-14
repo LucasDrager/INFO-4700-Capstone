@@ -21,11 +21,6 @@ function SidebarDashboard({ onFileUploadSuccess }) {
     const formData = new FormData();
     formData.append('file', file); // Append actual file
 
-    console.log("File selected:", file);
-    for (let pair of formData.entries()) {
-      console.log(pair[0] + ', ' + pair[1]);
-    }
-
     setUploading(true);
     setErrorMessage('');
 

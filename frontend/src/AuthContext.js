@@ -3,6 +3,7 @@
 // ============================
 import { createContext, useState, useContext, useEffect } from 'react';
 import jwtDecode from 'jwt-decode';
+import axios from 'axios';
 const API_BASE = process.env.REACT_APP_API_BASE;
 
 export const AuthContext = createContext(null);
@@ -22,13 +23,16 @@ export function AuthProvider({ children }) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password })
       });
-
+  
       if (res.ok) {
         const data = await res.json();
         setAuthTokens(data);
         setCurrentUser(data.username);
         localStorage.setItem('access_token', data.access);
         localStorage.setItem('refresh_token', data.refresh);
+  
+        axios.defaults.headers.common['Authorization'] = `Bearer ${data.access}`;
+  
         return { success: true };
       } else {
         return { success: false, message: "Invalid credentials." };
@@ -41,7 +45,8 @@ export function AuthProvider({ children }) {
   const logoutUser = () => {
     setAuthTokens(null);
     setCurrentUser(null);
-    localStorage.removeItem('authTokens');
+    delete axios.defaults.headers.common['Authorization'];
+    localStorage.clear();
   };
 
   return (

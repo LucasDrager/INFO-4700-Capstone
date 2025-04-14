@@ -31,7 +31,7 @@ services:
     env_file:
       - .env
     volumes:
-      - ./backend:/app  # Bind mount our backend code
+      - django_media:/app/media
     ports:
       - "8000:8000"
     environment:
@@ -61,7 +61,6 @@ services:
     env_file:
       - .env
     volumes:
-      - ./frontend:/app
       - react_node_modules:/app/node_modules # Avoid conflicts with host node_modules
     ports:
       - "3000:3000"
@@ -115,3 +114,4 @@ volumes:
   db_data:
   ollama_data:
   react_node_modules:
+  django_media:
