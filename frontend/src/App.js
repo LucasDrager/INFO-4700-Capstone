@@ -13,6 +13,7 @@ import ChatPage from "./Pages/ChatPage";
 import GamesPage from "./Pages/GamesPage";
 import Flashcard from "./Pages/Flashcard";
 import PracticeTest from "./Pages/PracticeTest";
+import ReadingMode from "./Pages/ReadingMode";
 
 // Import Protected Pages
 import Dashboard from "./Pages/Dashboard";
@@ -59,6 +60,7 @@ function AppContent() {
         <Link to="/dashboard" style={{ margin: "10px" }}>Dashboard</Link>
         <Link to="/gamespage" style={{ margin: "10px" }}>Games</Link>
         <Link to="/reading-mode" style={{ margin: "10px" }}>Reading Mode</Link>
+          <Link to="/readingmode" style={{ margin: "10px" }}>ReadingMode</Link>
       </nav>
       )}
 
@@ -89,6 +91,7 @@ function AppContent() {
 
           {/* Fallback Route */}
           <Route path="*" element={<Navigate to="/" />} />
+          <Route path="/readingmode" element={<ReadingMode />} />
         </Routes>
       </div>
     </>
