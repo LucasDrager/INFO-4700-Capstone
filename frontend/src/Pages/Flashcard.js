@@ -1,8 +1,10 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "../components/games-components/flashcardstyle.css";
 import FlashCard from "../components/games-components/FlashCard";
 
 const Flashcard = () => {
+    const navigate = useNavigate();
     const [currentPage, setCurrentPage] = useState(1);
     const totalPages = 10;
 
@@ -15,7 +17,8 @@ const Flashcard = () => {
     ];
 
     //active dot logic
-    const getActiveDot = (dotIndex) => {
+    const getActiveDot 
+= (dotIndex) => {
         if (currentPage <= 2) {
             return dotIndex === currentPage;
         } else if (currentPage >= totalPages - 0) {
@@ -49,7 +52,7 @@ const Flashcard = () => {
                     </div>
                 </div>
                 <div className="practice-test-container">
-                    <button className="practice-test-button">Practice Test</button>
+                    <button className="practice-test-button" onClick={() => navigate('/practice-test')}>Practice Test</button>
                 </div>
             </div>
             <div className="main-content">

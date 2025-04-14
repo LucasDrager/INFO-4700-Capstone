@@ -42,9 +42,8 @@ function PrivateOutlet() {
 function AppContent() {
   const location = useLocation();
 
-  // any path in this list will have the navbar hidden (with set hideHeadernav to TRUE)
-  const hideHeaderNav = ["/dashboard", "/settings", "/gamespage", "/GamesPage", "/reading-mode", "/flashcard", "/readingmode"].includes(location.pathname);
-
+  // Hide the navbar on certain pages
+  const hideHeaderNav = ["/dashboard", "/settings", "/gamespage", "/GamesPage", "/reading-mode", "/flashcard", "/practice-test"].includes(location.pathname);
 
   return (
     <>
@@ -75,6 +74,7 @@ function AppContent() {
           <Route path="/LLM" element={<ChatPage />} />
           <Route path="/gamespage" element={<GamesPage />} />
           <Route path="/flashcard" element={<Flashcard />} />
+          <Route path="/practice-test" element={<PracticeTest />} />
 
           {/* Authentication Pages */}
           <Route path="/login" element={<LoginPage />} />
