@@ -52,7 +52,7 @@ htmlcov/
 frontend/node_modules/
 # Production build (if you don’t want to commit the build output)
 frontend/build/
-node_modules
+
 # Lock files (if you prefer not to commit lock files—though generally recommended to commit)
 # yarn.lock
 # package-lock.json
