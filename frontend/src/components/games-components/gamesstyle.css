@@ -36,6 +36,11 @@
     color: #333;
 }
 
+.modal-buttons button:last-child {
+    background-color: #f5f5f5;
+    color: #333;
+}
+
 .filter-container {
     display: flex;
     gap: 1rem;
@@ -92,6 +97,254 @@
     color: white;
 }
 
+/* CreateFlashcardSet Component Styles */
+.create-flashcard-modal {
+    background: white;
+    padding: 2rem;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 600px;
+    max-height: 80vh;
+    overflow-y: auto;
+    position: relative;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.create-flashcard-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.set-title-input {
+    width: 100%;
+    padding: 0.75rem;
+    font-size: 1.1rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.flashcards-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.flashcard-input-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr auto;
+    gap: 1rem;
+    align-items: center;
+}
+
+.flashcard-input {
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+.remove-card-button {
+    background: none;
+    border: none;
+    color: #ff5252;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0.25rem 0.5rem;
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
+}
+
+.remove-card-button:hover {
+    opacity: 1;
+}
+
+.remove-card-button:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.add-card-button {
+    padding: 0.75rem;
+    background: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+}
+
+.add-card-button:hover {
+    background-color: #45a049;
+}
+
+.modal-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+    margin-top: 1rem;
+}
+
+.save-button {
+    padding: 0.75rem 1.5rem;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.cancel-button {
+    padding: 0.75rem 1.5rem;
+    background-color: #f5f5f5;
+    color: #333;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+/* Modal Preview Styles */
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.modal-header h2 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: #333;
+}
+
+.modal-controls {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 1.5rem;
+}
+
+.modal-action-button {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.modal-action-button.add-button {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.modal-action-button.add-button:hover {
+    background-color: #45a049;
+}
+
+.modal-action-button.delete-button {
+    background-color: #e18080;
+    color: white;
+}
+
+.modal-action-button.delete-button:hover {
+    background-color: #df2323;
+}
+
+.modal-action-button.edit-button {
+    background-color: #9da0a3;
+    color: white;
+}
+
+.modal-action-button.edit-button:hover {
+    background-color: #5a8bbc;
+}
+
+.modal-action-button.open-button {
+    background-color: #68ac6a;
+    color: white;
+}
+
+.modal-action-button.open-button:hover {
+    background-color: #31b838;
+}
+
+/* Edit Flashcard Styles */
+.edit-flashcard {
+    padding: 2rem;
+    background-color: #f5f5f5;
+    border-radius: 8px;
+    min-height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.edit-flashcard-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.input-group label {
+    font-weight: 500;
+    color: #333;
+}
+
+.input-group input {
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+    width: 100%;
+}
+
+.edit-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+    margin-top: 1rem;
+}
+
+.save-edit-button {
+    padding: 0.75rem 1.5rem;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+}
+
+.save-edit-button:hover {
+    background-color: #45a049;
+}
+
+.cancel-edit-button {
+    padding: 0.75rem 1.5rem;
+    background-color: #f5f5f5;
+    color: #333;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+}
+
+.cancel-edit-button:hover {
+    background-color: #e0e0e0;
+}
+
 .card:hover {
     background-color: #a5d6a7;
     transition: background-color 0.3s ease;
@@ -102,7 +355,7 @@
 }
 
 /* Modal Styles */
-.modal-overlay {
+.games-page .modal-overlay {
     position: fixed;
     top: 0;
     left: 0;
@@ -115,14 +368,17 @@
     z-index: 1000;
 }
 
-.modal-content {
-    background: white;
-    padding: 2rem;
+.games-page .modal-content {
+    background: rgb(255, 255, 255);
+    padding: 3rem;
     border-radius: 10px;
     width: 90%;
-    max-width: 600px;
+    max-width: 800px;
     position: relative;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    min-height: 600px;
+    display: flex;
+    flex-direction: column;
 }
 
 .close-button {
@@ -148,6 +404,13 @@
 
 .flashcard-content {
     text-align: center;
+    width: 100%;
+    padding: 3rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex-grow: 1;
+    gap: 3rem;
 }
 
 .flashcard-front h3,
@@ -158,9 +421,20 @@
 
 .flashcard-front p,
 .flashcard-back p {
-    font-size: 1.1rem;
-    line-height: 1.5;
-    color: #555;
+    font-size: 2.5rem;
+    color: #666;
+    padding: 2rem;
+    margin: 0;
+    line-height: 1.6;
+}
+
+.flashcard-front p,
+.flashcard-front h3 {
+    font-size: 3rem;
+    color: #333;
+    padding: 2rem;
+    margin: 0;
+    line-height: 1.4;
 }
 
 /* Modal Controls */

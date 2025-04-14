@@ -76,6 +76,23 @@ services:
       backend:
         condition: service_healthy  # Wait for Django backend to be ready
 
+  #########################
+  # Open WebUI            #
+  #########################
+  webui:
+    container_name: open_webui
+    image: ghcr.io/open-webui/open-webui:main
+    ports:
+      - "8080:8080"
+    environment:
+      - OLLAMA_BASE_URL=http://ollama:11434 
+    networks:
+      - backend_net
+    depends_on:
+      - backend
+      - db
+
+ 
   #####################
   # Ollama AI Model   #
   #####################
@@ -106,12 +123,12 @@ services:
   #               count: all
   #               capabilities: [compute, utility]
 
-networks:
-  backend_net:
-  frontend_net:
-
 volumes:
   db_data:
   ollama_data:
   react_node_modules:
   django_media:
+
+networks:
+  backend_net:
+  frontend_net:

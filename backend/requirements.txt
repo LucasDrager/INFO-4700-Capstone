@@ -7,6 +7,6 @@ gradio
 ollama
 httpx
 djangorestframework-simplejwt
-transformers
+transformers==4.28.0
 torch
 sentencepiece
