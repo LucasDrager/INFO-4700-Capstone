@@ -16,7 +16,7 @@ class ReaderProfile(models.Model):
 class File(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="files")
     file_name = models.CharField(max_length=255)
-    file = models.FileField(upload_to='pdfs/')
+    file = models.FileField(upload_to='pdfs/', default='/media/pdfs/placeholder.pdf')
     uploaded_at = models.DateTimeField(auto_now_add=True)
 
 class Annotation(models.Model):

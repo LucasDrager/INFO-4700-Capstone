@@ -91,7 +91,8 @@ services:
     depends_on:
       - backend
       - db
-      
+
+ 
   #####################
   # Ollama AI Model   #
   #####################
