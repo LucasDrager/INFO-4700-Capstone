@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 const SidebarDashboard = ({ interactiveTextRef, notes, onAddNote, onDeleteNote, onUpdateNote }) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
+  const [view, setView] = useState('stickyNotes');
 
   const handleCollapse = () => {
     setIsCollapsed(!isCollapsed);
@@ -21,14 +22,6 @@ const SidebarDashboard = ({ interactiveTextRef, notes, onAddNote, onDeleteNote, 
   const handleDeleteStickyNote = (id) => {
     // Use the shared note delete handler
     onDeleteNote(id);
-  };
-
-  const handleTextHighlight = () => {
-    const selection = window.getSelection();
-    if (selection && selection.toString().trim().length > 0) {
-      const selectedText = selection.toString();
-      handleAddStickyNote(selectedText);
-    }
   };
 
   const handleSearchChange = (e) => {
@@ -62,18 +55,31 @@ const SidebarDashboard = ({ interactiveTextRef, notes, onAddNote, onDeleteNote, 
       }}
     >
       {!isCollapsed && (
-        <div style={{ padding: '10px', width: '90%' }}>
-          <input
-            type="text"
-            placeholder="Search notes..."
-            value={searchTerm}
-            onChange={handleSearchChange}
+        <div style={{ padding: '5px', width: '90%', display: 'flex', justifyContent: 'space-around' }}>
+          <button 
+            onClick={() => setView('stickyNotes')} 
             style={{
-              width: '100%',
-              padding: '8px',
-              marginBottom: '10px',
-              borderRadius: '5px',
-              border: '1px solid #ccc'
+              backgroundColor: view === 'stickyNotes' ? '#84c59b' : '#ccc',
+              border: 'none',
+              borderRadius: '50%',
+              cursor: 'pointer',
+              width: '40px',
+              height: '40px',
+              backgroundImage: 'url(/Sticky-Note-Icon.png)',
+              backgroundSize: 'cover',
+            }}
+          />
+          <button 
+            onClick={() => setView('readingAssistant')} 
+            style={{
+              backgroundColor: view === 'readingAssistant' ? '#84c59b' : '#ccc',
+              border: 'none',
+              borderRadius: '50%',
+              cursor: 'pointer',
+              width: '40px',
+              height: '40px',
+              backgroundImage: 'url(/Reading-Helper-AI-Icon.png)',
+              backgroundSize: 'cover',
             }}
           />
         </div>
@@ -87,7 +93,7 @@ const SidebarDashboard = ({ interactiveTextRef, notes, onAddNote, onDeleteNote, 
           overflowY: 'auto',
         }}
       >
-        {!isCollapsed && filteredNotes.map(note => (
+        {!isCollapsed && view === 'stickyNotes' && filteredNotes.map(note => (
           <div 
             key={note.id}
             className="sticky-note" 
@@ -154,7 +160,7 @@ const SidebarDashboard = ({ interactiveTextRef, notes, onAddNote, onDeleteNote, 
           </div>
         ))}
 
-        {!isCollapsed && (
+        {!isCollapsed && view === 'stickyNotes' && (
           <button 
             onClick={() => handleAddStickyNote()} 
             style={{
@@ -174,6 +180,19 @@ const SidebarDashboard = ({ interactiveTextRef, notes, onAddNote, onDeleteNote, 
           >
             Add Sticky Note
           </button>
+        )}
+
+        {!isCollapsed && view === 'readingAssistant' && (
+          <iframe
+            src="http://localhost:8080"
+            title="Reading Assistant"
+            style={{
+              width: '100%',
+              height: 'calc(100% - 5px)',
+              border: 'none',
+              marginTop: '5px',
+            }}
+          />
         )}
       </div>
 

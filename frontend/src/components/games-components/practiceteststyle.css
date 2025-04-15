@@ -1,0 +1,151 @@
+.practice-test-layout {
+    display: flex;
+    height: 100vh;
+    background-color: #818181;
+    overflow: hidden;
+}
+
+.sidebar {
+    width: 300px;
+    background-color: #666;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    height: 100vh;
+    position: sticky;
+    top: 0;
+}
+
+.questions-box {
+    background-color: white;
+    padding: 20px;
+    border-radius: 15px;
+    margin-bottom: 20px;
+}
+
+.questions-box h2 {
+    margin: 0 0 15px 0;
+    color: #333;
+}
+
+.question-dots {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 10px;
+}
+
+.question-dot {
+    width: 20px;
+    height: 20px;
+    background-color: #ddd;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.question-dot.active {
+    background-color: #000000;
+}
+
+.back-arrow {
+    font-size: 24px;
+    color: white;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+    align-self: flex-start;
+}
+
+.main-content {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    height: 100vh;
+    scroll-behavior: smooth;
+}
+
+.pdf-title {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.content-area {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.white-box {
+    background-color: white;
+    border-radius: 8px;
+    padding: 2rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.question-text {
+    font-size: 1.2rem;
+    color: #333;
+    margin-bottom: 1.5rem;
+    line-height: 1.5;
+}
+
+.options-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.option {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.option:hover {
+    background-color: #f5f5f5;
+    border-color: #ccc;
+}
+
+.option.selected {
+    background-color: #e3f2fd;
+    border-color: #2196f3;
+}
+
+.option-label {
+    font-weight: bold;
+    margin-right: 1rem;
+    color: #666;
+    min-width: 30px;
+}
+
+.option-text {
+    color: #333;
+}
+
+.submit-button {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    padding: 1rem 2rem;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.submit-button:hover {
+    background-color: #45a049;
+}
