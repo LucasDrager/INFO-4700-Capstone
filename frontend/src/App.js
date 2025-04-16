@@ -9,10 +9,10 @@ import Header from "./components/Header";
 import HomePage from "./Pages/HomePage";
 import AboutPage from "./Pages/AboutPage";
 import ContactPage from "./Pages/ContactPage.js";
-import ChatPage from "./Pages/ChatPage";
 import GamesPage from "./Pages/GamesPage";
 import Flashcard from "./Pages/Flashcard";
 import PracticeTest from "./Pages/PracticeTest";
+import ReadingMode from "./Pages/ReadingMode";
 
 // Import Protected Pages
 import ThemeProvider from './ThemeContext'; /* rory's settings button test: can a user toggle light dark mode? */
@@ -41,7 +41,7 @@ function AppContent() {
   const location = useLocation();
 
   // Hide the navbar on certain pages
-  const hideHeaderNav = ["/dashboard", "/settings", "/gamespage", "/GamesPage", "/reading-mode", "/flashcard"].includes(location.pathname);
+  const hideHeaderNav = ["/dashboard", "/settings", "/gamespage", "/GamesPage", "/reading-mode", "/flashcard", "/practice-test"].includes(location.pathname);
 
   return (
     <>
@@ -56,10 +56,10 @@ function AppContent() {
         <Link to="/" style={{ margin: "10px" }}>Home</Link>
         <Link to="/about" style={{ margin: "10px" }}>About</Link>
         <Link to="/contact" style={{ margin: "10px" }}>Contact</Link>
-        <Link to="/LLM" style={{ margin: "10px" }}>LLM</Link>
         <Link to="/dashboard" style={{ margin: "10px" }}>Dashboard</Link>
         <Link to="/gamespage" style={{ margin: "10px" }}>Games</Link>
         <Link to="/reading-mode" style={{ margin: "10px" }}>Reading Mode</Link>
+          <Link to="/readingmode" style={{ margin: "10px" }}>ReadingMode</Link>
       </nav>
       )}
 
@@ -90,6 +90,7 @@ function AppContent() {
 
             {/* Fallback Route */}
           <Route path="*" element={<Navigate to="/" />} />
+          <Route path="/readingmode" element={<ReadingMode />} />
         </Routes>
       </div>
     </div>

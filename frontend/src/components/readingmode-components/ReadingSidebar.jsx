@@ -3,38 +3,40 @@ import { useNavigate } from 'react-router-dom';
 import ReadingBreadcrumbs from './ReadingBreadcrumbs';
 
 
-const SidebarDashboard = () => {
-  const navigate = useNavigate();
+const SidebarDashboard = ({ interactiveTextRef, notes, onAddNote, onDeleteNote, onUpdateNote }) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const [stickyNotes, setStickyNotes] = useState([{ id: 1, text: 'Sticky Note' }]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [view, setView] = useState('stickyNotes');
 
-  // Handle sidebar collapse
   const handleCollapse = () => {
     setIsCollapsed(!isCollapsed);
   };
 
-  // Handle sticky note text change
   const handleStickyNoteChange = (id, event) => {
-    const newStickyNotes = stickyNotes.map(note => {
-      if (note.id === id) {
-        return { ...note, text: event.target.value };
-      }
-      return note;
-    });
-    setStickyNotes(newStickyNotes);
+    // Use the shared note update handler
+    onUpdateNote(id, event.target.value);
   };
 
-  // Handle adding a new sticky note
-  const handleAddStickyNote = () => {
-    const newNote = { id: stickyNotes.length + 1, text: 'Sticky Note' };
-    setStickyNotes([...stickyNotes, newNote]);
+  const handleAddStickyNote = (initialText = 'Sticky Note') => {
+    // Use the shared note add handler
+    onAddNote(initialText, '');
   };
 
-  // Handle deleting a sticky note
   const handleDeleteStickyNote = (id) => {
-    const newStickyNotes = stickyNotes.filter(note => note.id !== id);
-    setStickyNotes(newStickyNotes);
+    // Use the shared note delete handler
+    onDeleteNote(id);
   };
+
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
+  };
+
+  const filteredNotes = notes ? notes.filter(note =>
+    note.text.toLowerCase().includes(searchTerm.toLowerCase())
+  ) : [];
+
+  // This effect is no longer needed since we're using the shared notes system
+  // and text selection is handled by ReadingContainer
 
   return (
     <div
@@ -45,59 +47,105 @@ const SidebarDashboard = () => {
         top: 0,
         height: '100%',
         width: isCollapsed ? '0px' : '300px',
-        backgroundColor: isCollapsed ? 'transparent' : '#f4f4f4', //  Hide background when collapsed
+        backgroundColor: isCollapsed ? 'transparent' : '#e6f4ea',
         transition: 'width 0.3s ease, background-color 0.3s ease',
-        overflow: 'hidden',  //  Prevents content from showing when collapsed
+        overflow: 'hidden',
         zIndex: 1000,
-        borderLeft: isCollapsed ? 'none' : '2px solid #ccc', // Optional border to show sidebar
+        borderLeft: isCollapsed ? 'none' : '2px solid #ccc',
         display: 'flex',
         flexDirection: 'column',
-        alignItems: 'center', // Center items horizontally
+        alignItems: 'center',
       }}
     >
       <ReadingBreadcrumbs />
+      {!isCollapsed && (
+        <div style={{ padding: '5px', width: '90%', display: 'flex', justifyContent: 'space-around' }}>
+          <button
+            onClick={() => setView('stickyNotes')}
+            style={{
+              backgroundColor: view === 'stickyNotes' ? '#84c59b' : '#ccc',
+              border: 'none',
+              borderRadius: '50%',
+              cursor: 'pointer',
+              width: '40px',
+              height: '40px',
+              backgroundImage: 'url(/Sticky-Note-Icon.png)',
+              backgroundSize: 'cover',
+            }}
+          />
+          <button
+            onClick={() => setView('readingAssistant')}
+            style={{
+              backgroundColor: view === 'readingAssistant' ? '#84c59b' : '#ccc',
+              border: 'none',
+              borderRadius: '50%',
+              cursor: 'pointer',
+              width: '40px',
+              height: '40px',
+              backgroundImage: 'url(/Reading-Helper-AI-Icon.png)',
+              backgroundSize: 'cover',
+            }}
+          />
+        </div>
+      )}
+
       <div
         className="sidebar-dashboardContainer"
         style={{
           width: '100%',
           height: '100%',
-          overflowY: 'auto', // Enable vertical scrolling
+          overflowY: 'auto',
         }}
       >
-        {/* Sticky notes */}
-        {!isCollapsed && stickyNotes.map(note => (
+        {!isCollapsed && view === 'stickyNotes' && filteredNotes.map(note => (
           <div
             key={note.id}
             className="sticky-note"
             style={{
-              position: 'relative', // Required for positioning the delete button
-              backgroundColor: '#ffeb3b',
-              padding: '10px',
+              position: 'relative',
+              backgroundColor: '#84c59b',
+              padding: '15px',
               margin: '10px auto',
-              borderRadius: '5px',
+              borderRadius: '8px',
               boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
-              textAlign: 'center',
-              fontWeight: 'bold',
-              width: '90%', //
+              width: '90%',
               display: 'flex',
-              justifyContent: 'center', // Center content horizontally
-              alignItems: 'center', // Center content vertically
+              flexDirection: 'column',
+              justifyContent: 'flex-start',
+              alignItems: 'flex-start',
+              color: '#fff',
             }}
           >
-            <textarea
-              value={note.text}
-              onChange={(event) => handleStickyNoteChange(note.id, event)}
-              style={{
-                width: '100%',
-                height: '100px',
-                border: 'none',
-                backgroundColor: 'transparent',
-                resize: 'none',
-                textAlign: 'center',
-                fontWeight: 'bold',
-                fontSize: '16px',
-              }}
-            />
+            <div style={{ display: 'flex', flexDirection: 'column', width: '100%', height: '100%' }}>
+              <textarea
+                value={note.text}
+                onChange={(event) => handleStickyNoteChange(note.id, event)}
+                style={{
+                  width: '100%',
+                  height: '70px',
+                  border: 'none',
+                  backgroundColor: 'transparent',
+                  resize: 'none',
+                  textAlign: 'left',
+                  fontWeight: 'bold',
+                  fontSize: '14px',
+                  color: '#fff',
+                  marginBottom: '5px',
+                }}
+              />
+              {note.comment && (
+                <div style={{
+                  fontSize: '12px',
+                  color: '#ffffffcc',
+                  textAlign: 'left',
+                  borderTop: '1px solid #ffffff33',
+                  paddingTop: '5px',
+                  fontStyle: 'italic'
+                }}>
+                  {note.comment}
+                </div>
+              )}
+            </div>
             <button
               onClick={() => handleDeleteStickyNote(note.id)}
               style={{
@@ -107,6 +155,7 @@ const SidebarDashboard = () => {
                 backgroundColor: 'transparent',
                 border: 'none',
                 fontSize: '16px',
+                color: '#fff',
                 cursor: 'pointer',
               }}
             >
@@ -114,29 +163,49 @@ const SidebarDashboard = () => {
             </button>
           </div>
         ))}
-        {/* Button to add a new sticky note */}
-        {!isCollapsed && (
+
+        {!isCollapsed && view === 'stickyNotes' && (
           <button
-            onClick={handleAddStickyNote}
+            onClick={() => handleAddStickyNote()}
             style={{
-              margin: '10px',
+              margin: '15px auto',
               padding: '10px 20px',
               fontSize: '16px',
               cursor: 'pointer',
+              backgroundColor: '#4caf50',
+              color: 'white',
+              border: 'none',
+              borderRadius: '8px',
+              display: 'block',
+              boxShadow: '0 2px 5px rgba(0, 0, 0, 0.2)',
+              fontWeight: 'bold',
+              transition: 'all 0.2s ease'
             }}
           >
             Add Sticky Note
           </button>
         )}
+
+        {!isCollapsed && view === 'readingAssistant' && (
+          <iframe
+            src="http://localhost:8080"
+            title="Reading Assistant"
+            style={{
+              width: '100%',
+              height: 'calc(100% - 5px)',
+              border: 'none',
+              marginTop: '5px',
+            }}
+          />
+        )}
       </div>
-      {/* Button to collapse the sidebar */}
+
       <div
         className="sidebar-tab"
         onClick={handleCollapse}
         style={{ cursor: 'pointer', padding: '17px' }}
       >
         <div>
-          {/* Collapse button icon */}
           <div
             style={{
               fontSize: '24px',
@@ -152,3 +221,9 @@ const SidebarDashboard = () => {
 };
 
 export default SidebarDashboard;
+
+
+
+
+
+
