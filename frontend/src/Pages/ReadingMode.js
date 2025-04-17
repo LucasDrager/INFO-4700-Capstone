@@ -1,15 +1,9 @@
-<<<<<<< HEAD
-import React from 'react';
-import ReadingSidebar from '../components/readingmode-components/ReadingSidebar';
-import ReadingContainer from '../components/readingmode-components/ReadingContainer';
-=======
 import React, { useState, useRef } from 'react';
 
 import ReadingSidebar from '../components/readingmode-components/ReadingSidebar';
 import ReadingContainer from '../components/readingmode-components/ReadingContainer';
 import ReadingModeAnnotator from '../components/readingmode-components/ReadingModeAnnotator';
 import './ReadingMode.css';
->>>>>>> origin/main
 
 function ReadingModePage() {
     const [currentPage, setCurrentPage] = useState(1);

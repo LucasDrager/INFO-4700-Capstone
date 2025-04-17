@@ -71,7 +71,6 @@ function AppContent() {
             <Route path="/" element={<HomePage />} />
             <Route path="/About" element={<AboutPage />} />
             <Route path="/contact" element={<ContactPage />} />
-            <Route path="/LLM" element={<ChatPage />} />
             <Route path="/gamespage" element={<GamesPage />} />
             <Route path="/flashcard" element={<Flashcard />} />
 
