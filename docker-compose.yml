@@ -93,7 +93,6 @@ services:
       - backend
       - db
 
- 
   #####################
   #  Ollama AI Model  #
   #####################
