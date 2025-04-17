@@ -1,6 +1,9 @@
 import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import "../components/login-components/loginstyle.css";
+import girlLaptop from '../images/GirlLaptop.png';
+import notesImage from '../images/NotesImage.png';
+import plantBook from '../images/plantBook.png';
 
 // Social Login Modal Component
 const SocialLoginModal = ({ isOpen, onClose, provider, onLogin }) => {
@@ -149,15 +152,18 @@ const LoginPage = () => {
   const slides = [
     {
       title: "Welcome to Lectern",
-      description: "Elevate your reading experience."
+      description: "Elevate your reading experience.",
+      image: girlLaptop
     },
     {
       title: "Interactive Learning",
-      description: "Engage with our interactive learning tools and games to enhance your educational journey."
+      description: "Engage with our interactive learning tools and games to enhance your educational journey.",
+      image: notesImage
     },
     {
       title: "Track Progress",
-      description: "Monitor your learning progress and achievements through our dashboard."
+      description: "Monitor your learning progress and achievements through our dashboard.",
+      image: plantBook
     }
   ];
 
@@ -307,8 +313,13 @@ const LoginPage = () => {
           <div className="slider" style={{ transform: `translateX(${currentTranslate}%)` }}>
             {slides.map((slide, index) => (
               <div key={index} className="slide">
-                <h2>{slide.title}</h2>
-                <p>{slide.description}</p>
+                <div className="slide-content">
+                  <img src={slide.image} alt={slide.title} className="slide-image" />
+                  <div className="slide-text">
+                    <h2>{slide.title}</h2>
+                    <p>{slide.description}</p>
+                  </div>
+                </div>
               </div>
             ))}
           </div>
