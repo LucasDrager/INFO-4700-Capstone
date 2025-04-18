@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import ReadingModeAnnotator from './ReadingModeAnnotator';
 
 // Constants for header height and positioning
-const HEADER_HEIGHT = 90; // Approximate header height in pixels
+const HEADER_HEIGHT = 0; // Approximate header height in pixels
 
 const SidebarDashboard = ({ 
   interactiveTextRef, 
