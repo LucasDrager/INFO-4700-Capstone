@@ -209,12 +209,12 @@ const SidebarDashboard = ({
           boxShadow: attachToNavbar ? 'none' : '0 2px 4px rgba(0,0,0,0.1)'
         }}
       >
-        {!isCollapsed && 'Reading Tools'}
+        {!isCollapsed && '≡'}
         {isCollapsed && '≡'}
       </div>
 
       <div style={{ 
-        padding: isCollapsed ? '15px 0' : '15px', 
+        padding: isCollapsed ? '10px 0' : '10px', 
         width: '100%', 
         display: 'flex', 
         flexDirection: isCollapsed ? 'column' : 'row',
