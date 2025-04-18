@@ -185,33 +185,11 @@ const SidebarDashboard = ({
         cursor: isDragging ? 'grabbing' : 'auto',
         maxWidth: '90vw',
         maxHeight: attachToNavbar ? '100%' : '90vh',
-        paddingBottom: '70px' // Add padding at bottom to ensure room for buttons
+        paddingBottom: '0' // Remove bottom padding
       }}
     >
       {/* Drag handle at the top */}
-      <div 
-        className="sidebar-drag-handle"
-        onMouseDown={handleDragStart}
-        style={{
-          padding: '12px 15px',
-          width: '100%',
-          backgroundColor: '#4caf50',
-          cursor: attachToNavbar ? 'default' : 'grab',
-          borderTopLeftRadius: attachToNavbar ? '0' : '8px', 
-          borderTopRightRadius: '8px',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          color: '#fff',
-          fontWeight: 'bold',
-          fontSize: '16px',
-          letterSpacing: '0.5px',
-          boxShadow: attachToNavbar ? 'none' : '0 2px 4px rgba(0,0,0,0.1)'
-        }}
-      >
-        {!isCollapsed && '≡'}
-        {isCollapsed && '≡'}
-      </div>
+      {/* Removed green bar for cleaner look */}
 
       <div style={{ 
         padding: isCollapsed ? '10px 0' : '10px', 
