@@ -97,6 +97,7 @@ function ReadingContainer({ isSidebarCollapsed, onTextExtraction, currentPage, o
         marginLeft: sidebarWidth,
         transition: 'width 0.3s ease, margin-left 0.3s ease',
         backgroundColor: '#f4f4f4',
+        paddingLeft: '10px', // Slight adjustment to move content left
       }}
     >
       <div
@@ -107,14 +108,15 @@ function ReadingContainer({ isSidebarCollapsed, onTextExtraction, currentPage, o
           alignItems: 'center',
           justifyContent: 'center',
           backgroundColor: '#ffffff',
-          padding: '30px',
+          padding: '20px', // Reduced padding
           borderRadius: '10px',
           boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
-          width: '90%',
-          maxWidth: '1000px',
-          height: '95vh',
+          width: '95%', // Increased width
+          maxWidth: '1200px', // Increased max width
+          height: '96vh', // Slightly taller
           overflow: 'hidden',
           position: 'relative',
+          margin: '0 auto', // Better centering
         }}
       >
         {/* Controls Panel */}
@@ -126,7 +128,7 @@ function ReadingContainer({ isSidebarCollapsed, onTextExtraction, currentPage, o
             alignItems: 'center',
             gap: '15px',
             position: 'absolute',
-            top: '10px',
+            top: '8px', // Moved up slightly
             left: '0',
             right: '0',
             zIndex: 10
@@ -239,7 +241,7 @@ function ReadingContainer({ isSidebarCollapsed, onTextExtraction, currentPage, o
 
         {/* Interactive Text View with Annotation Panel */}
         {viewMode === 'text' && parsedText.length > 0 && (
-          <div className="interactive-text-container" style={{ position: 'relative', width: '100%', height: '100%' }}>
+          <div className="interactive-text-container" style={{ position: 'relative', width: '100%', height: '100%', maxWidth: '100%' }}>
             <div
               ref={interactiveTextRef}
               className="interactive-text"
@@ -258,7 +260,7 @@ function ReadingContainer({ isSidebarCollapsed, onTextExtraction, currentPage, o
                 height: '100%',
                 overflowY: 'auto',
                 textAlign: 'left',
-                padding: '20px',
+                padding: '15px 25px', // More horizontal padding, less vertical
                 whiteSpace: 'pre-wrap',
                 fontFamily: 'Georgia, serif',
                 fontSize: '16px',
@@ -267,7 +269,7 @@ function ReadingContainer({ isSidebarCollapsed, onTextExtraction, currentPage, o
                 backgroundColor: '#fdfdfd',
                 borderRadius: '6px',
                 boxShadow: 'inset 0 0 4px rgba(0, 0, 0, 0.05)',
-                marginTop: '60px',
+                marginTop: '55px', // Reduced top margin
               }}
             >
               {parsedText.map((pageText, index) => (
