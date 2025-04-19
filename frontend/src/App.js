@@ -1,4 +1,4 @@
-import {React, useEffect} from "react";
+import {React, useEffect, useRef} from "react";
 import { BrowserRouter as Router, Routes, Route, Link, Navigate, Outlet, useLocation } from "react-router-dom";
 import { useAuth, AuthProvider } from './AuthContext.js';
 
@@ -102,39 +102,46 @@ function AppContent() {
 // Main App Component (Wraps Everything)
 // ============================
 function App() {
+  const frameRef = useRef(null);
+
   useEffect(() => {
-    const designWidth = 1440;
-    const designHeight = 812;
+    function updateScale() {
+      const frame = frameRef.current;
+      if (!frame) return;
 
-    function updateDimensions() {
-      // Calculate scale as the smaller ratio of current viewport vs. design dimensions.
-      const scale = Math.min(window.innerWidth / designWidth, window.innerHeight / designHeight);
+      // 1) Clear any previous transform so we measure real size
+      frame.style.transform = "none";
 
-      // Update the CSS custom property for scale (if you use it elsewhere)
-      document.documentElement.style.setProperty("--scale", scale);
+      // 2) Measure the frame’s natural dimensions
+      const { width: naturalW, height: naturalH } = frame.getBoundingClientRect();
 
-      // Now compute the adjusted dimensions.
-      const adjustedWidth = designWidth * scale;
-      const adjustedHeight = designHeight * scale;
+      // 3) Compute uniform scale that fits both axes
+      const scale = Math.min(
+        window.innerWidth  / naturalW,
+        window.innerHeight / naturalH
+      );
 
-      // Update the .app-frame element to reflect these dimensions.
-      const frame = document.querySelector(".app-frame");
-      if (frame) {
-        // Remove the transform so that the element's box model matches the visual size.
-        frame.style.width = `${adjustedWidth}px`;
-        frame.style.height = `${adjustedHeight}px`;
-        // Center the frame in the viewport.
-        frame.style.position = "absolute";
-        frame.style.left = `${(window.innerWidth - adjustedWidth) / 2}px`;
-        frame.style.top = `${(window.innerHeight - adjustedHeight) / 2}px`;
-      }
-      // For debugging, log the computed values.
-      console.log("Scale:", scale, "Width:", adjustedWidth, "Height:", adjustedHeight);
+      // 4) Apply natural size as container dimensions
+      frame.style.width  = `${naturalW}px`;
+      frame.style.height = `${naturalH}px`;
+      frame.style.position = "absolute";
+
+      // 5) Center the frame based on the *scaled* size
+      const scaledW = naturalW * scale;
+      const scaledH = naturalH * scale;
+      frame.style.left = `${(window.innerWidth  - scaledW) / 2}px`;
+      frame.style.top  = `${(window.innerHeight - scaledH) / 2}px`;
+
+      // 6) Finally scale it
+      frame.style.transform       = `scale(${scale})`;
+      frame.style.transformOrigin = "top left";
+
+      console.log("Scale:", scale, "natural:", naturalW, naturalH, "scaled:", scaledW, scaledH);
     }
 
-    window.addEventListener("resize", updateDimensions);
-    updateDimensions();
-    return () => window.removeEventListener("resize", updateDimensions);
+    window.addEventListener("resize", updateScale);
+    updateScale();
+    return () => window.removeEventListener("resize", updateScale);
   }, []);
 
   return (

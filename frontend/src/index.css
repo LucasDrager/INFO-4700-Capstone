@@ -19,8 +19,6 @@
   --hover-bg: #e0e0e0;
 
   /* NEW DESIGN VARIABLES */
-  --design-width: 1440;
-  --design-height: 812;
   --scale: 1;
 }
 
@@ -40,9 +38,7 @@
   --pdf-title-color: #e0e0e0;
   color: var(--bg-hvr);
 
-  /* NEW DESIGN VARIABLES in dark theme */
-  --design-width: 1440;
-  --design-height: 812;
+
   --scale: 1;
 }
 
@@ -56,6 +52,7 @@ html, body {
   margin: 0;
   padding: 0;
   overflow-x: hidden; /* Hide horizontal scroll globally */
+  background-color: var(--bg-light)
 }
 
 body {
