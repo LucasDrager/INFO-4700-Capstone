@@ -4,11 +4,11 @@ import ReadingModeAnnotator from './ReadingModeAnnotator';
 // Constants for header height and positioning
 const HEADER_HEIGHT = 0; // Approximate header height in pixels
 
-const SidebarDashboard = ({ 
-  interactiveTextRef, 
-  notes, 
-  onAddNote, 
-  onDeleteNote, 
+const SidebarDashboard = ({
+  interactiveTextRef,
+  notes,
+  onAddNote,
+  onDeleteNote,
   onUpdateNote,
   pdfText,
   currentPage,
@@ -141,11 +141,11 @@ const SidebarDashboard = ({
       // Reset position if sidebar is off-screen
       const rightEdge = position.x + width;
       const bottomEdge = position.y + calculateResponsiveHeight();
-      
+
       if (rightEdge > window.innerWidth || position.x < 0) {
         setPosition(prev => ({ ...prev, x: Math.max(0, window.innerWidth - width - 20) }));
       }
-      
+
       if (bottomEdge > window.innerHeight || position.y < 0) {
         setPosition(prev => ({ ...prev, y: Math.max(0, window.innerHeight - calculateResponsiveHeight() - 20) }));
       }
@@ -163,7 +163,7 @@ const SidebarDashboard = ({
   }, [attachToNavbar]);
 
   return (
-    <div 
+    <div
       ref={sidebarRef}
       className={`sidebar-dashboard ${isCollapsed ? 'collapsed' : ''} ${isDragging ? 'dragging' : ''} ${attachToNavbar ? 'attached' : ''}`}
       style={{
@@ -191,18 +191,18 @@ const SidebarDashboard = ({
       {/* Drag handle at the top */}
       {/* Removed green bar for cleaner look */}
 
-      <div style={{ 
-        padding: isCollapsed ? '10px 0' : '10px', 
-        width: '100%', 
-        display: 'flex', 
+      <div style={{
+        padding: isCollapsed ? '10px 0' : '10px',
+        width: '100%',
+        display: 'flex',
         flexDirection: isCollapsed ? 'column' : 'row',
         justifyContent: isCollapsed ? 'center' : 'space-around',
         gap: '20px',
         alignItems: 'center',
         marginBottom: '10px'
       }}>
-        <button 
-          onClick={() => setView('stickyNotes')} 
+        <button
+          onClick={() => setView('stickyNotes')}
           title="Sticky Notes"
           style={{
             backgroundColor: view === 'stickyNotes' ? '#84c59b' : '#f3f3f3',
@@ -220,8 +220,8 @@ const SidebarDashboard = ({
             margin: isCollapsed ? '8px 0' : '0'
           }}
         />
-        <button 
-          onClick={() => setView('readingAnnotator')} 
+        <button
+          onClick={() => setView('readingAnnotator')}
           title="Reading Annotator"
           style={{
             backgroundColor: view === 'readingAnnotator' ? '#84c59b' : '#f3f3f3',
@@ -239,8 +239,8 @@ const SidebarDashboard = ({
             margin: isCollapsed ? '8px 0' : '0'
           }}
         />
-        <button 
-          onClick={() => setView('webInterface')} 
+        <button
+          onClick={() => setView('webInterface')}
           title="Web Interface"
           style={{
             backgroundColor: view === 'webInterface' ? '#84c59b' : '#f3f3f3',
@@ -260,11 +260,11 @@ const SidebarDashboard = ({
         />
       </div>
 
-      <div 
-        className="sidebar-dashboardContainer" 
-        style={{ 
-          width: '100%', 
-          height: 'calc(100% - 100px)', 
+      <div
+        className="sidebar-dashboardContainer"
+        style={{
+          width: '100%',
+          height: 'calc(100% - 100px)',
           overflowY: 'auto',
           overflowX: 'hidden',
           display: isCollapsed ? 'none' : 'block',
@@ -273,14 +273,14 @@ const SidebarDashboard = ({
         }}
       >
         {view === 'stickyNotes' && filteredNotes.map(note => (
-          <div 
+          <div
             key={note.id}
-            className="sticky-note" 
+            className="sticky-note"
             style={{
               position: 'relative',
               backgroundColor: '#a8e6b5',
               padding: '15px',
-              margin: '15px auto', 
+              margin: '15px auto',
               borderRadius: '10px',
               boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
               width: '90%',
@@ -321,7 +321,7 @@ const SidebarDashboard = ({
                 </div>
               )}
             </div>
-            <button 
+            <button
               onClick={() => handleDeleteStickyNote(note.id)}
               style={{
                 position: 'absolute',
@@ -340,8 +340,8 @@ const SidebarDashboard = ({
         ))}
 
         {view === 'stickyNotes' && (
-          <button 
-            onClick={() => handleAddStickyNote()} 
+          <button
+            onClick={() => handleAddStickyNote()}
             style={{
               margin: '20px auto',
               padding: '12px 25px',
@@ -364,7 +364,7 @@ const SidebarDashboard = ({
 
         {view === 'readingAnnotator' && (
           <div style={{ height: '100%', width: '100%', overflow: 'hidden' }}>
-            <ReadingModeAnnotator 
+            <ReadingModeAnnotator
               interactiveTextRef={interactiveTextRef}
               pdfText={pdfText}
               currentPage={currentPage}
@@ -393,11 +393,11 @@ const SidebarDashboard = ({
 
       {/* Resize button */}
       {!isCollapsed && (
-        <div 
+        <div
           ref={resizeHandleRef}
-          className="sidebar-resize-handle" 
+          className="sidebar-resize-handle"
           onMouseDown={handleResizeStart}
-          style={{ 
+          style={{
             cursor: 'ew-resize',
             position: 'absolute',
             top: '40%',
@@ -412,7 +412,7 @@ const SidebarDashboard = ({
             alignItems: 'center',
             boxShadow: '-1px 0 3px rgba(0,0,0,0.1)',
             zIndex: 15
-          }} 
+          }}
         >
           <div style={{
             fontSize: '12px',
@@ -428,11 +428,11 @@ const SidebarDashboard = ({
       )}
 
       {/* Collapse button */}
-      <div 
-        className="sidebar-tab" 
-        onClick={handleCollapse} 
-        style={{ 
-          cursor: 'pointer', 
+      <div
+        className="sidebar-tab"
+        onClick={handleCollapse}
+        style={{
+          cursor: 'pointer',
           padding: '8px',
           position: 'absolute',
           bottom: isCollapsed ? '50%' : '20px', // Center vertically when collapsed
@@ -450,11 +450,11 @@ const SidebarDashboard = ({
           boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
           border: '2px solid #fff',
           zIndex: 20
-        }} 
+        }}
       >
-        <div 
+        <div
           style={{
-            fontSize: isCollapsed ? '24px' : '18px', 
+            fontSize: isCollapsed ? '24px' : '18px',
             fontWeight: 'bold',
             lineHeight: 1,
             color: '#ffffff',
@@ -472,11 +472,11 @@ const SidebarDashboard = ({
 
       {/* Reset position button - only show when not attached to navbar */}
       {!attachToNavbar && (
-        <div 
-          className="sidebar-reset-position" 
+        <div
+          className="sidebar-reset-position"
           onClick={() => setPosition({ x: 0, y: 0 })}
-          style={{ 
-            cursor: 'pointer', 
+          style={{
+            cursor: 'pointer',
             padding: '8px',
             position: 'absolute',
             bottom: '70px',
@@ -492,7 +492,7 @@ const SidebarDashboard = ({
             boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
             fontSize: '16px',
             zIndex: 20
-          }} 
+          }}
         >
           ⌂
         </div>

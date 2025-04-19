@@ -1,54 +1,51 @@
-// the sidebar on the dashboard page. 
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import UserProfileWidget from '../common-components/UserProfileWidget';
 import UploadWidget from '../common-components/UploadWidget';
+import PlantContainerWidget from '../dashboard-components/PlantContainerWidget';
 
-console.log('UserProfileWidget:', UserProfileWidget);
-console.log('UploadWidget:', UploadWidget);
+const SidebarDashboard = ({ collapseMode }) => {
+  const navigate = useNavigate();
 
+  // If collapseMode is true, clicking the tab will navigate to /dashboard.
+  // Otherwise, it navigates to /settings.
+  const handleTabClick = () => {
+    if (collapseMode) {
+      navigate('/dashboard');
+    } else {
+      navigate('/settings');
+    }
+  };
 
+  return (
+    <div className="sidebar-dashboard">
 
-const SidebarDashboard = () => {
-    const navigate = useNavigate();
-  
-    const handleExpand = () => {
-      navigate('/settings'); {/* expand to settings page */}
-    };
+      <div className="sidebar-dashboardContainer">
+        {/* Top widget: User/Profile */}
+        <div className="sidebar-top">
+          <UserProfileWidget />
+        </div>
 
-    return (
-        <div className="sidebar-dashboard">
-            <div className="sidebar-dashboardContainer">
-                {/* Topmost widget: User/Profile */}
-                <div className="sidebar-top">
-                <UserProfileWidget />
-                </div>
-        
+        {/* Upload widget */}
+        <div className="sidebar-upload">
+          <UploadWidget />
+        </div>
 
-                {/* upload docs // create foldrs */}
-                <div className="sidebar-upload">
-                    *<UploadWidget />*
-                </div>
+        {/* Bottom: Plant widget */}
+        <div className="sidebar-plant">
+            <PlantContainerWidget />
+        </div>
+      </div>
 
-
-                {/* button for the tab on the sidebar to go to settings (expand the sidebar.) */}
-                <div className="sidebar-tab" onClick={handleExpand}>
-                        <div>
-                            <div className="triangle"></div>
-                        </div>
-                </div>
-
-                {/* Bottom Section: Fun Icon / Plant Widget */}
-                <div className="sidebar-plant">
-                    <div className="tomogatchiHome">
-                        {/* Replace with actual image path or component when available */}
-                        <img src="#" alt="placeholder for the plant imgs" />
-                    </div>
-                </div>
-
-            </div>
-        </div> 
-    );
+    {/* The Tab Button */}
+    <div className="sidebar-tab" onClick={handleTabClick}>
+        <div>
+        {/* Use rightTriangle for collapse mode; otherwise, triangle */}
+        <div className= "rightTriangle"></div>
+        </div>
+    </div>
+    </div>
+  );
 };
 
 export default SidebarDashboard;

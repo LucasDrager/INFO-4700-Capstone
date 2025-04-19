@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-function MyLibraryWidget({ onSelectDoc }) {
+function MyLibraryWidget({ onSelectDoc, highlightedPdf }) {
   const folderData = [
     { id: 1, name: 'Folder 1', pdfs: ['file1.pdf', 'file2.pdf', 'file3.pdf'] },
     { id: 2, name: 'Folder 2', pdfs: ['docA.pdf', 'docB.pdf'] },
@@ -20,6 +20,8 @@ function MyLibraryWidget({ onSelectDoc }) {
   }
 
   const widgetClass = openFolderId ? "myLib-DashboardWidget open" : "myLib-DashboardWidget";
+
+
 
   return (
     <div className={widgetClass}>
@@ -52,15 +54,15 @@ function MyLibraryWidget({ onSelectDoc }) {
           {folderData
             .find((folder) => folder.id === openFolderId)
             ?.pdfs.map((pdfName, index) => (
-              <div 
-                key={index} 
-                className="FE-PdfItem"
-                onClick={() => {
+              <div
+                key={index}
+                className={`FE-PdfItem ${highlightedPdf === pdfName ? 'FE-PdfItem-selected' : ''}`}
+                onClick={(e) => {
                   if (onSelectDoc) {
                     onSelectDoc({
                       title: pdfName,
                       description: `Description for ${pdfName}`
-                    });
+                    }, 'library', e);
                   }
                 }}
               >
