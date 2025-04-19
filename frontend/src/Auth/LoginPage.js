@@ -6,6 +6,13 @@ import React, { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../components/login-components/loginstyle.css";
 import { useAuth, AuthProvider } from "../AuthContext";
+import girlLaptop from '../images/GirlLaptop.png';
+import notesImage from '../images/NotesImage.png';
+import plantBook from '../images/plantBook.png';
+
+import facebookLogo from '../images/facebook-logo.svg';
+import googleLogo from '../images/google-logo.svg';
+import githubLogo from '../images/github-logo.svg';
 const API_BASE = process.env.REACT_APP_API_BASE;
 
 // Slider content
@@ -13,17 +20,20 @@ const slides = [
   {
     title: "Welcome to Lectern",
     description:
-      "Join our community of learners and educators in an interactive educational experience."
+      "Join our community of learners and educators in an interactive educational experience.",
+    backgroundImage: girlLaptop
   },
   {
     title: "Interactive Learning",
     description:
-      "Engage with our interactive learning tools and games to enhance your educational journey."
+      "Engage with our learning tools and games to enhance your comprehension",
+    backgroundImage: notesImage
   },
   {
     title: "Track Progress",
     description:
-      "Monitor your learning progress and achievements through our comprehensive dashboard."
+      "Monitor your progress and achievements through our dashboard.",
+    backgroundImage: plantBook
   }
 ];
 
@@ -403,21 +413,21 @@ const [registrationModal, setRegistrationModal] = useState(false);
             aria-label="Login with Facebook"
             onClick={() => handleSocialLogin("Facebook")}
           >
-            <i className="fab fa-facebook-f"></i>
+            <img src={facebookLogo} alt="Facebook" className="social-icon" />
           </button>
           <button
             className="social-button google"
             aria-label="Login with Google"
             onClick={() => handleSocialLogin("Google")}
           >
-            <i className="fab fa-google"></i>
+            <img src={googleLogo} alt="Google" className="social-icon" />
           </button>
           <button
             className="social-button github"
             aria-label="Login with GitHub"
             onClick={() => handleSocialLogin("GitHub")}
           >
-            <i className="fab fa-github"></i>
+            <img src={githubLogo} alt="GitHub" className="social-icon" />
           </button>
         </div>
         <p className="signup-text">
@@ -462,7 +472,7 @@ const [registrationModal, setRegistrationModal] = useState(false);
             }}
           >
             {slides.map((slide, index) => (
-              <div key={index} className="slide">
+              <div key={index} className="slide" style={{ backgroundImage: `url(${slide.backgroundImage})` }}>
                 <div className="floating-card">
                   <h3>{slide.title}</h3>
                   <p>{slide.description}</p>
