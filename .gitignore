@@ -83,3 +83,4 @@ yarn-error.log
 # Sublime
 *.sublime-workspace
 *.sublime-project
+node_modules

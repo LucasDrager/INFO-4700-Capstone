@@ -8,5 +8,5 @@ ollama
 httpx
 djangorestframework-simplejwt
 transformers==4.28.0
-torch==1.13.1
+torch
 sentencepiece

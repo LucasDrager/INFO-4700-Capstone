@@ -5,6 +5,7 @@ import ReadingContainer from '../components/readingmode-components/ReadingContai
 import ReadingModeAnnotator from '../components/readingmode-components/ReadingModeAnnotator';
 import './ReadingMode.css';
 
+
 function ReadingModePage() {
     const [currentPage, setCurrentPage] = useState(1);
     const [pdfText, setPdfText] = useState([]);
@@ -24,12 +25,12 @@ function ReadingModePage() {
     const handlePageChange = (pageNumber, viewMode, toggleAnnotation) => {
         // Update current page
         setCurrentPage(pageNumber);
-        
+
         // If viewMode is provided, update the current view mode
         if (viewMode) {
             setCurrentViewMode(viewMode);
         }
-        
+
         // If toggleAnnotation is provided (true/false), set annotation mode
         if (toggleAnnotation !== undefined) {
             setAnnotationMode(toggleAnnotation);
@@ -37,7 +38,7 @@ function ReadingModePage() {
     };
 
     // Annotation mode is now toggled directly from ReadingContainer
-    
+
     // Handle adding a note from the annotator to be synced with sidebar
     const handleAddNote = (noteText, noteComment) => {
         const newNote = {
@@ -58,8 +59,8 @@ function ReadingModePage() {
     const handleUpdateNote = (noteId, updatedText, updatedComment) => {
         const updatedNotes = sharedNotes.map(note => {
             if (note.id === noteId) {
-                return { 
-                    ...note, 
+                return {
+                    ...note,
                     text: updatedText !== undefined ? updatedText : note.text,
                     comment: updatedComment !== undefined ? updatedComment : note.comment
                 };
@@ -71,7 +72,7 @@ function ReadingModePage() {
 
     return (
         <div className="readingmode-container">
-            <ReadingSidebar 
+            <ReadingSidebar
                 notes={sharedNotes}
                 onAddNote={handleAddNote}
                 onDeleteNote={handleDeleteNote}
@@ -79,8 +80,8 @@ function ReadingModePage() {
                 interactiveTextRef={interactiveTextRef}
             />
             <div className="readingmode-mainContentArea">
-                <ReadingContainer 
-                    onTextExtraction={handlePdfTextExtraction} 
+                <ReadingContainer
+                    onTextExtraction={handlePdfTextExtraction}
                     currentPage={currentPage}
                     onPageChange={handlePageChange}
                     pdfText={pdfText}
@@ -96,6 +97,5 @@ function ReadingModePage() {
         </div>
     );
 }
-
 
 export default ReadingModePage;
