@@ -27,6 +27,8 @@
     margin-bottom: 15px;
     border: 2px solid #fff;
     background-color: #fff;
+    object-fit: cover;
+    object-position: center;
 }
 
 .search-container {
@@ -60,6 +62,23 @@
 .practice-test-container {
     margin-top: auto;
     padding: 20px 0;
+}
+
+.back-arrow {
+    font-size: 24px;
+    color: white;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    transition: transform 0.3s ease;
+}
+
+.back-arrow:hover {
+    transform: translateX(-5px);
 }
 
 .practice-test-button {
@@ -104,14 +123,28 @@
 .action-button {
     background: none;
     border: none;
-    font-size: 20px;
+    font-size: 24px;
     cursor: pointer;
     padding: 5px;
-    transition: transform 0.2s;
+    transition: all 0.3s ease;
+    color: #666;
 }
 
 .action-button:hover {
     transform: scale(1.1);
+}
+
+.star-button {
+    color: #666;
+}
+
+.star-button:hover {
+    color: #ffd700;
+}
+
+.star-button.starred {
+    color: #ffd700;
+    text-shadow: 0 0 5px rgba(255, 215, 0, 0.5);
 }
 
 .pdf-title {

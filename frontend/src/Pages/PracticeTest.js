@@ -88,6 +88,7 @@ const PracticeTest = () => {
                     ))}
                 </div>
                 <button className="submit-button" onClick={handleSubmit}>Submit Test</button>
+                <button className="bottom-back-button" onClick={() => navigate(-1)}>←</button>
             </div>
         </div>
     );

@@ -149,3 +149,22 @@
 .submit-button:hover {
     background-color: #45a049;
 }
+
+.bottom-back-button {
+    position: fixed;
+    bottom: 2rem;
+    left: 2rem;
+    padding: 1rem 2rem;
+    background-color: #666;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.bottom-back-button:hover {
+    background-color: #555;
+}
