@@ -18,11 +18,11 @@ const UploadWidget = () => {
   const handleFileUpload = async (event) => {
     const selectedFiles = Array.from(event.target.files);
     if (selectedFiles.length === 0) return;
-    
+
     // For this prototype, we'll use only the first selected PDF
     const file = selectedFiles[0];
     const fileUrl = URL.createObjectURL(file);
-    
+
     const formData = new FormData();
     formData.append("pdf_files", file);
 
@@ -39,7 +39,7 @@ const UploadWidget = () => {
       if (!response.ok) {
         throw new Error(data.message || "Error processing PDF file");
       }
-      
+
       // Redirect to the reading mode page with the uploaded file and parsed text.
       navigate("/reading-mode", {
         state: {
@@ -54,28 +54,34 @@ const UploadWidget = () => {
     }
   };
 
+  const handleCreateFolder = () => {
+    alert("Create Folder functionality not implemented yet.");
+  };
+
   return (
-    <div>
-      {/* "New File" button triggers file upload */}
-      <button className="createFolderBTN" onClick={handleNewFileClick}>
-        New File
-      </button>
-      {/* Hidden file input */}
-      <input
-        type="file"
-        accept=".pdf"
-        style={{ display: "none" }}
-        ref={fileInputRef}
-        onChange={handleFileUpload}
-      />
-      {/* "Create Folder" remains as before */}
-      <button className="createFolderBTN">Create Folder</button>
-      {isLoading && (
-        <div className="spinner-border text-primary" role="status">
-          <span className="visually-hidden">Loading...</span>
-        </div>
-      )}
-    </div>
+  <div className="upload-widget">
+    <button className="btn-upload" onClick={handleNewFileClick}>
+      <span className="upload-icon">📄</span> Upload PDF
+    </button>
+
+    <input
+      type="file"
+      accept=".pdf"
+      ref={fileInputRef}
+      onChange={handleFileUpload}
+    />
+
+    <button className="btn-folder" onClick={handleCreateFolder}>
+      <span className="upload-icon">📁</span> Create Folder
+    </button>
+
+    {isLoading && (
+      <div className="upload-spinner" role="status">
+        Uploading...
+      </div>
+    )}
+  </div>
+
   );
 };
 
