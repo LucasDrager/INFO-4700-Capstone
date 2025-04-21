@@ -7,24 +7,23 @@ const ButtonsDashboardWidget = () => {
     { id: 1, icon: "📁", route: "/GamesPage" },
     { id: 2, icon: "⌨️", route: "/GamesPage" },
     { id: 3, icon: "🖥️", route: "/GamesPage" },
-    { id: 4, icon: "🎮", route: "/GamesPage" } // Add a route for the games page
+    { id: 4, icon: "🎮", route: "/GamesPage" } // Route for the games page
   ];
 
   const handleClick = (btn) => {
     if (btn.route) {
       navigate(btn.route);
     } else {
-      // Additional functionality for other buttons can be added here
       console.log(`Button ${btn.id} clicked!`);
     }
   };
 
   return (
-    <div className="BDW-Container">
+    <div className="d-flex justify-content-around align-items-center flex-wrap BDW-Container">
       {buttons.map((btn) => (
-        <button 
-          key={btn.id} 
-          className="BDW-Button" 
+        <button
+          key={btn.id}
+          className="btn btn-light BDW-Button"
           onClick={() => handleClick(btn)}
         >
           <span className="BDW-Icon">{btn.icon}</span>

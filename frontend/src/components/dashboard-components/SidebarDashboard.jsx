@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import UserProfileWidget from '../common-components/UserProfileWidget';
+import PlantContainerWidget from '../dashboard-components/PlantContainerWidget';
 const API_BASE = process.env.REACT_APP_API_BASE;
 
 function SidebarDashboard({ onFileUploadSuccess }) {
@@ -53,6 +54,14 @@ function SidebarDashboard({ onFileUploadSuccess }) {
     }
   };
 
+  const handleTabClick = () => {
+    if (collapseMode) {
+      navigate('/dashboard');
+    } else {
+      navigate('/settings');
+    }
+  };
+
   const handleExpand = () => {
     navigate('/settings');
   };
@@ -78,22 +87,22 @@ function SidebarDashboard({ onFileUploadSuccess }) {
           {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
         </div>
 
-        {/* Settings button */}
-        <div className="sidebar-tab" onClick={handleExpand}>
-          <div>
-            <div className="triangle"></div>
-          </div>
-        </div>
-
-        {/* Bottom Section: Fun Icon / Plant Widget */}
+        {/* Bottom: Plant widget */}
         <div className="sidebar-plant">
-          <div className="tomogatchiHome">
-            <img src="#" alt="placeholder for the plant imgs" />
-          </div>
+            <PlantContainerWidget />
         </div>
       </div>
+
+    {/* The Tab Button */}
+    <div className="sidebar-tab" onClick={handleTabClick}>
+        <div>
+        {/* Use rightTriangle for collapse mode; otherwise, triangle */}
+        <div className= "rightTriangle"></div>
+        </div>
+    </div>
     </div>
   );
-}
+};
 
 export default SidebarDashboard;
+

@@ -1,5 +1,9 @@
 {
   "dependencies": {
+<<<<<<< HEAD
+    "react-transition-group": "^4.4.5"
+=======
     "react-icons": "^5.5.0"
+>>>>>>> origin/main
   }
 }

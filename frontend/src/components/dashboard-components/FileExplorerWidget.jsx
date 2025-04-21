@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-function FileExplorerWidget({ onSelectDoc }) {
+function FileExplorerWidget({ onSelectDoc, highlightedPdf }) {
   const [pdfFiles, setPdfFiles] = useState([]);
 
   useEffect(() => {
@@ -38,7 +38,7 @@ function FileExplorerWidget({ onSelectDoc }) {
         {pdfFiles.map((file) => (
           <div
             key={file.id}
-            className="FE-PdfItem"
+            className={`FE-PdfItem ${highlightedPdf === file ? 'FE-PdfItem-selected' : ''}`}
             onClick={(e) => handleClick(file, e)}
           >
             <div className="FE-PdfIcon"></div>

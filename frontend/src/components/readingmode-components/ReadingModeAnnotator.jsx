@@ -1,6 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import './ReadingModeAnnotator.css';
 
+// Custom styles to override default CSS
+const styles = {
+  container: {
+    display: 'flex',
+    flexDirection: 'column',
+    width: '100%',
+    height: '100%',
+    background: '#ffffff',
+    borderRadius: '8px',
+    overflow: 'hidden'
+  },
+  annotationPanel: {
+    width: '100%',
+    flex: 1,
+    padding: '15px',
+    overflowY: 'auto'
+  }
+};
+
 // We'll use the timer from ReadingContainer instead
 
 const ReadingModeAnnotator = ({ pdfText, currentPage, onPageClick, notes, onAddNote, onDeleteNote, onUpdateNote }) => {
@@ -261,26 +280,8 @@ const ReadingModeAnnotator = ({ pdfText, currentPage, onPageClick, notes, onAddN
   };
 
   return (
-    <div className="container">
-      <div className="text-panel">
-                {/* Timer is now displayed in the ReadingContainer */}
-        {extractedText.map((page, index) => (
-          <div 
-            key={`page-${index}`}
-            className={`page-text ${currentPage === page.page ? 'current-page' : ''}`}
-            onClick={() => onPageClick && onPageClick(page.page)}
-          >
-            <h3>Page {page.page}</h3>
-            <div 
-              className="selectable-text"
-              onMouseUp={handleTextSelection}
-              dangerouslySetInnerHTML={{ __html: page.text }}
-            />
-          </div>
-        ))}
-      </div>
-      
-      <div className="annotation-panel">
+    <div className="container" style={{ display: 'flex', flexDirection: 'column', width: '100%', height: '100%' }}>
+      <div className="annotation-panel" style={{ width: '100%', flex: 1, overflowY: 'auto' }}>
         <h3>Text Selection Tools</h3>
         
         {!selectedText && (

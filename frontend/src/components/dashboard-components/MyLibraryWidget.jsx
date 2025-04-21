@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-function MyLibraryWidget({ onSelectDoc }) {
+function MyLibraryWidget({ onSelectDoc, highlightedPdf }) {
   const [files, setFiles] = useState([]);
   const [openFolder, setOpenFolder] = useState(null);
 
@@ -69,14 +69,14 @@ function MyLibraryWidget({ onSelectDoc }) {
           {folders[openFolder].map((file) => (
             <div
               key={file.id}
-              className="FE-PdfItem"
+              className={`FE-PdfItem ${highlightedPdf === file ? 'FE-PdfItem-selected' : ''}`}
               onClick={() => {
                 if (onSelectDoc) {
                   onSelectDoc({
                     title: file.file_name,
-                    description: `Uploaded at ${new Date(file.uploaded_at).toLocaleString()}`,
+                    description: `Description for ${file}`,
                     fileUrl: `http://localhost:8000/media/${file.file}`
-                  });
+                  }) // Pass the event to the onSelectDoc function;
                 }
               }}
             >
