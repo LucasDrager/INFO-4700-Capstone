@@ -58,9 +58,6 @@ const PracticeTest = () => {
                         ))}
                     </div>
                 </div>
-                <button className="back-arrow" onClick={() => navigate(-1)}>
-                    ←
-                </button>
             </div>
             <div className="main-content">
                 <h1 className="pdf-title">Title of PDF</h1>
@@ -88,6 +85,7 @@ const PracticeTest = () => {
                     ))}
                 </div>
                 <button className="submit-button" onClick={handleSubmit}>Submit Test</button>
+                <button className="bottom-back-button" onClick={() => navigate(-1)}>←</button>
             </div>
         </div>
     );

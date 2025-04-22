@@ -23,11 +23,13 @@
     padding: 20px;
     border-radius: 15px;
     margin-bottom: 20px;
+    text-size-adjust: 40%;
 }
 
 .questions-box h2 {
     margin: 0 0 15px 0;
     color: #333;
+    font-size: 1.2rem;
 }
 
 .question-dots {
@@ -47,16 +49,6 @@
 
 .question-dot.active {
     background-color: #000000;
-}
-
-.back-arrow {
-    font-size: 24px;
-    color: white;
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 10px;
-    align-self: flex-start;
 }
 
 .main-content {
@@ -148,4 +140,22 @@
 
 .submit-button:hover {
     background-color: #45a049;
+}
+
+.bottom-back-button {
+    position: fixed;
+    bottom: 2rem;
+    left: 2rem;
+    padding: 1rem 2rem;
+    background-color: #666;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 24px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.bottom-back-button:hover {
+    transform: translateX(-5px);
 }

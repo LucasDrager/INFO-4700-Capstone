@@ -44,7 +44,7 @@ function AppContent() {
   const location = useLocation();
 
   // Hide the navbar on certain pages
-  const hideHeaderNav = ["/dashboard", "/settings", "/gamespage", "/GamesPage", "/reading-mode", "/flashcard", "/practice-test"].includes(location.pathname);
+  const hideHeaderNav = ["/dashboard", "/settings", "/GamesPage", "/reading-mode", "/flashcard", "/practice-test"].includes(location.pathname);
 
   return (
     <>
@@ -76,6 +76,7 @@ function AppContent() {
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/gamespage" element={<GamesPage />} />
             <Route path="/flashcard" element={<Flashcard />} />
+            <Route path="/practice-test" element={<PracticeTest />} />
 
             {/* Authentication Pages */}
             <Route path="/login" element={<LoginPage />} />
