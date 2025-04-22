@@ -1,4 +1,3 @@
-// SidebarDashboard.jsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -12,15 +11,14 @@ function SidebarDashboard({ onFileUploadSuccess, collapseMode }) {
   const navigate = useNavigate();
 
   const handleFileUpload = async (event) => {
-    const file = event.target.files[0]; // Take first selected file
+    const file = event.target.files[0];
     if (!file) {
-      console.error("No file selected");
       setErrorMessage('No file selected. Please choose a file.');
       return;
     }
 
     const formData = new FormData();
-    formData.append('file', file); // Append actual file
+    formData.append('file', file);
 
     setUploading(true);
     setErrorMessage('');
@@ -30,25 +28,16 @@ function SidebarDashboard({ onFileUploadSuccess, collapseMode }) {
       const response = await axios.post(
         `${API_BASE}upload_pdf/`,
         formData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            // Do not manually set Content-Type for multipart/form-data — let Axios handle it
-          },
-        }
+        { headers: { Authorization: `Bearer ${token}` } }
       );
 
       const uploaded = response.data;
-      console.log('Upload successful:', response.data);
-
       if (onFileUploadSuccess) {
         onFileUploadSuccess(uploaded);
       }
-
-      // Reset input
       event.target.value = null;
     } catch (error) {
-      console.error('Error uploading file:', error);
+      console.error('Upload failed:', error);
       setErrorMessage('Upload failed. Please try again.');
     } finally {
       setUploading(false);
@@ -56,54 +45,44 @@ function SidebarDashboard({ onFileUploadSuccess, collapseMode }) {
   };
 
   const handleTabClick = () => {
-    if (collapseMode) {
-      navigate('/dashboard');
-    } else {
-      navigate('/settings');
-    }
-  };
-
-  const handleExpand = () => {
-    navigate('/settings');
+    navigate(collapseMode ? '/dashboard' : '/settings');
   };
 
   return (
-    <div className="sidebar-dashboard">
-      <div className="sidebar-dashboardContainer">
-        {/* Topmost widget: User/Profile */}
-        <div className="sidebar-top">
+    <div className="d-flex flex-column justify-content-between bg-light border-end p-3" style={{ width: '280px', minHeight: '100vh' }}>
+      <div>
+        <div className="mb-4">
           <UserProfileWidget />
         </div>
 
-        {/* Upload docs */}
-        <div className="sidebar-upload">
+        <div className="mb-3">
+        <label htmlFor="fileUpload" className="form-label fw-semibold">Upload PDF</label>
           <input
+            id="fileUpload"
             type="file"
             accept=".pdf"
-            onChange={handleFileUpload} // Simplified
+            className="form-control form-control-sm"
+            onChange={handleFileUpload}
             disabled={uploading}
           />
-
-          {uploading && <p>Uploading file...</p>}
-          {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
-        </div>
-
-        {/* Bottom: Plant widget */}
-        <div className="sidebar-plant">
-            <PlantContainerWidget />
+          {uploading && <div className="form-text">Uploading...</div>}
+          {errorMessage && <div className="text-danger small mt-1">{errorMessage}</div>}
         </div>
       </div>
 
-    {/* The Tab Button */}
-    <div className="sidebar-tab" onClick={handleTabClick}>
-        <div>
-        {/* Use rightTriangle for collapse mode; otherwise, triangle */}
-        <div className= "rightTriangle"></div>
-        </div>
-    </div>
+      <div>
+        <PlantContainerWidget />
+      </div>
+
+      {/* <div
+        className="position-absolute top-50 end-0 translate-middle-y bg-primary text-white px-2 py-1 rounded-start shadow"
+        onClick={handleTabClick}
+        style={{ cursor: 'pointer' }}
+      >
+        <i className="bi bi-chevron-double-right"></i>
+      </div> */}
     </div>
   );
 };
 
 export default SidebarDashboard;
-

@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import 'bootstrap/dist/css/bootstrap.min.css';
 //Makes login check accessable from all pages via dom
 import { useContext } from 'react';
 import { Navigate } from 'react-router-dom';

@@ -22,7 +22,6 @@ function MyLibraryWidget({ onSelectDoc, highlightedPdf }) {
     fetchFiles();
   }, []);
 
-  // Group files by "folder" - we'll use upload date as a pseudo-folder
   const folders = files.reduce((acc, file) => {
     const date = new Date(file.uploaded_at);
     const folderName = `${date.getFullYear()}-${date.getMonth() + 1}`;
@@ -32,60 +31,57 @@ function MyLibraryWidget({ onSelectDoc, highlightedPdf }) {
   }, {});
 
   const handleFolderClick = (folderName) => {
-    if (folderName === openFolder) {
-      setOpenFolder(null);
-    } else {
-      setOpenFolder(folderName);
-    }
+    setOpenFolder(openFolder === folderName ? null : folderName);
   };
 
-  const widgetClass = openFolder ? "myLib-DashboardWidget open" : "myLib-DashboardWidget";
-
   return (
-    <div className={widgetClass}>
-      <div className="myLib-Header">
-        <h2>my Library</h2>
+    <div className="card my-3 shadow-sm">
+      <div className="card-header d-flex justify-content-between align-items-center">
+        <h5 className="mb-0">My Library</h5>
         <input
           type="text"
+          className="form-control w-50"
           placeholder="Search..."
-          className="myLib-Search"
         />
       </div>
 
-      <div className="myLib-Folders">
-        {Object.keys(folders).map((folderName) => (
-          <button
-            key={folderName}
-            className="folder-button"
-            onClick={() => handleFolderClick(folderName)}
-          >
-            {folderName}
-          </button>
-        ))}
-      </div>
-
-      {openFolder && (
-        <div className="myLib-PDFSection">
-          {folders[openFolder].map((file) => (
-            <div
-              key={file.id}
-              className={`FE-PdfItem ${highlightedPdf === file ? 'FE-PdfItem-selected' : ''}`}
-              onClick={() => {
-                if (onSelectDoc) {
-                  onSelectDoc({
-                    title: file.file_name,
-                    description: `Description for ${file}`,
-                    fileUrl: `http://localhost:8000/media/${file.file}`
-                  }) // Pass the event to the onSelectDoc function;
-                }
-              }}
+      <div className="card-body">
+        <div className="d-flex flex-wrap gap-2 mb-3">
+          {Object.keys(folders).map((folderName) => (
+            <button
+              key={folderName}
+              className={`btn ${openFolder === folderName ? 'btn-primary' : 'btn-outline-primary'}`}
+              onClick={() => handleFolderClick(folderName)}
             >
-              <div className="FE-PdfIcon"></div>
-              <p className="FE-PdfTitle">{file.file_name}</p>
-            </div>
+              {folderName}
+            </button>
           ))}
         </div>
-      )}
+
+        {openFolder && (
+          <div className="list-group">
+            {folders[openFolder].map((file) => (
+              <div
+                key={file.id}
+                className={`list-group-item list-group-item-action ${highlightedPdf === file ? 'active' : ''}`}
+                style={{ cursor: 'pointer' }}
+                onClick={() => {
+                  if (onSelectDoc) {
+                    onSelectDoc({
+                      title: file.file_name,
+                      description: `Uploaded at ${new Date(file.uploaded_at).toLocaleString()}`,
+                      fileUrl: `http://localhost:8000/media/${file.file}`
+                    });
+                  }
+                }}
+              >
+                <i className="bi bi-file-earmark-pdf me-2"></i>
+                {file.file_name}
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

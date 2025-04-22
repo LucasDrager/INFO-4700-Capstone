@@ -71,7 +71,7 @@
     width: 100%;
 }
 
-.card {
+.games-page .card {
     background: white;
     border-radius: 10px;
     padding: 1.5rem;
@@ -464,7 +464,7 @@
     background-color: #e0e0e0;
 }
 
-.card:hover {
+.games-page .card:hover {
     background-color: #a5d6a7;
     transition: background-color 0.3s ease;
 }
