@@ -15,6 +15,7 @@ const GamesPage = () => {
     const navigate = useNavigate();
     const [activeTab, setActiveTab] = useState('flashcards');
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isNotesModalOpen, setIsNotesModalOpen] = useState(false);
     const [currentFlashcard, setCurrentFlashcard] = useState(0);
     const [isCreateSetModalOpen, setIsCreateSetModalOpen] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
@@ -56,14 +57,16 @@ const GamesPage = () => {
     const renderContent = () => {
         if (activeTab === 'flashcards') {
             return (
-                <div className="cards-grid">
-                    {flashcardSets.map((set) => (
-                        <div key={set.id} className="card" onDoubleClick={handleCardDoubleClick}>
-                            <h3 className="card-title">{set.title}</h3>
-                            <p className="card-subtitle">Flashcards ({set.cards.length})</p>
-                            <button className="preview-button" onClick={() => handlePreviewClick(set)}>Preview</button>
-                        </div>
-                    ))}
+                <div className="cards-container">
+                    <div className="cards-grid">
+                        {flashcardSets.map((set) => (
+                            <div key={set.id} className="card" onDoubleClick={handleCardDoubleClick}>
+                                <h3 className="card-title">{set.title}</h3>
+                                <p className="card-subtitle">Flashcards ({set.cards.length})</p>
+                                <button className="preview-button" onClick={() => handlePreviewClick(set)}>Preview</button>
+                            </div>
+                        ))}
+                    </div>
                 </div>
             );
         } else {
@@ -71,20 +74,20 @@ const GamesPage = () => {
                 <div className="cards-grid">
                     <div className="card">
                         <h3 className="card-title">Title of PDF</h3>
-                        <p className="card-subtitle">Notes (15)</p>
-                        <button className="preview-button">Preview</button>
+                        <p className="card-subtitle">Notes</p>
+                        <button className="preview-button" onClick={() => setIsNotesModalOpen(true)}>Preview</button>
                     </div>
                     
                     <div className="card">
                         <h3 className="card-title">Another PDF</h3>
                         <p className="card-subtitle">Notes</p>
-                        <button className="preview-button">Preview</button>
+                        <button className="preview-button" onClick={() => setIsNotesModalOpen(true)}>Preview</button>
                     </div>
                     
                     <div className="card">
                         <h3 className="card-title">Study Material</h3>
                         <p className="card-subtitle">Notes</p>
-                        <button className="preview-button">Preview</button>
+                        <button className="preview-button" onClick={() => setIsNotesModalOpen(true)}>Preview</button>
                     </div>
                 </div>
             );
@@ -110,12 +113,11 @@ const GamesPage = () => {
                 </button>
             </div>
 
-            <div className="filter-container">
-                <button className="filter-button">Filter</button>
-                <button className="filter-button">↓</button>
-                <button className="filter-button">↓</button>
-                <button className="filter-button" onClick={() => setIsCreateSetModalOpen(true)}>+ Add Set</button>
-            </div>
+            {activeTab === 'flashcards' && (
+                <div className="filter-container">
+                    <button className="filter-button" onClick={() => setIsCreateSetModalOpen(true)}>+ Add Set</button>
+                </div>
+            )}
 
             {renderContent()}
 
@@ -180,6 +182,42 @@ const GamesPage = () => {
                 onClose={() => setIsCreateSetModalOpen(false)}
                 onSave={handleSaveFlashcardSet}
             />
+
+            {isNotesModalOpen && (
+                <div className="modal-overlay" onClick={() => setIsNotesModalOpen(false)}>
+                    <div className="modal-content" onClick={e => e.stopPropagation()}>
+                        <div className="modal-header">
+                            <h2>Notes Preview</h2>
+                            <button className="close-button" onClick={() => setIsNotesModalOpen(false)}>×</button>
+                        </div>
+                        <div className="modal-body">
+                            <p>This is example notes.</p>
+                        </div>
+                        <div className="modal-controls">
+                            <button 
+                                className="modal-action-button edit-button"
+                                style={{ visibility: 'hidden' }}
+                            >
+                                Edit Card
+                            </button>
+                            <button 
+                                className="modal-action-button delete-button"
+                                style={{ visibility: 'hidden' }}
+                            >
+                                Delete Set
+                            </button>
+                            <button 
+                                className="modal-action-button open-button"
+                                onClick={() => {
+                                    navigate('/readingmode');
+                                }}
+                            >
+                                Open Set
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }; 
