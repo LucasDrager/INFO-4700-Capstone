@@ -1,5 +1,15 @@
 from django.contrib.auth.models import User
 from django.db import models
+import hashlib
+import os
+from datetime import datetime
+
+def hashed_upload_path(instance, filename):
+    name, ext = os.path.splitext(filename)
+    timestamp = datetime.now().isoformat()
+    hash_input = f"{timestamp}_{filename}".encode('utf-8')
+    hash_name = hashlib.sha256(hash_input).hexdigest()[:16]  # Shorten the hash
+    return f"pdfs/{hash_name}{ext.lower()}"
 
 class ChatMessage(models.Model):
     sender = models.CharField(max_length=10)  # "user" or "bot"
@@ -16,7 +26,7 @@ class ReaderProfile(models.Model):
 class File(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="files")
     file_name = models.CharField(max_length=255)
-    file = models.FileField(upload_to='pdfs/', default='/media/pdfs/placeholder.pdf')
+    file = models.FileField(upload_to=hashed_upload_path)
     uploaded_at = models.DateTimeField(auto_now_add=True)
 
 class Annotation(models.Model):

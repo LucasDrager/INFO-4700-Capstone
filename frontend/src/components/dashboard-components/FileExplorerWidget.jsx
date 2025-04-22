@@ -7,7 +7,7 @@ function FileExplorerWidget({ files, onSelectDoc, highlightedPdf }) {
       onSelectDoc({
         title: file.file_name,
         description: `Uploaded at ${new Date(file.uploaded_at).toLocaleString()}`,
-        fileUrl: `http://localhost:8000/media/${file.file}`,
+        fileUrl: file.file.startsWith('http') ? file.file : `http://localhost:8000/${file.file}`,
       }, e); // pass event to support double-click logic
     }
   };

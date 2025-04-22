@@ -42,7 +42,9 @@ function DashboardPage() {
     fetchFiles();
   }, []);
 
-  // state to store currently selected document's data (sidebar spotlight)
+  const handleUploadResponse = (uploadedFile) => {
+    setUploadedFiles(prev => [...prev, uploadedFile]);
+  };
 
   //handler for doc selection from fileExplorerWidget
   const handleSelectDoc = (docData, source, e) => {
@@ -66,7 +68,7 @@ function DashboardPage() {
       }
 
       if (docData && docData.fileUrl) {
-        navigate(`/reading-mode?fileUrl=${`http://localhost:8000/media/pdfs/`+encodeURIComponent(docData.title)}&title=${encodeURIComponent(docData.title)}`);
+        navigate(`/reading-mode?fileUrl=${encodeURIComponent(docData.fileUrl)}&title=${encodeURIComponent(docData.title)}`);
       }
       return;
     }
@@ -92,7 +94,7 @@ function DashboardPage() {
 
   return (
     <div className="dashboard-container">
-      <SidebarDashboard onFileUploadSuccess={fetchFiles} />
+      <SidebarDashboard onFileUploadSuccess={handleUploadResponse} />
       <div className="dashboard-mainContentArea">
           <MyLibraryWidget files={uploadedFiles}
             onSelectDoc={(doc, e) => handleSelectDoc(doc, 'library')}

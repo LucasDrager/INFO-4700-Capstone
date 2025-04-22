@@ -38,10 +38,11 @@ function SidebarDashboard({ onFileUploadSuccess, collapseMode }) {
         }
       );
 
+      const uploaded = response.data;
       console.log('Upload successful:', response.data);
 
       if (onFileUploadSuccess) {
-        onFileUploadSuccess();
+        onFileUploadSuccess(uploaded);
       }
 
       // Reset input
