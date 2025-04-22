@@ -5,8 +5,8 @@ function DocumentSpotlightSidebar({ documentData, onClose }) {
   const navigate = useNavigate();
 
   const handleReadModeClick = () => {
-    if (docData && docData.fileUrl) {
-      navigate(`/reading-mode?fileUrl=${`http://localhost:8000/media/pdfs/`+encodeURIComponent(docData.title)}&title=${encodeURIComponent(docData.title)}`);
+    if (documentData && documentData.fileUrl) {
+      navigate(`/reading-mode?fileUrl=${`http://localhost:8000/media/pdfs/`+encodeURIComponent(documentData.title)}&title=${encodeURIComponent(documentData.title)}`);
     }
   };
 

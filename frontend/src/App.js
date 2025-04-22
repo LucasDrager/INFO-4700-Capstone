@@ -30,7 +30,10 @@ import ResetPasswordPage from "./Auth/ResetPasswordPage";
 // Private Route Wrapper
 // ============================
 function PrivateOutlet() {
-  const { currentUser } = useAuth();
+  const { currentUser, loading } = useAuth();
+
+  if (loading) return null; // or a spinner/loading screen
+
   return currentUser ? <Outlet /> : <Navigate to="/login" replace />;
 }
 

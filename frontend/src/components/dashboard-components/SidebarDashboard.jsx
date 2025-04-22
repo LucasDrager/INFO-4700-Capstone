@@ -6,7 +6,7 @@ import UserProfileWidget from '../common-components/UserProfileWidget';
 import PlantContainerWidget from '../dashboard-components/PlantContainerWidget';
 const API_BASE = process.env.REACT_APP_API_BASE;
 
-function SidebarDashboard({ onFileUploadSuccess }) {
+function SidebarDashboard({ onFileUploadSuccess, collapseMode }) {
   const [uploading, setUploading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();

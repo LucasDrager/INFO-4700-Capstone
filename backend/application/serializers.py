@@ -7,6 +7,10 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework import serializers
 from rest_framework_simplejwt.views import TokenObtainPairView
 from django.contrib.auth.models import User
+# DATABASE
+import os
+import re
+from django.utils.text import slugify
 
 # DATABASE
 from .models import File
@@ -43,6 +47,14 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         data['email'] = self.user.email
         return data
 
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+        token['username'] = user.username
+        token['email'] = user.email
+
+        return token
+
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
@@ -58,8 +70,17 @@ class FileUploadSerializer(serializers.ModelSerializer):
         read_only_fields = ['file_name', 'uploaded_at', 'id']
 
     def create(self, validated_data):
-        validated_data['file_name'] = validated_data['file'].name
+        uploaded_file = validated_data['file']
+        if not uploaded_file.name.lower().endswith('.pdf'):
+            raise serializers.ValidationError("Only PDF files are allowed.")
+
+        base_name, ext = os.path.splitext(uploaded_file.name)
+
+        safe_name = slugify(base_name)
+        safe_file_name = f"{safe_name}.pdf"
+        validated_data['file_name'] = safe_file_name
         validated_data['user'] = self.context['request'].user
+
         return super().create(validated_data)
 
 

@@ -98,10 +98,11 @@ function DashboardPage() {
             onSelectDoc={(doc, e) => handleSelectDoc(doc, 'library')}
             highlightedPdf={highlightedPdf}
           />
-        <FileExplorerWidget files={uploadedFiles}
-          onSelectDoc={(doc, e) => handleSelectDoc(doc, 'explorer')}
-          highlightedPdf={highlightedPdf}
-           />
+          <FileExplorerWidget
+            files={uploadedFiles}
+            onSelectDoc={(doc, e) => handleSelectDoc(doc, 'explorer', e)}
+            highlightedPdf={highlightedPdf}
+          />
         <ButtonsDashboardWidget />
       </div>
 

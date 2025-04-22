@@ -7,7 +7,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 //Makes login check accessable from all pages via dom
 import { useContext } from 'react';
 import { Navigate } from 'react-router-dom';
-import AuthContext from './AuthContext';
+import { AuthContext } from './AuthContext';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
