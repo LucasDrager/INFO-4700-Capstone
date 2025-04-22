@@ -57,14 +57,16 @@ const GamesPage = () => {
     const renderContent = () => {
         if (activeTab === 'flashcards') {
             return (
-                <div className="cards-grid">
-                    {flashcardSets.map((set) => (
-                        <div key={set.id} className="card" onDoubleClick={handleCardDoubleClick}>
-                            <h3 className="card-title">{set.title}</h3>
-                            <p className="card-subtitle">Flashcards ({set.cards.length})</p>
-                            <button className="preview-button" onClick={() => handlePreviewClick(set)}>Preview</button>
-                        </div>
-                    ))}
+                <div className="cards-container">
+                    <div className="cards-grid">
+                        {flashcardSets.map((set) => (
+                            <div key={set.id} className="card" onDoubleClick={handleCardDoubleClick}>
+                                <h3 className="card-title">{set.title}</h3>
+                                <p className="card-subtitle">Flashcards ({set.cards.length})</p>
+                                <button className="preview-button" onClick={() => handlePreviewClick(set)}>Preview</button>
+                            </div>
+                        ))}
+                    </div>
                 </div>
             );
         } else {

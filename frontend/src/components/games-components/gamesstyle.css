@@ -1,3 +1,8 @@
+.games-page {
+    background-color: white;
+    min-height: 70vh;
+}
+
 .reading-tools-container {
     padding: 2rem;
     max-width: 1200px;
@@ -55,10 +60,15 @@
     cursor: pointer;
 }
 
+.cards-container {
+    width: 100%;
+}
+
 .cards-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     gap: 2rem;
+    width: 100%;
 }
 
 .card {
@@ -198,7 +208,18 @@
 
 .cancel-button {
     padding: 0.75rem 1.5rem;
-    background-color: #f5f5f5;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-weight: 500;
+    background-color: #707070;
+    color: #333;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+.cancel-button:hover {
+    background-color: #777777;
+    color: #8d8d8d;
 }
 
 .modal-overlay {
