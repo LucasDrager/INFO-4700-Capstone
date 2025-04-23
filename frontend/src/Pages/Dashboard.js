@@ -44,10 +44,10 @@ function DashboardPage() {
     setLastClickTime(currentTime);
 
     if (isDoubleClick && docData?.fileUrl) {
-      if (e?.currentTarget) {
+      if (e?.currentTarget && e.currentTarget.classList) {
         e.currentTarget.classList.add('FE-PdfItem-doubleClick');
         setTimeout(() => {
-          e.currentTarget.classList.remove('FE-PdfItem-doubleClick');
+          e.currentTarget?.classList?.remove('FE-PdfItem-doubleClick');
         }, 300);
       }
       navigate(`/reading-mode?fileUrl=${encodeURIComponent(docData.fileUrl)}&title=${encodeURIComponent(docData.title)}`);

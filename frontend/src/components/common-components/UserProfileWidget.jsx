@@ -5,7 +5,7 @@ import React from "react";
 const UserProfileWidget = () => {
   return (
     <div className="userProfileContainer">
-      <button className="ProfileBtn">PROFILE BUTTON</button>
+      <a type="button" class="btn btn-primary btn-lg" href="/settings">Profile</a>
     </div>
   )
 };

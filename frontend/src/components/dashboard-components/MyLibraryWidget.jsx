@@ -65,13 +65,13 @@ function MyLibraryWidget({ onSelectDoc, highlightedPdf }) {
                 key={file.id}
                 className={`list-group-item list-group-item-action ${highlightedPdf === file ? 'active' : ''}`}
                 style={{ cursor: 'pointer' }}
-                onClick={() => {
+                onClick={(e) => {
                   if (onSelectDoc) {
                     onSelectDoc({
                       title: file.file_name,
                       description: `Uploaded at ${new Date(file.uploaded_at).toLocaleString()}`,
                       fileUrl: `http://localhost:8000/media/${file.file}`
-                    });
+                    }, e);
                   }
                 }}
               >

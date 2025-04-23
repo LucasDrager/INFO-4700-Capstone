@@ -19,7 +19,7 @@ function FileExplorerWidget({ files, onSelectDoc, highlightedPdf }) {
       </div>
       <div className='card-body'>
         <div className='container-fluid '>
-          <div className="row row-cols-2 row-cols-md-3 g-3">
+          <div className="row row-cols-8 gap-3">
             {files.length === 0 ? (
               <p className="text-center text-muted">No files uploaded yet.</p>
             ) : (

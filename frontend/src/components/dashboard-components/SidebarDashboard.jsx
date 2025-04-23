@@ -49,7 +49,7 @@ function SidebarDashboard({ onFileUploadSuccess, collapseMode }) {
   };
 
   return (
-    <div className="d-flex flex-column justify-content-between bg-light border-end p-3" style={{ width: '280px', minHeight: '100vh' }}>
+    <div className="d-flex flex-column justify-content-between bg-light border-end p-3" style={{ width: '330px', minHeight: '100vh' }}>
       <div>
         <div className="mb-4">
           <UserProfileWidget />
@@ -73,14 +73,6 @@ function SidebarDashboard({ onFileUploadSuccess, collapseMode }) {
       <div>
         <PlantContainerWidget />
       </div>
-
-      {/* <div
-        className="position-absolute top-50 end-0 translate-middle-y bg-primary text-white px-2 py-1 rounded-start shadow"
-        onClick={handleTabClick}
-        style={{ cursor: 'pointer' }}
-      >
-        <i className="bi bi-chevron-double-right"></i>
-      </div> */}
     </div>
   );
 };
