@@ -70,7 +70,7 @@ function MyLibraryWidget({ onSelectDoc, highlightedPdf }) {
                     onSelectDoc({
                       title: file.file_name,
                       description: `Uploaded at ${new Date(file.uploaded_at).toLocaleString()}`,
-                      fileUrl: `http://localhost:8000/media/${file.file}`
+                      fileUrl: `http://localhost:8000/${file.file}`
                     }, e);
                   }
                 }}

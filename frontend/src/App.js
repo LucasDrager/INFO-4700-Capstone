@@ -60,9 +60,6 @@ function AppContent() {
         <Link to="/about" style={{ margin: "10px" }}>About</Link>
         <Link to="/contact" style={{ margin: "10px" }}>Contact</Link>
         <Link to="/dashboard" style={{ margin: "10px" }}>Dashboard</Link>
-        <Link to="/gamespage" style={{ margin: "10px" }}>Games</Link>
-        <Link to="/reading-mode" style={{ margin: "10px" }}>Reading Mode</Link>
-          <Link to="/readingmode" style={{ margin: "10px" }}>ReadingMode</Link>
       </nav>
       )}
 

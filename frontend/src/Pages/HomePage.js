@@ -1,186 +1,46 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { motion } from "framer-motion";
 import { Link } from 'react-router-dom';
 import "bootstrap/dist/css/bootstrap.min.css";
-import ExtractedTextAnnotator from "../components/extracted-text-components/ExtractedTextAnnotator";
 
 const LandingPage = () => {
-  const [pdfText, setPdfText] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [files, setFiles] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-
-  // API base URL - determine based on hostname
-  const API_BASE_URL = "http://localhost:8000";
-
-  useEffect(() => {
-    const testApiConnection = async () => {
-      try {
-        const response = await fetch(`${API_BASE_URL}/api/parse-pdf/`, {
-          headers: {
-            'Accept': 'application/json',
-          },
-        });
-        if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(errorData.message || 'API is not reachable');
-        }
-        console.log('API is reachable');
-      } catch (error) {
-        console.error('API connection test failed:', error);
-      }
-    };
-    testApiConnection();
-  }, []);
-
-  const handleFileUpload = async (event) => {
-    const selectedFiles = Array.from(event.target.files);
-    if (selectedFiles.length === 0) return;
-
-    const newFiles = selectedFiles.map(file => ({
-      name: file.name,
-      url: URL.createObjectURL(file),
-    }));
-
-    setFiles(prevFiles => [...prevFiles, ...newFiles]);
-
-    const formData = new FormData();
-    selectedFiles.forEach(file => formData.append('pdf_files', file));
-
-    setIsLoading(true);
-    try {
-      const response = await fetch(`${API_BASE_URL}/api/parse-pdf/`, {
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-        },
-        body: formData,
-      });
-      const data = await response.json();
-      
-      if (!response.ok) {
-        throw new Error(data.message || 'Error processing PDF file');
-      }
-      
-      setPdfText(Array.isArray(data.texts) ? data.texts : []);
-    } catch (error) {
-      console.error('Error uploading PDF:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   return (
-    <div className="landing-container">
-      <main className="container mt-4">
-        <h2>Welcome to Lectern</h2>
-      </main>
-
-      <motion.div
-        className="btn btn-primary btn-lg"
-        whileHover={{ scale: 1.1 }}>
-        <Link to="/about" style={{ color: 'inherit', textDecoration: 'none' }}>
-          Learn More About Lectern
-        </Link>
-      </motion.div>
-
-
-      <div className="container text-center mt-5">
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
+    <div className="bg-dark text-light min-vh-100 d-flex flex-column justify-content-center">
+      <motion.h1 
+          className="display-4 fw-bold mb-3"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1 }}
-          className="pdf-upload-section">
-          <h2>Upload and Parse PDF</h2>
-          <div className="mt-4">
-            <input
-              type="file"
-              accept=".pdf"
-              multiple
-              onChange={handleFileUpload}
-              className="form-control"
-              style={{ maxWidth: '300px', margin: '0 auto' }}
-            />
+        >
+          Welcome to Lectern
+        </motion.h1>
+      <main className="container text-center py-5">
+        <p className="text-start lead mb-4">
+          Revolutionize your reading experience with AI-driven assistance, powerful annotation tools,
+          and a focused reading mode designed to help you truly understand, not just consume.
+        </p>
+
+        <div className="row mt-5">
+          <div className="col-md-4">
+            <i className="bi bi-eye-slash display-4 mb-3 text-primary"></i>
+            <h4>Focused Reading Mode</h4>
+            <p>Minimize distractions and maximize comprehension with our clean, immersive interface.</p>
           </div>
-
-          {isLoading && (
-            <div className="mt-3">
-              <div className="spinner-border text-primary" role="status">
-                <span className="visually-hidden">Loading...</span>
-              </div>
-            </div>
-          )}
-
-          {pdfText.length > 0 && (
-            <div className="mt-4">
-              <ExtractedTextAnnotator 
-                pdfText={pdfText} 
-                currentPage={currentPage}
-                onPageClick={(page) => {
-                  setCurrentPage(page);
-                  // Find the PDF viewer iframe and navigate to the page || This doesnt work at all
-                  const pdfViewer = document.querySelector('iframe');
-                  if (pdfViewer?.contentWindow?.PDFViewerApplication) {
-                    try {
-                      pdfViewer.contentWindow.PDFViewerApplication.page = page;
-                    } catch (error) {
-                      console.error('Failed to navigate PDF:', error);
-                    }
-                  }
-                }}
-              />
-            </div>
-          )}
-        </motion.div>
-      </div>
-
-      <div className="pdf-viewer-container">
-        {files.map((file, index) => (
-          <div key={index} className="pdf-viewer-item">
-            <iframe
-              src={file.url}
-              title={`PDF Viewer ${index}`}
-              width="50%"
-              height="600px"
-              style={{ border: 'none' }}
-              onLoad={(e) => {
-                const iframe = e.target;
-                const checkPDFViewer = setInterval(() => {
-                  try {
-                    if (iframe.contentWindow.PDFViewerApplication) {
-                      clearInterval(checkPDFViewer);
-                      
-                      // Add message listener for PDF.js events
-                      const messageHandler = (event) => {
-                        if (event.data?.type === 'pageChanged') {
-                          setCurrentPage(event.data.page);
-                        }
-                      };
-                      window.addEventListener('message', messageHandler);
-
-                      // Cleanup listener when component unmounts
-                      return () => window.removeEventListener('message', messageHandler);
-
-                      // Setup PDF viewer event listeners
-                      iframe.contentWindow.PDFViewerApplication.eventBus.on('pagechanging', (evt) => {
-                        window.parent.postMessage({
-                          type: 'pageChanged',
-                          page: evt.pageNumber
-                        }, '*');
-                      });
-                    }
-                  } catch (error) {
-                    console.log('PDF viewer not ready yet...');
-                  }
-                }, 100);
-
-                // Clear interval after 10 seconds to prevent infinite checking
-                setTimeout(() => clearInterval(checkPDFViewer), 10000);
-              }}
-            />
+          <div className="col-md-4">
+            <i className="bi bi-pencil-square display-4 mb-3 text-success"></i>
+            <h4>In-App Annotations</h4>
+            <p>Take notes directly on your documents, highlight key ideas, and revisit insights instantly.</p>
           </div>
-        ))}
-      </div>
+          <div className="col-md-4">
+            <i className="bi bi-robot display-4 mb-3 text-info"></i>
+            <h4>Smart AI Tutoring</h4>
+            <p>Engage with an AI that teaches—not just answers—tailored to your learning needs.</p>
+          </div>
+        </div>
+      </main>
+      <Link to="/dashboard" className="btn btn-outline-light btn-lg mt-5">
+        Start Reading Now
+      </Link>
     </div>
   );
 };

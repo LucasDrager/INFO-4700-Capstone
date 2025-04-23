@@ -224,7 +224,7 @@ function ReadingContainer({ isSidebarCollapsed, onTextExtraction, currentPage, o
                 {viewMode === 'text' ? 'PDF View' : 'Text View'}
               </button>
 
-              {viewMode === 'text' && (
+              {/* {viewMode === 'text' && (
                 <button
                   onClick={() => setAnnotationPanelVisible(!annotationPanelVisible)}
                   style={{
@@ -248,7 +248,7 @@ function ReadingContainer({ isSidebarCollapsed, onTextExtraction, currentPage, o
                   </span>
                   {annotationPanelVisible ? 'Close' : 'Annotate'}
                 </button>
-              )}
+              )} */}
             </div>
           )}
         </div>
