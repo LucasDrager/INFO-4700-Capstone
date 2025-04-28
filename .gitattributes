@@ -1,0 +1,8 @@
+# ── Keep all shell / bash scripts in LF ──
+*.sh          text eol=lf
+*.bash        text eol=lf
+Dockerfile    text eol=lf
+Makefile      text eol=lf
+
+# ── PowerShell remains CRLF so Windows users get native endings ──
+*.ps1         text eol=crlf

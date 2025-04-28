@@ -84,3 +84,7 @@ yarn-error.log
 *.sublime-workspace
 *.sublime-project
 node_modules
+
+# MEDIA
+# Ignore media files
+backend/media

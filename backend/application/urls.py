@@ -18,8 +18,11 @@ from django.contrib import admin
 from django.urls import path
 from django.http import HttpResponse,JsonResponse
 from django.contrib.auth import views as auth_views
-from .views import parse_pdf, chat_with_ollama, get_chat_history, register_user, summarize_text, RegisterUserView, CustomTokenObtainPairView
+from .views import list_pdfs, parse_pdf, chat_with_ollama, get_chat_history, register_user, summarize_text, RegisterUserView, CustomTokenObtainPairView
+from .views import upload_pdf, list_pdfs
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+from django.conf.urls.static import static
+from django.conf import settings
 
 def health_check(request):
     return JsonResponse({"status":"ok"}, status=200)
@@ -39,4 +42,6 @@ urlpatterns = [
     path('password-reset/', auth_views.PasswordResetView.as_view(), name='password_reset'),
     path('password-reset-confirm/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
     path('api/register/', register_user, name='register_user'),
-]
+    path('api/upload_pdf/', upload_pdf, name='upload-pdf'),
+    path('list-pdfs/', list_pdfs, name='list-pdfs'),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

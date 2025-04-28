@@ -20,3 +20,6 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+#docker-compose run backend python manage.py makemigrations application
+#docker-compose run backend python manage.py migrate

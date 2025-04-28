@@ -20,7 +20,7 @@ const PlantContainerWidget = ({ plantState }) => {
         bottom: '1.5625rem',
         width: '15.625rem',
         height: '24.375rem',
-        margin: '0 1.5625rem',
+        margin: 'auto',
         overflow: 'hidden',
         backgroundRepeat: 'no-repeat',
       }}

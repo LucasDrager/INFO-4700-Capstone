@@ -95,6 +95,7 @@ const GamesPage = () => {
     };
 
     return (
+        <div className="games-page">
         <div className="reading-tools-container games-page">
             <h1 className="reading-tools-title">Reading Tools</h1>
             
@@ -218,6 +219,7 @@ const GamesPage = () => {
                     </div>
                 </div>
             )}
+        </div>
         </div>
     );
 }; 

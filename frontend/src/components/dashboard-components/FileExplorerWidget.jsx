@@ -1,48 +1,43 @@
 import React from 'react';
 
-function FileExplorerWidget({ onSelectDoc, highlightedPdf }) {
-  const placeholderPdfs = [
-    'filename1.pdf',
-    'filename2.pdf',
-    'filename3.pdf',
-    'filename4.pdf',
-    'filename5.pdf',
-    'filename6.pdf',
-    'filename7.pdf',
-    'filename8.pdf',
-    'filename9.pdf',
-    'filename10.pdf',
-    'filename11.pdf',
-    'filename12.pdf',
-    'filename13.pdf',
-    'filename14.pdf',
-    'filename15.pdf',
-    'filename16.pdf',
-  ];
-
-  const handleClick = (pdf, e) => {
+function FileExplorerWidget({ files, onSelectDoc, highlightedPdf }) {
+  const handleClick = (file, e) => {
     e.stopPropagation();
     if (onSelectDoc) {
       onSelectDoc({
-        title: pdf,
-        description: `Description for ${pdf}`
-      }, 'explorer', e);
+        title: file.file_name,
+        description: `Uploaded at ${new Date(file.uploaded_at).toLocaleString()}`,
+        fileUrl: file.file.startsWith('http') ? file.file : `http://localhost:8000/${file.file}`,
+      }, e);
     }
   };
 
   return (
-    <div className="FE-WidgetContainer">
-      <div className="FE-InnerContainer">
-        {placeholderPdfs.map((pdf, index) => (
-          <div
-            key={index}
-            className={`FE-PdfItem ${highlightedPdf === pdf ? 'FE-PdfItem-selected' : ''}`}
-            onClick={(e) => handleClick(pdf, e)}
-          >
-            <div className="FE-PdfIcon"></div>
-            <p className="FE-PdfTitle">{pdf}</p>
+    <div className="card my-3 shadow-sm">
+      <div className='card-header d-flex justify-content-between align-items-center'>
+        <h5 className="mb-3 fw-semibold">File Explorer</h5>
+      </div>
+      <div className='card-body'>
+        <div className='container-fluid '>
+          <div className="row row-cols-8 gap-3">
+            {files.length === 0 ? (
+              <p className="text-center text-muted">No files uploaded yet.</p>
+            ) : (
+              files.map((file) => (
+                <div className="col" key={file.id}>
+                  <div
+                    className={`card text-center p-3 border-0 shadow-sm h-100 pdf-item ${highlightedPdf === file.file_name ? 'border-primary' : ''}`}
+                    onClick={(e) => handleClick(file, e)}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    <i className="bi bi-file-earmark-pdf text-danger fs-1 mb-2"></i>
+                    <p className="mb-0 small text-truncate">{file.file_name}</p>
+                  </div>
+                </div>
+              ))
+            )}
           </div>
-        ))}
+        </div>
       </div>
     </div>
   );

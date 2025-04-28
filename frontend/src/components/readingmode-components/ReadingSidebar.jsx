@@ -190,7 +190,7 @@ const SidebarDashboard = ({
     >
       {/* Drag handle at the top */}
       {/* Removed green bar for cleaner look */}
-
+      <a type="button" class="btn btn-secondary" href='/dashboard'>Home</a>
       <div style={{
         padding: isCollapsed ? '10px 0' : '10px',
         width: '100%',

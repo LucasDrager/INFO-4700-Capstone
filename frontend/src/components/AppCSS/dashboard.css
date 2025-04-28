@@ -1,0 +1,11 @@
+.text-truncate {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.pdf-item{
+  padding: auto ;
+  margin: auto;
+  background-color: lightgray;
+}

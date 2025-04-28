@@ -32,48 +32,84 @@ function ReadingContainer({ isSidebarCollapsed, onTextExtraction, currentPage, o
     return () => clearInterval(interval);
   }, [timerRunning]);
 
-  const handleFileUpload = async (event) => {
-    const selectedFiles = Array.from(event.target.files);
-    if (selectedFiles.length === 0) return;
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const fileUrl = params.get('fileUrl');
 
+    console.log('File URL from query params:', fileUrl);
+  
+    if (fileUrl) {
+      // This fetches the PDF file as a Blob from your Django server
+      fetch(fileUrl)
+        .then(response => response.blob())
+        .then(blob => {
+          // Convert Blob to a File so we can send it as multipart/form-data
+          const pdfFile = new File([blob], 'myFile.pdf', { type: 'application/pdf' });
+          handleFileUpload(pdfFile);
+        })
+        .catch(err => console.error('Error fetching file from fileUrl', err));
+    }
+  }, []);  
+
+  const handleFileUpload = async (input) => {
+    let selectedFiles = [];
+  
+    // 1. If `input` is an Event from <input type="file" />,
+    //    we'll pull files from input.target.files
+    if (input?.target?.files) {
+      selectedFiles = Array.from(input.target.files);
+    }
+    // 2. Else, if `input` is already a single File
+    //    (like from your "fetch-then-new File()" flow),
+    //    just push that file directly
+    else if (input instanceof File) {
+      selectedFiles.push(input);
+    } 
+    // 3. Otherwise, bail out
+    else {
+      console.error("handleFileUpload called with unknown input:", input);
+      return;
+    }
+  
+    if (selectedFiles.length === 0) return;
     const newFiles = selectedFiles.map(file => ({
       name: file.name,
       url: URL.createObjectURL(file),
     }));
 
     setFiles(newFiles);
-
+  
     const formData = new FormData();
-    selectedFiles.forEach(file => formData.append('pdf_files', file));
-
+    selectedFiles.forEach(file => formData.append("pdf_files", file));
+  
     setIsLoading(true);
     setTimerRunning(true);
-
+  
     try {
-      const response = await fetch('http://localhost:8000/api/parse-pdf/', {
-        method: 'POST',
+      const response = await fetch("http://localhost:8000/api/parse-pdf/", {
+        method: "POST",
         headers: {
-          'Accept': 'application/json',
+          Accept: "application/json",
         },
         body: formData,
       });
-
+  
       const data = await response.json();
-
+  
       if (!response.ok) {
-        throw new Error(data.message || 'Error processing PDF file');
+        throw new Error(data.message || "Error processing PDF file");
       }
-
+  
       const texts = data.texts || [];
       setParsedText(texts);
-
+  
       if (onTextExtraction) {
         onTextExtraction(texts);
       }
-
+  
       setTimerRunning(true);
     } catch (error) {
-      console.error('Error uploading PDF:', error);
+      console.error("Error uploading PDF:", error);
     } finally {
       setIsLoading(false);
     }
@@ -188,7 +224,7 @@ function ReadingContainer({ isSidebarCollapsed, onTextExtraction, currentPage, o
                 {viewMode === 'text' ? 'PDF View' : 'Text View'}
               </button>
 
-              {viewMode === 'text' && (
+              {/* {viewMode === 'text' && (
                 <button
                   onClick={() => setAnnotationPanelVisible(!annotationPanelVisible)}
                   style={{
@@ -212,7 +248,7 @@ function ReadingContainer({ isSidebarCollapsed, onTextExtraction, currentPage, o
                   </span>
                   {annotationPanelVisible ? 'Close' : 'Annotate'}
                 </button>
-              )}
+              )} */}
             </div>
           )}
         </div>

@@ -283,7 +283,7 @@ const ReadingModeAnnotator = ({ pdfText, currentPage, onPageClick, notes, onAddN
     <div className="container" style={{ display: 'flex', flexDirection: 'column', width: '100%', height: '100%' }}>
       <div className="annotation-panel" style={{ width: '100%', flex: 1, overflowY: 'auto' }}>
         <h3>Text Selection Tools</h3>
-        
+        <h10>Hint: Make sure you click Text view!</h10>
         {!selectedText && (
           <div className="empty-selection-prompt">
             <div className="info-icon">i</div>

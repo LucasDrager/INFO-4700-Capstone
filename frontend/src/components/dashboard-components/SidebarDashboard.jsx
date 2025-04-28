@@ -1,49 +1,78 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import UserProfileWidget from '../common-components/UserProfileWidget';
-import UploadWidget from '../common-components/UploadWidget';
 import PlantContainerWidget from '../dashboard-components/PlantContainerWidget';
+const API_BASE = process.env.REACT_APP_API_BASE;
 
-const SidebarDashboard = ({ collapseMode }) => {
+function SidebarDashboard({ onFileUploadSuccess, collapseMode }) {
+  const [uploading, setUploading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
 
-  // If collapseMode is true, clicking the tab will navigate to /dashboard.
-  // Otherwise, it navigates to /settings.
-  const handleTabClick = () => {
-    if (collapseMode) {
-      navigate('/dashboard');
-    } else {
-      navigate('/settings');
+  const handleFileUpload = async (event) => {
+    const file = event.target.files[0];
+    if (!file) {
+      setErrorMessage('No file selected. Please choose a file.');
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    setUploading(true);
+    setErrorMessage('');
+
+    try {
+      const token = localStorage.getItem('access_token');
+      const response = await axios.post(
+        `${API_BASE}upload_pdf/`,
+        formData,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      const uploaded = response.data;
+      if (onFileUploadSuccess) {
+        onFileUploadSuccess(uploaded);
+      }
+      event.target.value = null;
+    } catch (error) {
+      console.error('Upload failed:', error);
+      setErrorMessage('Upload failed. Please try again.');
+    } finally {
+      setUploading(false);
     }
   };
 
-  return (
-    <div className="sidebar-dashboard">
+  const handleTabClick = () => {
+    navigate(collapseMode ? '/dashboard' : '/settings');
+  };
 
-      <div className="sidebar-dashboardContainer">
-        {/* Top widget: User/Profile */}
-        <div className="sidebar-top">
+  return (
+    <div className="d-flex flex-column justify-content-between bg-light border-end p-3" style={{ width: '330px', minHeight: '100vh' }}>
+      <div>
+        <div className="mb-4">
           <UserProfileWidget />
         </div>
 
-        {/* Upload widget */}
-        <div className="sidebar-upload">
-          <UploadWidget />
-        </div>
-
-        {/* Bottom: Plant widget */}
-        <div className="sidebar-plant">
-            <PlantContainerWidget />
+        <div className="mb-3">
+        <label htmlFor="fileUpload" className="form-label fw-semibold">Upload PDF</label>
+          <input
+            id="fileUpload"
+            type="file"
+            accept=".pdf"
+            className="form-control form-control-sm"
+            onChange={handleFileUpload}
+            disabled={uploading}
+          />
+          {uploading && <div className="form-text">Uploading...</div>}
+          {errorMessage && <div className="text-danger small mt-1">{errorMessage}</div>}
         </div>
       </div>
 
-    {/* The Tab Button */}
-    <div className="sidebar-tab" onClick={handleTabClick}>
-        <div>
-        {/* Use rightTriangle for collapse mode; otherwise, triangle */}
-        <div className= "rightTriangle"></div>
-        </div>
-    </div>
+      <div>
+        <PlantContainerWidget />
+      </div>
     </div>
   );
 };

@@ -1,78 +1,87 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
 function MyLibraryWidget({ onSelectDoc, highlightedPdf }) {
-  const folderData = [
-    { id: 1, name: 'Folder 1', pdfs: ['file1.pdf', 'file2.pdf', 'file3.pdf'] },
-    { id: 2, name: 'Folder 2', pdfs: ['docA.pdf', 'docB.pdf'] },
-    { id: 3, name: 'Folder 3', pdfs: ['project.pdf'] },
-    { id: 4, name: 'Folder 4', pdfs: ['example.pdf', 'example2.pdf'] },
-    { id: 5, name: 'Folder 5', pdfs: ['report.pdf'] },
-  ];
+  const [files, setFiles] = useState([]);
+  const [openFolder, setOpenFolder] = useState(null);
 
-  const [openFolderId, setOpenFolderId] = useState(null);
+  useEffect(() => {
+    const fetchFiles = async () => {
+      try {
+        const response = await axios.get('http://localhost:8000/list-pdfs/', {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+          }
+        });
+        setFiles(response.data);
+      } catch (error) {
+        console.error('Error fetching files:', error);
+      }
+    };
 
-  function handleFolderClick(folderId) {
-    if (folderId === openFolderId) {
-      setOpenFolderId(null);
-    } else {
-      setOpenFolderId(folderId);
-    }
-  }
+    fetchFiles();
+  }, []);
 
-  const widgetClass = openFolderId ? "myLib-DashboardWidget open" : "myLib-DashboardWidget";
+  const folders = files.reduce((acc, file) => {
+    const date = new Date(file.uploaded_at);
+    const folderName = `${date.getFullYear()}-${date.getMonth() + 1}`;
+    if (!acc[folderName]) acc[folderName] = [];
+    acc[folderName].push(file);
+    return acc;
+  }, {});
 
-
+  const handleFolderClick = (folderName) => {
+    setOpenFolder(openFolder === folderName ? null : folderName);
+  };
 
   return (
-    <div className={widgetClass}>
-      {/* Header + Search Row */}
-      <div className="myLib-Header">
-        <h2>my Library</h2>
+    <div className="card my-3 shadow-sm">
+      <div className="card-header d-flex justify-content-between align-items-center">
+        <h5 className="mb-0">My Library</h5>
         <input
           type="text"
+          className="form-control w-50"
           placeholder="Search..."
-          className="myLib-Search"
         />
       </div>
 
-      {/* Folders Section */}
-      <div className="myLib-Folders">
-        {folderData.map((folder) => (
-          <button
-            key={folder.id}
-            className="folder-button"
-            onClick={() => handleFolderClick(folder.id)}
-          >
-            {folder.name}
-          </button>
-        ))}
-      </div>
+      <div className="card-body">
+        <div className="d-flex flex-wrap gap-2 mb-3">
+          {Object.keys(folders).map((folderName) => (
+            <button
+              key={folderName}
+              className={`btn ${openFolder === folderName ? 'btn-primary' : 'btn-outline-primary'}`}
+              onClick={() => handleFolderClick(folderName)}
+            >
+              {folderName}
+            </button>
+          ))}
+        </div>
 
-      {/* PDFs in the open folder */}
-      {openFolderId !== null && (
-        <div className="myLib-PDFSection">
-          {folderData
-            .find((folder) => folder.id === openFolderId)
-            ?.pdfs.map((pdfName, index) => (
+        {openFolder && (
+          <div className="list-group">
+            {folders[openFolder].map((file) => (
               <div
-                key={index}
-                className={`FE-PdfItem ${highlightedPdf === pdfName ? 'FE-PdfItem-selected' : ''}`}
+                key={file.id}
+                className={`list-group-item list-group-item-action ${highlightedPdf === file ? 'active' : ''}`}
+                style={{ cursor: 'pointer' }}
                 onClick={(e) => {
                   if (onSelectDoc) {
                     onSelectDoc({
-                      title: pdfName,
-                      description: `Description for ${pdfName}`
-                    }, 'library', e);
+                      title: file.file_name,
+                      description: `Uploaded at ${new Date(file.uploaded_at).toLocaleString()}`,
+                      fileUrl: `http://localhost:8000/${file.file}`
+                    }, e);
                   }
                 }}
               >
-                <div className="FE-PdfIcon"></div>
-                <p className="FE-PdfTitle">{pdfName}</p>
+                <i className="bi bi-file-earmark-pdf me-2"></i>
+                {file.file_name}
               </div>
-            ))
-          }
-        </div>
-      )}
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

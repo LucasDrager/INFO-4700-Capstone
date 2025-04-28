@@ -9,7 +9,7 @@ COPY package.json package-lock.json ./
 
 # Install dependencies
 RUN npm install
-RUN npm install react-router-dom axios web-vitals bootstrap framer-motion jwt-decode@latest
+RUN npm install react-router-dom axios web-vitals bootstrap framer-motion jwt-decode@latest react-router-dom
 
 # Copy the rest of the application files
 COPY . .

@@ -13,6 +13,7 @@ services:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     volumes:
       - db_data:/var/lib/postgresql/data
+      - ./backend/application/migrations:/app/application/migrations # Ensure migrations are in sync with the host
       - ./backend/init.sql:/docker-entrypoint-initdb.d/init.sql #Establish Tables from DB init
     networks:
       - backend_net
@@ -30,13 +31,8 @@ services:
     container_name: django_app
     env_file:
       - .env
-    # Assure that DB Table connections are established and
-    # Run the Django dev server on port 8000
-    command: >
-      sh -c "python manage.py migrate &&
-             python manage.py runserver 0.0.0.0:8000"
     volumes:
-      - ./backend:/app  # Bind mount our backend code
+      - django_media:/app/media
     ports:
       - "8000:8000"
     environment:
@@ -50,6 +46,7 @@ services:
         condition: service_healthy  # Wait for PostgreSQL to be ready
     networks:
       - backend_net
+    # Assure that DB Table connections are established and ready before Django starts
     healthcheck:
       test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/').status"]
       interval: 30s
@@ -65,7 +62,6 @@ services:
     env_file:
       - .env
     volumes:
-      - ./frontend:/app
       - react_node_modules:/app/node_modules # Avoid conflicts with host node_modules
     ports:
       - "3000:3000"
@@ -97,9 +93,8 @@ services:
       - backend
       - db
 
- 
   #####################
-  # Ollama AI Model   #
+  #  Ollama AI Model  #
   #####################
   ollama:
     build: ./LLM
@@ -113,25 +108,12 @@ services:
       - "11434:11434"
     networks:
       - backend_net
-    devices:
-    - /dev/dri # Required for Intel & AMD GPUs
-    environment: #Allows the service to take advantage of GPU resorces
-    - NVIDIA_VISIBLE_DEVICES=all # Enables Nvidia GPUs
-    - NVIDIA_DRIVER_CAPABILITIES=compute,utility
-    - ROC_ENABLE_PRE_VEGA=1 # Enables AMD ROCm support (for older AMD GPUs)
-    - OLLAMA_USE_METAL=1 # Enables Apple Metal GPU support
-    deploy:
-        resources:
-          reservations:
-            devices:
-              - driver: nvidia
-                count: all
-                capabilities: [compute, utility]
 
 volumes:
   db_data:
   ollama_data:
   react_node_modules:
+  django_media:
 
 networks:
   backend_net:
