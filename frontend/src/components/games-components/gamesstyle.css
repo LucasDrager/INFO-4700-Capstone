@@ -1,12 +1,30 @@
 .games-page {
     background-color: white;
-    min-height: 70vh;
+    min-height: 100vh;
+}
+
+.back-arrow1 {
+    font-size: 24px;
+    color: #000000;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    transition: transform 0.3s ease;
+}
+
+.back-arrow1:hover {
+    transform: translateX(-5px);
 }
 
 .reading-tools-container {
     padding: 2rem;
     max-width: 1200px;
     margin: 0 auto;
+    margin-left: 60px;
 }
 
 .reading-tools-title {
