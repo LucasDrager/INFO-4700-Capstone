@@ -10,12 +10,17 @@ COPY package.json package-lock.json ./
 # Install dependencies
 RUN npm install
 RUN npm install react-router-dom axios web-vitals bootstrap framer-motion jwt-decode@latest react-router-dom
-
+RUN npm install -g serve
 # Copy the rest of the application files
 COPY . .
+# Set environment variables
+COPY .env .env
+
+# Build the app
+RUN npm run build
 
 # Expose the port React runs on
 EXPOSE 3000
 
-# Start the React application
-CMD ["npm", "start"]
+# Start the static server
+CMD ["serve", "-s", "build", "-l", "3000"]

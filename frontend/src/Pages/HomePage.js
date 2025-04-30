@@ -14,12 +14,11 @@ const LandingPage = () => {
         >
           Welcome to Lectern
         </motion.h1>
+      <p className="text-start text-center lead mb-4">
+        Revolutionize your reading experience with AI-driven assistance, powerful annotation tools,
+        and a focused reading mode designed to help you truly understand, not just consume.
+      </p>
       <main className="container text-center py-5">
-        <p className="text-start lead mb-4">
-          Revolutionize your reading experience with AI-driven assistance, powerful annotation tools,
-          and a focused reading mode designed to help you truly understand, not just consume.
-        </p>
-
         <div className="row mt-5">
           <div className="col-md-4">
             <i className="bi bi-eye-slash display-4 mb-3 text-primary"></i>
@@ -38,7 +37,7 @@ const LandingPage = () => {
           </div>
         </div>
       </main>
-      <Link to="/dashboard" className="btn btn-outline-light btn-lg mt-5">
+      <Link to="/dashboard" className="btn btn-outline-light btn-lg btn-block">
         Start Reading Now
       </Link>
     </div>

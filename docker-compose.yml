@@ -33,6 +33,7 @@ services:
       - .env
     volumes:
       - django_media:/app/media
+      - static_volume:/app/staticfiles
     ports:
       - "8000:8000"
     environment:
@@ -63,6 +64,7 @@ services:
       - .env
     volumes:
       - react_node_modules:/app/node_modules # Avoid conflicts with host node_modules
+      - react_app:/app/build # Ensure build is in sync with the host
     ports:
       - "3000:3000"
     environment:
@@ -70,7 +72,6 @@ services:
     networks:
       - frontend_net
       - backend_net
-    command: npm start  # Explicitly set the start command
     stdin_open: true  # Keep container open for interactive mode
     tty: true
     depends_on:
@@ -109,11 +110,33 @@ services:
     networks:
       - backend_net
 
+  #####################
+  #    Ngix routing   #
+  #####################
+  nginx:
+    image: nginx:latest
+    container_name: nginx_proxy
+    ports:
+      - "80:80"  # Expose to the world
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - react_app:/app/build:ro
+      - static_volume:/app/staticfiles:ro
+      - django_media:/app/media:ro
+    depends_on:
+      - frontend
+      - backend
+    networks:
+      - frontend_net
+      - backend_net
+
 volumes:
   db_data:
   ollama_data:
   react_node_modules:
   django_media:
+  static_volume:
+  react_app:
 
 networks:
   backend_net:

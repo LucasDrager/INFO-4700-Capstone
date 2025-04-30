@@ -42,6 +42,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:8000",
     "http://ollama:11434",
     "http://localhost:11434",
+    "http://76.155.220.63"
 ]
 
 
@@ -192,6 +193,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # collectstatic target
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
