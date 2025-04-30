@@ -145,7 +145,7 @@
 .bottom-back-button {
     position: fixed;
     bottom: 2rem;
-    left: 2rem;
+    left: 0rem;
     padding: 1rem 2rem;
     background-color: #666;
     color: white;

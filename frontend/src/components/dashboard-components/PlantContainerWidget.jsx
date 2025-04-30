@@ -1,30 +1,27 @@
 import React from 'react';
-import treeNoLeavesTest from '../common-components/ReactiveTree/TREEBASE.png';
+import treeVideo from '../../assets/videos/treegrowth.mp4';
 
-const imageMap = {
-  healthy: treeNoLeavesTest,
-  // add further states/images if needed
-};
-
-const PlantContainerWidget = ({ plantState }) => {
-  const backgroundImage = imageMap[plantState] || imageMap.healthy;
-
+const PlantContainerWidget = () => {
   return (
-    <div
-      className="sidebar-plant"
-      style={{
-        backgroundImage: `url(${backgroundImage})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        position: 'absolute',
-        bottom: '1.5625rem',
-        width: '15.625rem',
-        height: '24.375rem',
-        margin: 'auto',
-        overflow: 'hidden',
-        backgroundRepeat: 'no-repeat',
-      }}
-    ></div>
+    <div className="sidebar-plant">
+      <video
+        style={{
+          position: 'absolute',
+          bottom: '1.5625rem',
+          width: '15rem',
+          height: '20rem',
+          margin: 'auto',
+          objectFit: 'cover',
+          left: '0.1rem'
+        }}
+        autoPlay
+        muted
+        playsInline
+      >
+        <source src={treeVideo} type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
+    </div>
   );
 };
 

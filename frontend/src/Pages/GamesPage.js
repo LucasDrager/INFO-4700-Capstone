@@ -96,9 +96,11 @@ const GamesPage = () => {
 
     return (
         <div className="games-page">
+        <button className="back-arrow1" onClick={() => navigate(-1)} aria-label="Go back">
+                    ←
+                </button>
         <div className="reading-tools-container games-page">
             <h1 className="reading-tools-title">Reading Tools</h1>
-            
             <div className="toggle-container">
                 <button 
                     className={`toggle-button ${activeTab === 'flashcards' ? 'active' : ''}`}
