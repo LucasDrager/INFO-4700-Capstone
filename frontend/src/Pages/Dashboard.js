@@ -6,6 +6,7 @@ import MyLibraryWidget from '../components/dashboard-components/MyLibraryWidget'
 import ButtonsDashboardWidget from '../components/dashboard-components/ButtonsDashboard';
 import DocumentSpotlightSidebar from '../components/dashboard-components/DocumentSpotlightSidebar';
 import '../components/AppCSS/dashboard.css'
+const API_BASE = process.env.REACT_APP_API_BASE;
 
 function DashboardPage() {
   const [selectedDoc, setSelectedDoc] = useState(null);
@@ -18,7 +19,7 @@ function DashboardPage() {
     const fetchFiles = async () => {
       try {
         const token = localStorage.getItem('access_token');
-        const response = await fetch('http://localhost:8000/list-pdfs/', {
+        const response = await fetch(`${API_BASE}list-pdfs/`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

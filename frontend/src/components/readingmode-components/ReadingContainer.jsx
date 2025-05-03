@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import ReadingModeAnnotator from './ReadingModeAnnotator';
+const API_BASE = process.env.REACT_APP_API_BASE;
 
 function ReadingContainer({ isSidebarCollapsed, onTextExtraction, currentPage, onPageChange, pdfText, notes, onAddNote, onDeleteNote, onUpdateNote, interactiveTextRef }) {
   const [annotationPanelVisible, setAnnotationPanelVisible] = useState(false);
@@ -86,7 +87,7 @@ function ReadingContainer({ isSidebarCollapsed, onTextExtraction, currentPage, o
     setTimerRunning(true);
   
     try {
-      const response = await fetch("http://localhost:8000/api/parse-pdf/", {
+      const response = await fetch(`${API_BASE}parse-pdf/`, {
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -171,7 +172,7 @@ function ReadingContainer({ isSidebarCollapsed, onTextExtraction, currentPage, o
           }}
         >
           {/* Reading Timer with Jackson improvements */}
-          <div
+          {/* <div
             className="reading-timer"
             style={{
               backgroundColor: '#a5d6a7',
@@ -195,7 +196,7 @@ function ReadingContainer({ isSidebarCollapsed, onTextExtraction, currentPage, o
             }}
           >
             {formatTime(timer)}
-          </div>
+          </div> */}
 
           {/* Mode Controls */}
           {files.length > 0 && parsedText.length > 0 && (

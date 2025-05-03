@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+const API_BASE = process.env.REACT_APP_API_BASE;
 
 function MyLibraryWidget({ onSelectDoc, highlightedPdf }) {
   const [files, setFiles] = useState([]);
@@ -8,7 +9,7 @@ function MyLibraryWidget({ onSelectDoc, highlightedPdf }) {
   useEffect(() => {
     const fetchFiles = async () => {
       try {
-        const response = await axios.get('http://localhost:8000/list-pdfs/', {
+        const response = await axios.get(`${API_BASE}list-pdfs/`, {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('access_token')}`
           }

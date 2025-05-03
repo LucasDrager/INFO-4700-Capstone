@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import ReadingModeAnnotator from './ReadingModeAnnotator';
+const API_BASE = process.env.REACT_APP_API_BASE;
 
 // Constants for header height and positioning
 const HEADER_HEIGHT = 0; // Approximate header height in pixels
