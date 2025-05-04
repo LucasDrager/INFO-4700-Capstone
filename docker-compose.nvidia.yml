@@ -117,25 +117,6 @@ services:
               count: all
               capabilities: [gpu]  # Allocate all GPUs
   
-  #####################
-  #    Ngix routing   #
-  # #####################
-  # nginx:
-  #   image: nginx:latest
-  #   container_name: nginx_proxy
-  #   ports:
-  #     - "80:80"  # Expose to the world
-  #   volumes:
-  #     - ./nginx.conf:/etc/nginx/nginx.conf:ro
-  #     - react_app:/app/build:ro
-  #     - django_media:/app/media:ro
-  #   depends_on:
-  #     - frontend
-  #     - backend
-  #   networks:
-  #     - frontend_net
-  #     - backend_net
-
 volumes:
   db_data:
   ollama_data:
